@@ -1,0 +1,50 @@
+{
+  "name": "log",
+  "version": "0.0.1",
+  "description": "",
+  "scripts": {
+    "start": "webpack-dev-server --config example/webpack.config.js --env development",
+    "format": "prettier --write \"**/*.{js,json,md,html,scss}\"",
+    "prepare": "husky install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/peilingjiang/log.git"
+  },
+  "author": "Peiling Jiang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/peilingjiang/log/issues"
+  },
+  "homepage": "https://github.com/peilingjiang/log#readme",
+  "devDependencies": {
+    "@babel/core": "^7.17.12",
+    "@babel/preset-env": "^7.17.12",
+    "@babel/preset-react": "^7.17.12",
+    "@svgr/webpack": "^6.2.1",
+    "babel-loader": "^8.2.5",
+    "css-loader": "^6.7.1",
+    "eslint": "^8.15.0",
+    "eslint-plugin-react": "^7.30.0",
+    "husky": "^8.0.1",
+    "lint-staged": "^12.4.1",
+    "mini-css-extract-plugin": "^2.6.0",
+    "prettier": "^2.6.2",
+    "sass": "^1.51.0",
+    "sass-loader": "^13.0.0",
+    "style-loader": "^3.3.1",
+    "webpack": "^5.72.1",
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.9.0"
+  },
+  "dependencies": {
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
+    "react-router-dom": "^6.3.0"
+  },
+  "type": "module",
+  "lint-staged": {
+    "*.js": "eslint --cache --fix",
+    "*.{js,json,md,html,scss}": "prettier --write"
+  }
+}
