@@ -1,0 +1,40 @@
+@import '../root.scss';
+
+.button-example {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  margin: 1rem auto;
+
+  * {
+    font-size: 1rem;
+  }
+
+  textarea {
+    height: 20rem;
+    border: $light-grey 1px solid;
+    border-radius: $radius-small;
+    padding: 0.5rem;
+    resize: none;
+  }
+
+  button {
+    // margin: 3rem;
+    max-width: 10rem;
+    border-radius: $radius-small;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+  }
+
+  #submit-button {
+    background: $confirm;
+    color: $white;
+  }
+
+  #clear-button {
+    background: $grey;
+    color: $white;
+  }
+}

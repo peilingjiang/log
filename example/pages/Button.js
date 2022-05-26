@@ -1,14 +1,60 @@
 import React, { Component } from 'react'
 
-import '../css/Button.scss'
+import '../css/pages/Button.scss'
 
 export default class Button extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      text: '',
+      submitButton: 0,
+      clearButton: 0,
+    }
+  }
+
   render() {
     return (
-      <>
-        <button>Click me!</button>
-        <button>Please click me!</button>
-      </>
+      <div className="button-example">
+        <textarea
+          id="text-input"
+          value={this.state.text}
+          placeholder="Write something to submit..."
+          onChange={e => {
+            this.setState({
+              text: e.target.value,
+            })
+            e.target.log(e.target.value)
+          }}
+        />
+        <button
+          id="submit-button"
+          onClick={e => {
+            this.setState(
+              {
+                submitButton: this.state.submitButton + 1,
+              },
+              () => e.target.log(this.state.submitButton)
+            )
+          }}
+        >
+          Submit
+        </button>
+        <button
+          id="clear-button"
+          onClick={e => {
+            this.setState(
+              {
+                text: '',
+                clearButton: this.state.clearButton + 1,
+              },
+              () => e.target.log(this.state.clearButton)
+            )
+          }}
+        >
+          Clear
+        </button>
+      </div>
     )
   }
 }

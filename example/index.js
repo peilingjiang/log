@@ -7,13 +7,23 @@ import Button from './pages/Button.js'
 // import reportWebVitals from './reportWebVitals'
 
 import './css/main.scss'
+import PagesList from './pages/PagesList.js'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
-        <Route exact path="/" element={<App />} />
+        <Route
+          exact
+          path="/"
+          element={
+            <>
+              <App />
+              <PagesList />
+            </>
+          }
+        />
         <Route path="/" element={<App />}>
           <Route path="button" element={<Button />} />
         </Route>
