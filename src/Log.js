@@ -1,34 +1,29 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+import isEqual from 'react-fast-compare'
+
+import LogHeader from './components/LogHeader.js'
+import LogBody from './components/LogBody.js'
+
+import { logInterface } from './constants.js'
 
 export default class Log extends Component {
   static get propTypes() {
     return {
-      log: PropTypes.shape({
-        id: PropTypes.string,
-        groupId: PropTypes.string,
-        element: PropTypes.object,
-        args: PropTypes.array,
-        timestamp: PropTypes.shape({
-          now: PropTypes.number,
-          date: PropTypes.object,
-        }),
-        offset: PropTypes.shape({
-          x: PropTypes.number,
-          y: PropTypes.number,
-        }),
-      }),
-      groupId: PropTypes.string,
+      log: logInterface,
     }
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return !isEqual(nextProps, this.props)
+  }
+
   render() {
-    const { log, groupId } = this.props
+    const { log } = this.props
 
     return (
-      <div className="hyper-log-block">
-        <div className="hyper-log-header"></div>
-        <div className="hyper-log-body"></div>
+      <div className={`hyper-log-block`}>
+        <LogHeader log={log} />
+        <LogBody log={log} />
       </div>
     )
   }

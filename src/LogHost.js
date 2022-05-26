@@ -4,14 +4,13 @@ import LogStream from './organizations/LogStream.js'
 
 import { g } from './global.js'
 import { addLog } from './methods/addLog.js'
-import { getTimestamp } from './methods/utils.js'
 
 export default class LogHost extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      logs: {},
+      logGroups: {},
       organization: 'augmented', // list, grid, timeline
     }
   }
@@ -26,28 +25,24 @@ export default class LogHost extends Component {
 
   addLogsForPage() {
     window.log = (...args) => {
-      addLog(this, args, null, 'page')
+      addLog(this, args, null)
     }
   }
 
   addLogsForElement() {
     const logHost = this
     HTMLElement.prototype.log = function (...args) {
-      addLog(logHost, args, this, 'page')
+      addLog(logHost, args, this)
     }
   }
 
   /* -------------------------------------------------------------------------- */
 
-  renderAugmentedLogs(logs) {
+  renderAugmentedLogs(logGroups) {
     const streamElements = []
-    for (const logGroupId in logs)
+    for (const logGroupId in logGroups)
       streamElements.push(
-        <LogStream
-          key={logGroupId}
-          groupId={logGroupId}
-          logs={logs[logGroupId]}
-        />
+        <LogStream key={logGroupId} logGroup={logGroups[logGroupId]} />
       )
 
     return streamElements
@@ -56,12 +51,12 @@ export default class LogHost extends Component {
   /* -------------------------------------------------------------------------- */
 
   render() {
-    const { logs, organization } = this.state
+    const { logGroups, organization } = this.state
 
     let renderedLogElements
     switch (organization) {
       case 'augmented':
-        renderedLogElements = this.renderAugmentedLogs(logs)
+        renderedLogElements = this.renderAugmentedLogs(logGroups)
         break
 
       default:

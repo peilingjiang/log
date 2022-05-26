@@ -1,16 +1,20 @@
 import { v4 as uuid } from 'uuid'
+import { v5 as uuidv5 } from 'uuid'
 
 import { g } from '../global.js'
 import {
   assertArguments,
   assertArray,
+  assertExistence,
   assertObject,
   assertString,
-  getGroupIds,
+  cloneLogGroups,
+  getObjectIds,
   getTimestamp,
+  parseStack,
 } from './utils.js'
 
-export const newLog = (args, element, groupId, timestamp) => {
+export const newLog = (args, element, groupId, timestamp, parsedStack) => {
   assertArguments([
     {
       value: args,
@@ -29,34 +33,53 @@ export const newLog = (args, element, groupId, timestamp) => {
 
   return {
     id: uuid(),
-    groupId: groupId, // 'page' or uuid()
+    groupId: groupId,
     element: element,
     args: [...args],
     timestamp: timestamp,
-    offset: {
-      x: 0,
-      y: 0,
-    },
+    stack: parsedStack,
   }
 }
 
-export const addLog = (logHost, args, element = null, groupId) => {
+export const addLog = (logHost, args, element = null) => {
   const timestamp = getTimestamp()
 
   // Traditional
   if (g.preserveConsole) window.console.log(...args)
 
   // HyperLog
-  logHost.setState(prevState => {
-    const newState = { ...prevState } // might need deeper copy
-    const prevIds = getGroupIds(prevState.logs)
+  parseStack(new Error().stack, parsedStack => {
+    const groupId = uuidv5(
+      `${parsedStack.path}:${parsedStack.line}:${parsedStack.char}`,
+      uuidv5.URL
+    )
 
-    // can't find id among current groups
-    if (prevIds.length === 0 || !prevIds.includes(groupId))
-      newState.logs[groupId] = []
+    // add log to logHost
+    logHost.setState(prevState => {
+      const newState = {
+        ...prevState,
+        logGroups: cloneLogGroups(prevState.logGroups),
+      }
 
-    newState.logs[groupId].push(newLog(args, element, groupId, timestamp))
+      const prevIds = getObjectIds(prevState.logGroups)
 
-    return newState
+      // can't find id among current groups
+      if (prevIds.length === 0 || !prevIds.includes(groupId))
+        newState.logGroups[groupId] = {
+          logs: [],
+          groupId: groupId,
+          offset: {
+            x: 0,
+            y: 0,
+          },
+          followType: assertExistence(element) ? 'stick' : 'independent',
+        }
+
+      newState.logGroups[groupId].logs.push(
+        newLog(args, element, groupId, timestamp, parsedStack)
+      )
+
+      return newState
+    })
   })
 }

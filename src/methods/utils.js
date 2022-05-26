@@ -1,3 +1,7 @@
+import { mapStackTrace } from 'sourcemapped-stacktrace'
+
+import { stackActualCallerDepth } from '../constants.js'
+
 export const getTimestamp = () => {
   return {
     now: performance.now(),
@@ -5,8 +9,48 @@ export const getTimestamp = () => {
   }
 }
 
-export const getGroupIds = logs => {
-  return Object.keys(logs)
+export const getObjectIds = obj => {
+  return Object.keys(obj)
+}
+
+/* -------------------------------------------------------------------------- */
+
+export const copyObject = obj => {
+  return JSON.parse(JSON.stringify(obj))
+}
+
+export const cloneLogGroups = logGroups => {
+  const newLogGroups = {}
+  for (const logGroupId in logGroups) {
+    const prevLogGroup = logGroups[logGroupId]
+    newLogGroups[logGroupId] = {
+      ...prevLogGroup,
+      logs: [...prevLogGroup.logs],
+    }
+  }
+
+  return newLogGroups
+}
+
+/* -------------------------------------------------------------------------- */
+// parse stack
+
+export const parseStack = (stack, callback) => {
+  // https://github.com/novocaine/sourcemapped-stacktrace
+  mapStackTrace(stack, mappedStack => {
+    const actualCallerStack = mappedStack[stackActualCallerDepth]
+    // https://github.com/bevry/get-current-line/blob/ccf9e903710123b73cc117a6a9250f519e21e4bf/source/index.ts#L85
+    const result = actualCallerStack.match(
+      /\s+at\s(?:(?<method>.+?)\s\()?(?<path>.+?):(?<line>\d+):(?<char>\d+)\)?\s*$/
+    ).groups
+
+    result.method = result.method || '<anonymous>'
+    result.file = result.path.replace(/^.*[\\/]/, '')
+    result.line = Number(result.line)
+    result.char = Number(result.char)
+
+    callback(result)
+  })
 }
 
 /* -------------------------------------------------------------------------- */

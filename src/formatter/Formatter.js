@@ -1,5 +1,10 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
-export const Formatter = () => {
-  return <div>Formatter</div>
+export const Formatter = ({ args }) => {
+  return <div className="hyper-log-formatted-content">{args.join(' ')}</div>
+}
+
+Formatter.propTypes = {
+  args: PropTypes.array,
 }
