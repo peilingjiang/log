@@ -63,6 +63,10 @@ export default class LogHost extends Component {
         break
     }
 
-    return <div id="log-host">{renderedLogElements}</div>
+    return (
+      <div id="hyper-log-host" className="hyper-log-host">
+        {renderedLogElements}
+      </div>
+    )
   }
 }

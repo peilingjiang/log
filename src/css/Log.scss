@@ -1,0 +1,30 @@
+@import 'root.scss';
+
+.hyper-log {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+}
+
+.hyper-log-body {
+  display: flex;
+  gap: $padding-x-large;
+  justify-content: center;
+  align-items: center;
+
+  padding: $padding-small;
+
+  background: rgba($light-grey, $opacity-default);
+  backdrop-filter: blur(calc(5 / $rem-to-px) px);
+
+  .hyper-log-formatted-content,
+  .hyper-log-formatted-content * {
+    font-family: 'Inconsolata', 'Courier New', Courier, monospace;
+  }
+
+  .source-location {
+    color: $dark-grey;
+    font-size: $font-size-small;
+  }
+}

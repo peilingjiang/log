@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom/client'
 
 import LogHost from './LogHost.js'
 
+import './css/main.scss'
+
 const logHostElement = document.createElement('div')
 logHostElement.id = 'log-root'
 document.body.appendChild(logHostElement)

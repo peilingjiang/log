@@ -21,7 +21,7 @@ export default class Log extends Component {
     const { log } = this.props
 
     return (
-      <div className={`hyper-log-block`}>
+      <div className={`hyper-log`}>
         <LogHeader log={log} />
         <LogBody log={log} />
       </div>
