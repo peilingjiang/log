@@ -2,9 +2,14 @@
 
 .hyper-log {
   position: absolute;
+
   display: flex;
   flex-direction: column;
+
   width: fit-content;
+  max-width: $max-log-width;
+
+  overflow: hidden;
 }
 
 .hyper-log-body {
@@ -16,7 +21,7 @@
   padding: $padding-small;
 
   background: rgba($light-grey, $opacity-default);
-  backdrop-filter: blur(calc(5 / $rem-to-px) px);
+  backdrop-filter: blur(unit-rem-to-px(1rem));
 
   .hyper-log-formatted-content,
   .hyper-log-formatted-content * {
@@ -26,5 +31,6 @@
   .source-location {
     color: $dark-grey;
     font-size: $font-size-small;
+    white-space: nowrap;
   }
 }

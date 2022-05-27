@@ -48,10 +48,10 @@ export const addLog = (logHost, args, element = null) => {
   if (g.preserveConsole) window.console.log(...args)
 
   // HyperLog
-  parseStack(new Error().stack, parsedStack => {
+  parseStack(new Error(), parsedStack => {
     const groupId = uuidv5(
       `${parsedStack.path}:${parsedStack.line}:${parsedStack.char}`,
-      uuidv5.URL
+      uuidv5.URL // ? any potential problems?
     )
 
     // add log to logHost
@@ -68,9 +68,10 @@ export const addLog = (logHost, args, element = null) => {
         newState.logGroups[groupId] = {
           logs: [],
           groupId: groupId,
-          offset: {
-            x: 0,
-            y: 0,
+          element: element,
+          bounding: {
+            left: `0`,
+            top: `0`,
           },
           followType: assertExistence(element) ? 'stick' : 'independent',
         }

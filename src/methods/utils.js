@@ -1,6 +1,8 @@
+import { getFramesFromError, getLocationsFromFrames } from 'get-current-line'
 import { mapStackTrace } from 'sourcemapped-stacktrace'
 
 import { stackActualCallerDepth } from '../constants.js'
+import { g } from '../global.js'
 
 export const getTimestamp = () => {
   return {
@@ -14,6 +16,31 @@ export const getObjectIds = obj => {
 }
 
 /* -------------------------------------------------------------------------- */
+// geometry
+
+export const getElementBounding = element => {
+  return element.getBoundingClientRect()
+}
+
+export const mergeBoundingRects = rects => {
+  const left = Math.min(...rects.map(rect => rect.left))
+  const right = Math.max(...rects.map(rect => rect.right))
+  const top = Math.min(...rects.map(rect => rect.top))
+  const bottom = Math.max(...rects.map(rect => rect.bottom))
+  const width = right - left
+  const height = bottom - top
+  return {
+    left,
+    right,
+    top,
+    bottom,
+    width,
+    height,
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+// copy object
 
 export const copyObject = obj => {
   return JSON.parse(JSON.stringify(obj))
@@ -35,25 +62,39 @@ export const cloneLogGroups = logGroups => {
 /* -------------------------------------------------------------------------- */
 // parse stack
 
-export const parseStack = (stack, callback) => {
-  // https://github.com/novocaine/sourcemapped-stacktrace
-  mapStackTrace(stack, mappedStack => {
-    const actualCallerStack = mappedStack[stackActualCallerDepth]
-    // https://github.com/bevry/get-current-line/blob/ccf9e903710123b73cc117a6a9250f519e21e4bf/source/index.ts#L85
-    const result = actualCallerStack.match(
-      /\s+at\s(?:(?<method>.+?)\s\()?(?<path>.+?):(?<line>\d+):(?<char>\d+)\)?\s*$/
-    ).groups
+export const parseStack = (error, callback) => {
+  if (g.useSourceMaps)
+    // https://github.com/novocaine/sourcemapped-stacktrace
+    mapStackTrace(error.stack, mappedStack => {
+      // TODO somehow make async
+      const actualCallerStack = mappedStack[stackActualCallerDepth]
+      // https://github.com/bevry/get-current-line/blob/ccf9e903710123b73cc117a6a9250f519e21e4bf/source/index.ts#L85
+      const result = actualCallerStack.match(
+        /\s+at\s(?:(?<method>.+?)\s\()?(?<path>.+?):(?<line>\d+):(?<char>\d+)\)?\s*$/
+      ).groups
+
+      result.method = result.method || '<anonymous>'
+      result.file = result.path.replace(/^.*[\\/]/, '')
+      result.line = Number(result.line)
+      result.char = Number(result.char)
+
+      callback(result)
+    })
+  else {
+    const result = getLocationsFromFrames(getFramesFromError(error))[
+      stackActualCallerDepth
+    ]
 
     result.method = result.method || '<anonymous>'
+    result.path = result.file
     result.file = result.path.replace(/^.*[\\/]/, '')
-    result.line = Number(result.line)
-    result.char = Number(result.char)
 
     callback(result)
-  })
+  }
 }
 
 /* -------------------------------------------------------------------------- */
+// assertions
 
 export const assertExistence = a => {
   return a !== undefined && a !== null

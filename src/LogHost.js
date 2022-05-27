@@ -13,27 +13,54 @@ export default class LogHost extends Component {
       logGroups: {},
       organization: 'augmented', // list, grid, timeline
     }
+
+    this.updateLogGroup = this.updateLogGroup.bind(this)
   }
 
   componentDidMount() {
     // register log functions
 
     // ADD LOG
-    this.addLogsForPage()
-    this.addLogsForElement()
+    this.defineLogs()
   }
 
-  addLogsForPage() {
+  defineLogs() {
+    // window.log
     window.log = (...args) => {
       addLog(this, args, null)
     }
-  }
 
-  addLogsForElement() {
+    // element.log
     const logHost = this
     HTMLElement.prototype.log = function (...args) {
       addLog(logHost, args, this)
     }
+  }
+
+  /* -------------------------------------------------------------------------- */
+  // update logs
+
+  updateLogGroup(logGroupId, logGroup) {
+    const { logGroups } = this.state
+
+    logGroups[logGroupId] = logGroup
+
+    this.setState({
+      logGroups,
+    })
+  }
+
+  updateLog(logGroupId, logId, log) {
+    const { logGroups } = this.state
+
+    const logGroup = logGroups[logGroupId]
+    if (!logGroup) return
+
+    logGroup.logs[logId] = log
+
+    this.setState({
+      logGroups,
+    })
   }
 
   /* -------------------------------------------------------------------------- */
@@ -42,7 +69,11 @@ export default class LogHost extends Component {
     const streamElements = []
     for (const logGroupId in logGroups)
       streamElements.push(
-        <LogStream key={logGroupId} logGroup={logGroups[logGroupId]} />
+        <LogStream
+          key={logGroupId}
+          logGroup={logGroups[logGroupId]}
+          updateLogGroup={this.updateLogGroup}
+        />
       )
 
     return streamElements
