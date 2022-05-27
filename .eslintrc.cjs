@@ -22,4 +22,5 @@ module.exports = {
       { vars: 'all', args: 'after-used', ignoreRestSiblings: false },
     ],
   },
+  ignorePatterns: ['node_modules/', 'lib/'],
 }

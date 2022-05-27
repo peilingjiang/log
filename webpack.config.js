@@ -5,7 +5,7 @@
 import { __dirname, config, output } from './webpack.common.js'
 
 export default env => {
-  if (env === 'production') {
+  if (env.production) {
     console.log('Producing production build...')
     return {
       ...config,
@@ -15,7 +15,7 @@ export default env => {
         path: __dirname + '/lib',
       }),
       optimization: {
-        minimize: false,
+        minimize: true,
       },
     }
   }
