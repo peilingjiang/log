@@ -30,14 +30,16 @@ export default class LogBody extends Component {
     return (
       <div
         className="hyper-log-body"
-        style={{
-          background: `rgba(${tinyColorToRGBStyleString(
-            _tinyColors.lightGrey
-          )}, ${
-            _rootStyles.opacityDefault -
-            _config.logStreamHistoryRenderOpacityUnitDecrease * orderReversed
-          })`,
-        }}
+        style={
+          {
+            // background: `rgba(${tinyColorToRGBStyleString(
+            //   _tinyColors.lightGrey
+            // )}, ${
+            //   _rootStyles.opacityDefault -
+            //   _config.logStreamHistoryRenderOpacityUnitDecrease * orderReversed
+            // })`,
+          }
+        }
       >
         <Formatter args={args} />
         {/* <p className="source-location">

@@ -18,6 +18,15 @@ export const boundingInterface = PropTypes.exact({
   verticalAlign: PropTypes.string,
 })
 
+export const boundingDefault = Object.seal({
+  left: '0px',
+  right: '0px',
+  top: '0px',
+  bottom: '0px',
+  horizontalAlign: 'left',
+  verticalAlign: 'top',
+})
+
 export const logInterface = PropTypes.exact({
   id: PropTypes.string,
   groupId: PropTypes.string,
@@ -63,8 +72,8 @@ export const logStreamGapToAnchorPx = 10
 
 export const _config = Object.seal({
   logStreamHistoryRenderDepth: 3,
-  logStreamHistoryRenderUnitOffsetPx: 3,
-  logStreamHistoryRenderOpacityUnitDecrease: 0.25,
+  logStreamHistoryRenderUnitOffsetPx: 4,
+  logStreamHistoryRenderOpacityUnitDecrease: 0.3,
 })
 
 export const _rootStyles = Object.seal({

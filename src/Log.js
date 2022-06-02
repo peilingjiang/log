@@ -5,7 +5,12 @@ import isEqual from 'react-fast-compare'
 import LogHeader from './components/LogHeader.js'
 import LogBody from './components/LogBody.js'
 
-import { boundingInterface, logInterface, _config } from './constants.js'
+import {
+  boundingInterface,
+  logInterface,
+  _config,
+  _rootStyles,
+} from './constants.js'
 
 export default class Log extends Component {
   static get propTypes() {
@@ -13,6 +18,7 @@ export default class Log extends Component {
       log: logInterface,
       groupBounding: boundingInterface,
       orderReversed: PropTypes.number,
+      logsCount: PropTypes.number,
     }
   }
 
@@ -21,23 +27,29 @@ export default class Log extends Component {
   }
 
   render() {
-    const { log, groupBounding, orderReversed } = this.props
+    const { log, orderReversed, logsCount } = this.props
+    const orderInHistoryDisplayStack =
+      Math.min(logsCount, _config.logStreamHistoryRenderDepth) -
+      orderReversed -
+      1
 
-    const historyRenderStyle =
-      orderReversed === 0
-        ? {}
-        : {
-            left: `${
-              _config.logStreamHistoryRenderUnitOffsetPx * orderReversed
-            }px`,
-            bottom: `${
-              _config.logStreamHistoryRenderUnitOffsetPx * orderReversed
-            }px`,
-          }
+    const historyRenderStyle = {
+      zIndex: orderInHistoryDisplayStack,
+      opacity: `${
+        _rootStyles.opacityDefault -
+        _config.logStreamHistoryRenderOpacityUnitDecrease * orderReversed
+      }`,
+      transform: `translateY(calc(-${100 * orderInHistoryDisplayStack}% + ${
+        _config.logStreamHistoryRenderUnitOffsetPx * orderInHistoryDisplayStack
+      }px)) scale(${1 - 0.2 * orderReversed})`,
+    }
 
     return (
       orderReversed < _config.logStreamHistoryRenderDepth && (
-        <div className={`hyper-log`} style={historyRenderStyle}>
+        <div
+          className={`hyper-log${orderReversed === 0 ? '' : ' log-in-history'}`}
+          style={historyRenderStyle}
+        >
           <LogHeader log={log} />
           <LogBody log={log} orderReversed={orderReversed} />
         </div>

@@ -1,17 +1,25 @@
 @import 'root.scss';
 
 .hyper-log {
-  position: absolute;
+  position: relative;
+  // position: absolute;
 
   display: flex;
   flex-direction: column;
 
   width: fit-content;
-  max-width: $max-log-width;
+  // max-width: $max-log-width;
+  transform-origin: top;
 
   overflow: hidden;
 
-  // backdrop-filter: blur(unit-rem-to-px(3rem));
+  backdrop-filter: blur(unit-rem-to-px(3rem));
+
+  &.log-in-history {
+    pointer-events: none;
+  }
+
+  // &:not(:first-of-type) {}
 }
 
 .hyper-log-body {
@@ -21,14 +29,19 @@
   align-items: center;
 
   padding: $padding-small;
+  overflow-wrap: break-word;
 
   background: rgba($light-grey, $opacity-default);
 
   .hyper-log-formatted-content,
   .hyper-log-formatted-content * {
+    width: max-content;
     font-family: 'Inconsolata', 'Courier New', Courier, monospace;
     font-weight: 500;
-    white-space: pre;
+    word-wrap: break-word;
+    white-space: pre-line;
+    max-width: $max-log-width;
+    overflow-wrap: break-word !important;
     line-height: 120%;
   }
 

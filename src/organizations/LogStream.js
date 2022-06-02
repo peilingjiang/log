@@ -4,7 +4,7 @@ import isEqual from 'react-fast-compare'
 
 import Log from '../Log.js'
 
-import { logGroupInterface } from '../constants.js'
+import { logGroupInterface, _config } from '../constants.js'
 import {
   assertExistence,
   getElementBounding,
@@ -88,6 +88,7 @@ export default class LogStream extends Component {
           log={log}
           groupBounding={logGroup.bounding}
           orderReversed={--orderReversed}
+          logsCount={logGroup.logs.length}
         />
       )
     }

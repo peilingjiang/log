@@ -4,6 +4,7 @@ import LogStream from './organizations/LogStream.js'
 
 import { g } from './global.js'
 import { addLog } from './methods/addLog.js'
+import { boundingDefault } from './constants.js'
 
 export default class LogHost extends Component {
   constructor(props) {
@@ -14,6 +15,8 @@ export default class LogHost extends Component {
       organization: 'augmented', // list, grid, timeline
     }
 
+    this.windowResizeTimer = null
+
     this.updateLogGroup = this.updateLogGroup.bind(this)
   }
 
@@ -22,6 +25,21 @@ export default class LogHost extends Component {
 
     // ADD LOG
     this.defineLogs()
+
+    // add event listeners
+    window.addEventListener('resize', () => {
+      clearTimeout(this.windowResizeTimer)
+      this.windowResizeTimer = setTimeout(() => {
+        // window resized
+        for (let groupId in this.state.logGroups) {
+          const logGroup = this.state.logGroups[groupId]
+          this.updateLogGroup(groupId, {
+            ...logGroup,
+            bounding: boundingDefault,
+          })
+        }
+      }, 50)
+    })
   }
 
   defineLogs() {
