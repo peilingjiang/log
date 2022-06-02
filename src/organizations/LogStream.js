@@ -8,9 +8,9 @@ import { logGroupInterface } from '../constants.js'
 import {
   assertExistence,
   getElementBounding,
-  mergeBoundingRects,
+  // mergeBoundingRects,
 } from '../methods/utils.js'
-import { findPosition } from '../methods/findPosition.js'
+import { findPosition, pxWrap } from '../methods/findPosition.js'
 
 // for augmented logs
 
@@ -32,6 +32,10 @@ export default class LogStream extends Component {
     this.optimizePosition()
   }
 
+  componentDidUpdate() {
+    this.optimizePosition()
+  }
+
   shouldComponentUpdate(nextProps, nextState) {
     return !isEqual(nextProps, this.props)
   }
@@ -39,19 +43,14 @@ export default class LogStream extends Component {
   optimizePosition() {
     const { logGroup, updateLogGroup } = this.props
 
-    // Get stream element [display] size
-    // by merging the bounding rects of all its children
-    const mergedChildRects = mergeBoundingRects(
-      [...this.ref.current.children].map(child => getElementBounding(child))
-    )
-
     if (!assertExistence(logGroup.element)) return
 
     const optimizedPosition = findPosition(
       logGroup.element,
       this.ref.current,
-      mergedChildRects
+      this._getChildRects()
     )
+
     updateLogGroup(logGroup.groupId, {
       ...logGroup,
       bounding: optimizedPosition,
@@ -60,18 +59,38 @@ export default class LogStream extends Component {
 
   expandStream() {}
 
+  /* -------------------------------------------------------------------------- */
+
+  _getChildRects() {
+    // Get stream element [display] size
+    // by merging the bounding rects of all its children
+    // return mergeBoundingRects(
+    //   [...this.ref.current.children].map(child => getElementBounding(child))
+    // )
+    // ...
+    // get the rect of the most recent one
+    return getElementBounding(
+      this.ref.current.children[this.ref.current.children.length - 1]
+    )
+  }
+
+  /* -------------------------------------------------------------------------- */
+
   render() {
     const { logGroup } = this.props
 
     const logElements = []
-    for (let log of logGroup.logs)
+    let orderReversed = logGroup.logs.length
+    for (let log of logGroup.logs) {
       logElements.push(
         <Log
           key={`${log.id} ${log.timestamp.now}`}
           log={log}
           groupBounding={logGroup.bounding}
+          orderReversed={--orderReversed}
         />
       )
+    }
 
     return (
       <div
@@ -79,6 +98,9 @@ export default class LogStream extends Component {
         style={{
           top: logGroup.bounding.top,
           left: logGroup.bounding.left,
+          height: this.ref.current
+            ? pxWrap(this._getChildRects().height)
+            : null,
         }}
         data-id={logGroup.groupId}
         ref={this.ref}

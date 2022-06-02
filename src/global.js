@@ -1,4 +1,6 @@
-export const g = {
+// customizable
+
+export const g = Object.seal({
   preserveConsole: true,
-  useSourceMaps: false,
-}
+  useSourceMaps: true,
+})

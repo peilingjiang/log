@@ -81,56 +81,70 @@ export const isOverlapped = (rect1, rect2) => {
 
 /* -------------------------------------------------------------------------- */
 
+const _getPos = (
+  leftNum,
+  topNum,
+  horizontalAlign,
+  verticalAlign,
+  width,
+  height
+) => {
+  return {
+    left: pxWrap(leftNum),
+    top: pxWrap(topNum),
+    right: pxWrap(leftNum + width),
+    bottom: pxWrap(topNum + height),
+    horizontalAlign: horizontalAlign,
+    verticalAlign: verticalAlign,
+  }
+}
+
 export const registeredPositions = (posId, anchorBounding, logBounding) => {
   const { left, right, top, bottom } = anchorBounding
   const { width, height } = logBounding
   const gap = logStreamGapToAnchorPx
 
-  const getPosition = (leftNum, topNum, horizontalAlign, verticalAlign) => {
-    return {
-      left: pxWrap(leftNum),
-      top: pxWrap(topNum),
-      right: pxWrap(leftNum + width),
-      bottom: pxWrap(topNum + height),
-      horizontalAlign: horizontalAlign,
-      verticalAlign: verticalAlign,
-    }
-  }
-
   switch (Number(posId)) {
     case 1:
-      return getPosition(left, bottom + gap, _L, _T)
+      return _getPos(left, bottom + gap, _L, _T, width, height)
 
     case 2:
-      return getPosition(right + gap, top, _L, _T)
+      return _getPos(right + gap, top, _L, _T, width, height)
 
     case 3:
-      return getPosition(left, top - gap - height, _L, _B)
+      return _getPos(left, top - gap - height, _L, _B, width, height)
 
     case 4:
-      return getPosition(left - gap - width, top, _R, _T)
+      return _getPos(left - gap - width, top, _R, _T, width, height)
 
     case 5:
-      return getPosition(right - width, bottom + gap, _R, _T)
+      return _getPos(right - width, bottom + gap, _R, _T, width, height)
 
     case 6:
-      return getPosition(right + gap, bottom - height, _R, _B)
+      return _getPos(right + gap, bottom - height, _R, _B, width, height)
 
     case 7:
-      return getPosition(right - width, bottom - gap - height, _R, _B)
+      return _getPos(
+        right - width,
+        bottom - gap - height,
+        _R,
+        _B,
+        width,
+        height
+      )
 
     case 8:
-      return getPosition(left - gap - width, bottom - height, _R, _B)
+      return _getPos(left - gap - width, bottom - height, _R, _B, width, height)
 
     default:
       break
   }
 }
 
-const pxWrap = value => {
+export const pxWrap = value => {
   return `${value}px`
 }
 
-const pxTrim = value => {
+export const pxTrim = value => {
   return Number(value.replace('px', ''))
 }

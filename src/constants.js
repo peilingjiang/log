@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types'
+import tinycolor from 'tinycolor2'
 
 export const stackInterface = PropTypes.exact({
   line: PropTypes.number,
@@ -41,7 +42,11 @@ export const logGroupInterface = PropTypes.exact({
 
 /* -------------------------------------------------------------------------- */
 
+// the meaningful line of where the log is from should not be the log wrapper interface
+// instead, we trace back to the actual caller
 export const stackActualCallerDepth = 2
+
+// out of 8 possible positions around the anchor element, we only allow the first N best ones
 export const positionFindingWorstAllowed = 7
 
 export const _L = 'left'
@@ -51,4 +56,23 @@ export const _B = 'bottom'
 
 /* -------------------------------------------------------------------------- */
 
-export const logStreamGapToAnchorPx = 10 // px
+// default gap between the log and the anchor element
+export const logStreamGapToAnchorPx = 10
+
+/* -------------------------------------------------------------------------- */
+
+export const _config = Object.seal({
+  logStreamHistoryRenderDepth: 3,
+  logStreamHistoryRenderUnitOffsetPx: 3,
+  logStreamHistoryRenderOpacityUnitDecrease: 0.25,
+})
+
+export const _rootStyles = Object.seal({
+  lightGrey: '#cfcfcf',
+
+  opacityDefault: 0.95,
+})
+
+export const _tinyColors = Object.seal({
+  lightGrey: tinycolor(_rootStyles.lightGrey),
+})

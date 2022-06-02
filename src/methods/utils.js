@@ -131,3 +131,11 @@ export const assertArguments = argsAndAssertions => {
     if (!assertion(value, shape)) throw `[ERROR assertArguments ${value}]`
   }
 }
+
+/* -------------------------------------------------------------------------- */
+// colors
+
+export const tinyColorToRGBStyleString = tinyColor => {
+  const { r, g, b } = tinyColor.toRgb()
+  return `${r}, ${g}, ${b}`
+}

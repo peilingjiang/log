@@ -10,6 +10,8 @@
   max-width: $max-log-width;
 
   overflow: hidden;
+
+  // backdrop-filter: blur(unit-rem-to-px(3rem));
 }
 
 .hyper-log-body {
@@ -21,11 +23,13 @@
   padding: $padding-small;
 
   background: rgba($light-grey, $opacity-default);
-  backdrop-filter: blur(unit-rem-to-px(1rem));
 
   .hyper-log-formatted-content,
   .hyper-log-formatted-content * {
     font-family: 'Inconsolata', 'Courier New', Courier, monospace;
+    font-weight: 500;
+    white-space: pre;
+    line-height: 120%;
   }
 
   .source-location {
