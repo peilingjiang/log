@@ -7,7 +7,7 @@ import {
   _rootStyles,
   _tinyColors,
 } from '../constants.js'
-import { Formatter } from '../formatter/formatter.js'
+import { Formatter } from '../formatter/Main.js'
 import { tinyColorToRGBStyleString } from '../methods/utils.js'
 
 export default class LogBody extends Component {

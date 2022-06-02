@@ -132,6 +132,16 @@ export const assertArguments = argsAndAssertions => {
   }
 }
 
+export const assertTypeOfArg = arg => {
+  if (arg === undefined) return 'undefined'
+  if (arg === null) return 'null'
+  if (assertNumber(arg)) return 'number'
+  if (assertString(arg)) return 'string'
+  if (assertArray(arg)) return 'array'
+  if (assertObject(arg)) return 'object'
+  return 'unknown'
+}
+
 /* -------------------------------------------------------------------------- */
 // colors
 
