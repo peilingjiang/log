@@ -1,6 +1,7 @@
 import React, { Component, createRef } from 'react'
 import PropTypes from 'prop-types'
 import isEqual from 'react-fast-compare'
+import LeaderLine from 'leader-line-new'
 
 import Log from '../Log.js'
 
@@ -15,7 +16,6 @@ import {
 } from '../methods/utils.js'
 import { findPosition, pxWrap } from '../methods/findPosition.js'
 import LogStreamMenu from './LogStreamMenu.js'
-import LeaderLine from 'leader-line-new'
 
 // for augmented logs
 

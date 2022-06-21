@@ -1,5 +1,9 @@
-import PropTypes from 'prop-types'
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+
+import Expand from '../icons/expand.svg'
+import Fold from '../icons/fold.svg'
+import Relink from '../icons/relink.svg'
 
 export default class LogStreamMenu extends Component {
   static propTypes = {
@@ -16,13 +20,13 @@ export default class LogStreamMenu extends Component {
     return (
       <div className="hyper-log-stream-menu">
         <p className="stream-menu-item" onClick={expandStream}>
-          {expand ? 'fold' : 'expand'}
+          {expand ? <Fold /> : <Expand />} {expand ? 'fold' : 'expand'}
         </p>
         <p
           className="stream-menu-item cursor-crosshair"
           onMouseDown={startRelink}
         >
-          relink
+          <Relink /> relink
         </p>
       </div>
     )
