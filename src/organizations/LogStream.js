@@ -5,7 +5,12 @@ import LeaderLine from 'leader-line-new'
 
 import Log from '../Log.js'
 
-import { logGroupInterface, _L, _rootStyles } from '../constants.js'
+import {
+  boundingDefault,
+  logGroupInterface,
+  _L,
+  _rootStyles,
+} from '../constants.js'
 import {
   assertExistence,
   bindableElement,
@@ -16,6 +21,7 @@ import {
 } from '../methods/utils.js'
 import { findPosition, pxWrap } from '../methods/findPosition.js'
 import LogStreamMenu from './LogStreamMenu.js'
+import LogStreamName from '../components/LogStreamName.js'
 
 // for augmented logs
 
@@ -45,6 +51,8 @@ export default class LogStream extends Component {
     this.menuFunctions = {
       expandStream: this.expandStream.bind(this),
       startRelink: this.startRelink.bind(this),
+      pauseStream: this.pauseStream.bind(this),
+      deleteStream: this.deleteStream.bind(this),
     }
   }
 
@@ -64,7 +72,10 @@ export default class LogStream extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return !isEqual(nextProps, this.props) || !isEqual(nextState, this.state)
+    return (
+      (!nextProps.logGroup.paused || !this.props.logGroup.paused) &&
+      (!isEqual(nextProps, this.props) || !isEqual(nextState, this.state))
+    )
   }
 
   // optimizePosition() {
@@ -171,6 +182,7 @@ export default class LogStream extends Component {
           ...logGroup,
           element: newElement,
           groupElementId: idFromString(stringifyDOMElement(newElement)),
+          bounding: boundingDefault,
           followType: newElement ? 'stick' : 'independent',
         })
         for (let log of logGroup.logs) {
@@ -181,6 +193,25 @@ export default class LogStream extends Component {
         }
       })
     }
+  }
+
+  pauseStream() {
+    const { logGroup, updateLogGroup } = this.props
+    updateLogGroup(logGroup.groupId, {
+      ...logGroup,
+      paused: !logGroup.paused,
+    })
+  }
+
+  deleteStream() {
+    const { logGroup, updateLogGroup } = this.props
+
+    logGroup.element.classList.remove('forced-outline-bound')
+
+    updateLogGroup(logGroup.groupId, {
+      ...logGroup,
+      deleted: true,
+    })
   }
 
   /* -------------------------------------------------------------------------- */
@@ -210,6 +241,9 @@ export default class LogStream extends Component {
 
   handleMouseEnter(e) {
     this.ref.current.classList.add('stream-hovered')
+    this.ref.current.classList.add('up-front')
+    if (this.ref.current.parentNode)
+      this.ref.current.parentNode.classList.add('up-front')
 
     // add outline to the target element
     if (this.props.logGroup.element)
@@ -218,6 +252,9 @@ export default class LogStream extends Component {
 
   handleMouseOut(e) {
     this.ref.current.classList.remove('stream-hovered')
+    this.ref.current.classList.remove('up-front')
+    if (this.ref.current.parentNode)
+      this.ref.current.parentNode.classList.remove('up-front')
 
     if (this.props.logGroup.element)
       this.props.logGroup.element.classList.remove('forced-outline-bound')
@@ -229,6 +266,7 @@ export default class LogStream extends Component {
     const { expand } = this.state
     const {
       logGroup: { name, logs, bounding, groupId },
+      updateLogGroup,
     } = this.props
 
     const logElements = []
@@ -252,16 +290,24 @@ export default class LogStream extends Component {
         style={{
           alignItems:
             bounding.horizontalAlign === _L ? 'flex-start' : 'flex-end',
+          transform: `translate(${bounding.left}, ${bounding.top})`,
         }}
         data-id={groupId}
         ref={this.ref}
         onMouseEnter={this.handleMouseEnter}
         onMouseLeave={this.handleMouseOut}
       >
-        {name && <p className="hyper-log-stream-name">{name}</p>}
+        <LogStreamName
+          name={name}
+          groupId={groupId}
+          logGroup={this.props.logGroup}
+          updateLogGroup={updateLogGroup}
+          streamRef={this.ref}
+        />
         <LogStreamMenu
-          functions={this.menuFunctions}
+          logGroup={this.props.logGroup}
           streamState={this.state}
+          functions={this.menuFunctions}
         />
         <div className="logs-wrapper" ref={this.logsWrapperRef}>
           {logElements}

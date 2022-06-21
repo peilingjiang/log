@@ -24,7 +24,7 @@ export default class Button extends Component {
             this.setState({
               text: e.target.value,
             })
-            e.target.log(e.target.value).name('textarea')
+            e.target.log(e.target.value)
           }}
         />
         <button
@@ -35,7 +35,10 @@ export default class Button extends Component {
                 submitButton: this.state.submitButton + 1,
               },
               () => {
-                log(this.state.submitButton).name('submit')
+                log(this.state.submitButton)
+                  .name('submit')
+                  .color('#7900ff')
+                  .options({})
               }
             )
           }}

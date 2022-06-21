@@ -7,6 +7,8 @@ import { addLog } from './methods/addLog.js'
 import { boundingDefault } from './constants.js'
 import LogStreamsHolder from './LogStreamsHolder.js'
 import { HyperLog } from './globalLogObject.js'
+import isEqual from 'react-fast-compare'
+import { copyObject } from './methods/utils.js'
 
 export default class LogHost extends Component {
   constructor(props) {
@@ -51,6 +53,10 @@ export default class LogHost extends Component {
     })
   }
 
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   return !isEqual(this.state, nextState) || !isEqual(this.props, nextProps)
+  // }
+
   defineLogs() {
     // window.log
     window.log = (...args) => {
@@ -93,15 +99,19 @@ export default class LogHost extends Component {
   }
 
   updateLog(logGroupId, logId, log) {
-    const { logGroups } = this.state
+    if (!this.state.logGroups[logGroupId]) return
 
-    const logGroup = logGroups[logGroupId]
-    if (!logGroup) return
+    this.setState(prevState => {
+      const newState = copyObject(prevState)
+      const { logGroups } = newState
 
-    logGroup.logs[logId] = log
+      for (const originalLog of logGroups[logGroupId].logs) {
+        if (originalLog.id === logId) {
+          for (const key in log) originalLog[key] = log[key]
+        }
+      }
 
-    this.setState({
-      logGroups,
+      return newState
     })
   }
 

@@ -3,11 +3,12 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 import App from './App.js'
+import PagesList from './pages/PagesList.js'
 import Button from './pages/Button.js'
-// import reportWebVitals from './reportWebVitals'
+import SmartPix from './pages/SmartPix.js'
 
 import './css/main.scss'
-import PagesList from './pages/PagesList.js'
+// import reportWebVitals from './reportWebVitals'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
@@ -26,6 +27,7 @@ root.render(
         />
         <Route path="/" element={<App />}>
           <Route path="button" element={<Button />} />
+          <Route path="px" element={<SmartPix />} />
         </Route>
       </Routes>
     </BrowserRouter>

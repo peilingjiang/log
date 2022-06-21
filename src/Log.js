@@ -52,7 +52,7 @@ export default class Log extends Component {
           }${expandedLog ? ' log-expand' : ' log-not-expand'}`}
           style={historyRenderStyle}
         >
-          <LogHeader log={log} />
+          {/* <LogHeader log={log} /> */}
           <LogBody
             log={log}
             orderReversed={orderReversed}

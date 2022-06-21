@@ -13,7 +13,6 @@
 
   overflow: hidden;
 
-  // backdrop-filter: blur(unit-rem-to-px(3rem));
   transition: all 100ms;
 
   &.log-in-history {
@@ -39,6 +38,7 @@
   overflow-wrap: break-word;
 
   background: rgba($light-grey, $opacity-default);
+  // backdrop-filter: blur(5px);
 
   // user-select: all;
   // &:focus {

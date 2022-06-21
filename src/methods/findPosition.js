@@ -169,6 +169,7 @@ export const registeredPositions = (posId, anchorBounding) => {
 }
 
 export const pxWrap = value => {
+  if (value === 0) return '0px'
   return value ? `${value}px` : ''
 }
 

@@ -13,6 +13,9 @@ export default class PagesList extends Component {
         <li>
           <Link to={'/button'}>Button and Text</Link>
         </li>
+        <li>
+          <Link to={'/px'}>Display Numbers with Units</Link>
+        </li>
       </ul>
     )
   }

@@ -22,6 +22,7 @@ $max-log-width: 12rem;
 $radius-small: 0.25rem;
 $radius-large: 0.5rem;
 
+$padding-xxs: 0.125rem;
 $padding-xs: 0.25rem;
 $padding-small: 0.5rem;
 $padding-mid: 0.9rem;
@@ -55,8 +56,20 @@ $rem-to-px: 16;
 
 /* -------------------------------------------------------------------------- */
 
+.up-front {
+  z-index: 999999999 !important;
+}
+
 .cursor-crosshair {
   cursor: crosshair !important;
+}
+
+.cursor-grab {
+  cursor: grab !important;
+}
+
+.cursor-grabbing {
+  cursor: grabbing !important;
 }
 
 .no-pointer-events {

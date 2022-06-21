@@ -19,12 +19,20 @@
   block-size: fit-content;
 
   .hyper-log-stream-name {
+    display: inline-flex;
+    align-items: center;
+    gap: $padding-xxs;
+
     color: $black;
     font-size: $font-size-small;
     margin: 0;
-    padding: $padding-xs 0 0 0;
+    padding: $padding-xs 0;
     white-space: nowrap;
     user-select: none;
+
+    svg {
+      font-size: $font-size-small;
+    }
   }
 
   .logs-wrapper {
@@ -51,7 +59,7 @@
 .stream-hovered,
 .stream-expand,
 .stream-current {
-  .hyper-log-stream-menu {
+  &:not(.in-grabbing) .hyper-log-stream-menu {
     opacity: 1 !important;
     pointer-events: initial !important;
   }
@@ -92,5 +100,9 @@
     //   height: $font-size-small;
     //   // height: auto;
     // }
+
+    svg path {
+      fill: $dark-grey;
+    }
   }
 }

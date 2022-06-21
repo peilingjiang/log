@@ -123,8 +123,9 @@ export default class LogStreamsHolder extends Component {
         }}
         data-element-id={elementId}
       >
-        {logGroups.map(logGroup => {
-          return (
+        {logGroups
+          .filter(logGroup => !logGroup.deleted)
+          .map(logGroup => (
             <LogStream
               key={logGroup.groupId}
               logGroup={logGroup}
@@ -132,8 +133,7 @@ export default class LogStreamsHolder extends Component {
               updateLog={updateLog}
               hostRef={hostRef}
             />
-          )
-        })}
+          ))}
       </div>
     )
   }

@@ -7,7 +7,7 @@ import { g } from '../global.js'
 export const getTimestamp = () => {
   return {
     now: performance.now(),
-    date: new Date(),
+    // date: new Date(),
   }
 }
 

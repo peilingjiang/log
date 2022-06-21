@@ -34,9 +34,13 @@ export const logInterface = PropTypes.exact({
   args: PropTypes.array,
   timestamp: PropTypes.exact({
     now: PropTypes.number,
-    date: PropTypes.object,
+    // ! change 3 places to re-enable this Date type
+    // date: PropTypes.object,
   }),
   stack: stackInterface,
+  ////
+  // customization
+  color: PropTypes.string,
 })
 
 // export const logGroupInterface = PropTypes.object
@@ -50,6 +54,11 @@ export const logGroupInterface = PropTypes.exact({
   groupElementId: PropTypes.string,
   bounding: boundingInterface,
   followType: PropTypes.string,
+  ////
+  paused: PropTypes.bool,
+  deleted: PropTypes.bool,
+  ////
+  // customization
 })
 
 /* -------------------------------------------------------------------------- */
@@ -66,6 +75,8 @@ export const _R = 'right'
 export const _T = 'top'
 export const _B = 'bottom'
 
+export const _DEF = 'default'
+
 /* -------------------------------------------------------------------------- */
 
 // default gap between the log and the anchor element
@@ -76,7 +87,7 @@ export const logStreamGapToAnchorPx = 10
 export const _config = Object.seal({
   logStreamHistoryRenderDepth: 3,
   logStreamHistoryRenderUnitOffsetPx: 2,
-  logStreamHistoryRenderOpacityUnitDecrease: 0.3,
+  logStreamHistoryRenderOpacityUnitDecrease: 0.25,
 })
 
 export const _rootStyles = Object.seal({

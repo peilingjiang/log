@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid'
 import { v5 as uuidv5 } from 'uuid'
-import { boundingDefault, _L, _T } from '../constants.js'
+import { boundingDefault, _DEF, _L, _T } from '../constants.js'
 
 import { g } from '../global.js'
 import {
@@ -30,7 +30,8 @@ export const newLog = (args, element, groupId, timestamp, parsedStack) => {
     {
       value: timestamp,
       assertion: assertObject,
-      shape: ['now', 'date'],
+      // shape: ['now', 'date'],
+      shape: ['now'],
     },
   ])
 
@@ -41,6 +42,9 @@ export const newLog = (args, element, groupId, timestamp, parsedStack) => {
     args: [...args],
     timestamp: timestamp,
     stack: parsedStack,
+    ////
+    // customization
+    color: _DEF,
   }
 }
 
@@ -70,13 +74,17 @@ export const addLog = (logHost, args, element = null, gotId = null) => {
         // can't find id among current groups
         if (prevIds.length === 0 || !prevIds.includes(groupId))
           newState.logGroups[groupId] = {
-            name: '',
+            name: `${parsedStack.file}:${parsedStack.line}`,
             logs: [],
             groupId: groupId,
             groupElementId: groupElementId,
             element: element,
             bounding: boundingDefault,
             followType: assertExistence(element) ? 'stick' : 'independent',
+            paused: false,
+            deleted: false,
+            ////
+            // customization
           }
 
         newState.logGroups[groupId].logs.push(
