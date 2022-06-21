@@ -2,24 +2,31 @@
 
 .hyper-log {
   position: relative;
-  // position: absolute;
 
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
 
   width: fit-content;
-  // max-width: $max-log-width;
+  min-height: min-content;
   transform-origin: top;
 
   overflow: hidden;
 
-  backdrop-filter: blur(unit-rem-to-px(3rem));
+  // backdrop-filter: blur(unit-rem-to-px(3rem));
+  transition: all 100ms;
 
   &.log-in-history {
     pointer-events: none;
   }
 
-  // &:not(:first-of-type) {}
+  &.log-current {
+    outline: $outline-dark;
+  }
+
+  &.log-expand {
+    margin-bottom: $padding-xs !important;
+  }
 }
 
 .hyper-log-body {
@@ -32,6 +39,11 @@
   overflow-wrap: break-word;
 
   background: rgba($light-grey, $opacity-default);
+
+  // user-select: all;
+  // &:focus {
+  //   animation: select 100ms step-end forwards;
+  // }
 
   .hyper-log-formatted-content,
   .hyper-log-formatted-content * {

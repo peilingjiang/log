@@ -1,0 +1,27 @@
+.forced-outline-bound {
+  outline: 5px solid rgba($element-outline-bound, $opacity-mid);
+}
+
+.forced-outline-bound-inside {
+  outline: 5px solid rgba($element-outline-bound, $opacity-mid);
+  outline-offset: -5px;
+}
+
+/* -------------------------------------------------------------------------- */
+
+.sudo-pointer-element {
+  position: absolute;
+
+  width: 10px;
+  height: 10px;
+  background: transparent;
+  z-index: 1000;
+
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.leader-line {
+  z-index: 9999;
+  // pointer-events: none;
+}

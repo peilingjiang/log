@@ -24,7 +24,7 @@ export default class Button extends Component {
             this.setState({
               text: e.target.value,
             })
-            e.target.log(e.target.value)
+            e.target.log(e.target.value).name('textarea')
           }}
         />
         <button
@@ -34,7 +34,9 @@ export default class Button extends Component {
               {
                 submitButton: this.state.submitButton + 1,
               },
-              () => e.target.log(this.state.submitButton)
+              () => {
+                log(this.state.submitButton).name('submit')
+              }
             )
           }}
         >
@@ -48,7 +50,7 @@ export default class Button extends Component {
                 text: '',
                 clearButton: this.state.clearButton + 1,
               },
-              () => e.target.log(this.state.clearButton)
+              () => e.target.log(this.state.clearButton).name('clear')
             )
           }}
         >

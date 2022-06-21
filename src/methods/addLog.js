@@ -1,5 +1,6 @@
 import { v4 as uuid } from 'uuid'
 import { v5 as uuidv5 } from 'uuid'
+import { boundingDefault, _L, _T } from '../constants.js'
 
 import { g } from '../global.js'
 import {
@@ -11,7 +12,9 @@ import {
   cloneLogGroups,
   getObjectIds,
   getTimestamp,
+  idFromString,
   parseStack,
+  stringifyDOMElement,
 } from './utils.js'
 
 export const newLog = (args, element, groupId, timestamp, parsedStack) => {
@@ -41,46 +44,50 @@ export const newLog = (args, element, groupId, timestamp, parsedStack) => {
   }
 }
 
-export const addLog = (logHost, args, element = null) => {
+export const addLog = (logHost, args, element = null, gotId = null) => {
   const timestamp = getTimestamp()
 
   // Traditional
   if (g.preserveConsole) window.console.log(...args)
 
   // HyperLog
-  parseStack(new Error(), parsedStack => {
-    const groupId = uuidv5(
-      `${parsedStack.path}:${parsedStack.line}:${parsedStack.char}`,
-      uuidv5.URL // ? any potential problems?
+  parseStack(parsedStack => {
+    const groupId = idFromString(
+      `${parsedStack.path}:${parsedStack.line}:${parsedStack.char}`
     )
+    const groupElementId = idFromString(stringifyDOMElement(element))
 
     // add log to logHost
-    logHost.setState(prevState => {
-      const newState = {
-        ...prevState,
-        logGroups: cloneLogGroups(prevState.logGroups),
-      }
-
-      const prevIds = getObjectIds(prevState.logGroups)
-
-      // can't find id among current groups
-      if (prevIds.length === 0 || !prevIds.includes(groupId))
-        newState.logGroups[groupId] = {
-          logs: [],
-          groupId: groupId,
-          element: element,
-          bounding: {
-            left: `0`,
-            top: `0`,
-          },
-          followType: assertExistence(element) ? 'stick' : 'independent',
+    logHost.setState(
+      prevState => {
+        const newState = {
+          ...prevState,
+          logGroups: cloneLogGroups(prevState.logGroups),
         }
 
-      newState.logGroups[groupId].logs.push(
-        newLog(args, element, groupId, timestamp, parsedStack)
-      )
+        const prevIds = getObjectIds(prevState.logGroups)
 
-      return newState
-    })
+        // can't find id among current groups
+        if (prevIds.length === 0 || !prevIds.includes(groupId))
+          newState.logGroups[groupId] = {
+            name: '',
+            logs: [],
+            groupId: groupId,
+            groupElementId: groupElementId,
+            element: element,
+            bounding: boundingDefault,
+            followType: assertExistence(element) ? 'stick' : 'independent',
+          }
+
+        newState.logGroups[groupId].logs.push(
+          newLog(args, element, groupId, timestamp, parsedStack)
+        )
+
+        return newState
+      },
+      () => {
+        if (gotId) gotId(groupId, groupElementId)
+      }
+    )
   })
 }

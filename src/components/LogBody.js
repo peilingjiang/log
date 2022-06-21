@@ -1,20 +1,16 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
-import {
-  logInterface,
-  _config,
-  _rootStyles,
-  _tinyColors,
-} from '../constants.js'
+import { logInterface } from '../constants.js'
 import { Formatter } from '../formatter/Main.js'
-import { tinyColorToRGBStyleString } from '../methods/utils.js'
+// import { tinyColorToRGBStyleString } from '../methods/utils.js'
 
 export default class LogBody extends Component {
   static get propTypes() {
     return {
       log: logInterface,
       orderReversed: PropTypes.number,
+      expandedLog: PropTypes.bool,
     }
   }
 
@@ -25,26 +21,17 @@ export default class LogBody extends Component {
         stack: { file, line },
       },
       orderReversed,
+      expandedLog,
     } = this.props
 
     return (
-      <div
-        className="hyper-log-body"
-        style={
-          {
-            // background: `rgba(${tinyColorToRGBStyleString(
-            //   _tinyColors.lightGrey
-            // )}, ${
-            //   _rootStyles.opacityDefault -
-            //   _config.logStreamHistoryRenderOpacityUnitDecrease * orderReversed
-            // })`,
-          }
-        }
-      >
+      <div className="hyper-log-body">
         <Formatter args={args} />
-        {/* <p className="source-location">
-          {file}:{line}
-        </p> */}
+        {expandedLog && (
+          <p className="source-location">
+            {file}:{line}
+          </p>
+        )}
       </div>
     )
   }

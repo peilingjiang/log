@@ -6,39 +6,47 @@ import {
   _R,
   _T,
 } from '../constants.js'
-import { assertExistence, getElementBounding } from './utils.js'
+import {
+  assertExistence,
+  getElementBounding,
+  keyWithSmallestValue,
+} from './utils.js'
 
-export const findPosition = (
-  anchorElement,
-  logElement,
-  logChildrenRect = null
-) => {
+export const findPosition = (anchorElement, logElement) => {
+  // TODO avoid being outside of the page view
+
   // get all rects of page elements
   const existingPageRects = []
   const existingPageElements = document.querySelectorAll(
-    'body * :not(.hyper-log-host, .hyper-log-stream *)'
+    'body * :not(.hyper-log-host, .hyper-log-streams-holder, .hyper-log-streams-holder *)'
   )
+
   for (let e of existingPageElements) {
     if (
       !e.isSameNode(anchorElement) &&
+      !anchorElement.contains(e) &&
+      !e.contains(anchorElement) &&
       (!assertExistence(e.dataset.id) || e.dataset.id !== logElement.dataset.id)
     )
       existingPageRects.push(getElementBounding(e))
   }
 
   const anchorBounding = getElementBounding(anchorElement)
-  const logBounding = assertExistence(logChildrenRect)
-    ? logChildrenRect
-    : getElementBounding(logElement)
+  const logBounding = getElementBounding(logElement)
 
   const overlapByPosId = {}
+
   for (let posId = 1; posId <= positionFindingWorstAllowed; posId++) {
-    const testPosition = registeredPositions(posId, anchorBounding, logBounding)
+    const testPosition = {
+      ...registeredPositions(posId, anchorBounding),
+      width: logBounding.width,
+      height: logBounding.height,
+    }
     const testPseudoRect = {
-      left: pxTrim(testPosition.left),
-      right: pxTrim(testPosition.right),
-      top: pxTrim(testPosition.top),
-      bottom: pxTrim(testPosition.bottom),
+      left: getTestValue('left', testPosition),
+      right: getTestValue('right', testPosition),
+      top: getTestValue('top', testPosition),
+      bottom: getTestValue('bottom', testPosition),
       width: logBounding.width,
       height: logBounding.height,
     }
@@ -55,11 +63,8 @@ export const findPosition = (
     overlapByPosId[posId] = overlapWithExistingPageElements
   }
 
-  const optimizedId = Object.keys(overlapByPosId).reduce((a, b) =>
-    overlapByPosId[a] < overlapByPosId[b] ? a : b
-  )
-
-  return registeredPositions(optimizedId, anchorBounding, logBounding)
+  const smallestKey = keyWithSmallestValue(overlapByPosId)
+  return registeredPositions(smallestKey, anchorBounding)
 }
 
 export const overlappingArea = (rect1, rect2) => {
@@ -84,57 +89,79 @@ export const isOverlapped = (rect1, rect2) => {
 const _getPos = (
   leftNum,
   topNum,
+  rightNum,
+  bottomNum,
   horizontalAlign,
-  verticalAlign,
-  width,
-  height
+  verticalAlign
 ) => {
   return {
     left: pxWrap(leftNum),
     top: pxWrap(topNum),
-    right: pxWrap(leftNum + width),
-    bottom: pxWrap(topNum + height),
+    right: pxWrap(rightNum),
+    bottom: pxWrap(bottomNum),
     horizontalAlign: horizontalAlign,
     verticalAlign: verticalAlign,
   }
 }
 
-export const registeredPositions = (posId, anchorBounding, logBounding) => {
+export const registeredPositions = (posId, anchorBounding) => {
   const { left, right, top, bottom } = anchorBounding
-  const { width, height } = logBounding
+  const { innerWidth, innerHeight } = window
+
   const gap = logStreamGapToAnchorPx
 
   switch (Number(posId)) {
     case 1:
-      return _getPos(left, bottom + gap, _L, _T, width, height)
+      return _getPos(left, bottom + gap, undefined, undefined, _L, _T)
 
     case 2:
-      return _getPos(right + gap, top, _L, _T, width, height)
+      return _getPos(right + gap, top, undefined, undefined, _L, _T)
 
     case 3:
-      return _getPos(left, top - gap - height, _L, _B, width, height)
+      return _getPos(left, undefined, undefined, innerWidth - top + gap, _L, _B)
 
     case 4:
-      return _getPos(left - gap - width, top, _R, _T, width, height)
+      return _getPos(undefined, top, innerWidth - left + gap, undefined, _R, _T)
 
     case 5:
-      return _getPos(right - width, bottom + gap, _R, _T, width, height)
+      return _getPos(
+        undefined,
+        bottom + gap,
+        innerWidth - right,
+        undefined,
+        _R,
+        _T
+      )
 
     case 6:
-      return _getPos(right + gap, bottom - height, _R, _B, width, height)
+      return _getPos(
+        right + gap,
+        undefined,
+        undefined,
+        innerHeight - bottom,
+        _R,
+        _B
+      )
 
     case 7:
       return _getPos(
-        right - width,
-        bottom - gap - height,
+        undefined,
+        undefined,
+        innerWidth - right,
+        innerHeight - top + gap,
         _R,
-        _B,
-        width,
-        height
+        _B
       )
 
     case 8:
-      return _getPos(left - gap - width, bottom - height, _R, _B, width, height)
+      return _getPos(
+        undefined,
+        undefined,
+        innerWidth - left + gap,
+        innerHeight - bottom,
+        _R,
+        _B
+      )
 
     default:
       break
@@ -142,9 +169,30 @@ export const registeredPositions = (posId, anchorBounding, logBounding) => {
 }
 
 export const pxWrap = value => {
-  return `${value}px`
+  return value ? `${value}px` : ''
 }
 
 export const pxTrim = value => {
   return Number(value.replace('px', ''))
+}
+
+export const getTestValue = (accessor, testPosition) => {
+  if (testPosition[accessor]) return pxTrim(testPosition[accessor])
+  const { innerWidth, innerHeight } = window
+  switch (accessor) {
+    case 'left':
+      return innerWidth - pxTrim(testPosition.right) - testPosition.width
+
+    case 'right':
+      return pxTrim(testPosition.left) + testPosition.width
+
+    case 'top':
+      return innerHeight - pxTrim(testPosition.bottom) - testPosition.height
+
+    case 'bottom':
+      return pxTrim(testPosition.top) + testPosition.height
+
+    default:
+      return 0
+  }
 }

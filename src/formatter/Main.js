@@ -14,15 +14,31 @@ const formatArg = arg => {
   const type = assertTypeOfArg(arg)
   switch (type) {
     case 'undefined':
-      return <span className="f-undefined">undefined</span>
+      return (
+        <span className="f-undefined" key="undefined">
+          undefined
+        </span>
+      )
     case 'null':
-      return <span className="f-undefined">null</span>
+      return (
+        <span className="f-undefined" key="undefined-null">
+          null
+        </span>
+      )
     case 'number':
-      return <span className="f-number">{arg}</span>
+      return (
+        <span className="f-number" key={`number`}>
+          {arg}
+        </span>
+      )
     case 'string':
-      return <span className="f-string">{`'${arg}'`}</span>
+      return <span className="f-string" key={`string`}>{`'${arg}'`}</span>
     default:
-      return <span>{arg}</span>
+      return (
+        <span className="f-unable-to-parse" key={`no-parse`}>
+          {arg}
+        </span>
+      )
   }
 }
 

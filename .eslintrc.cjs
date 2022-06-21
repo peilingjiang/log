@@ -21,6 +21,7 @@ module.exports = {
       'warn',
       { vars: 'all', args: 'after-used', ignoreRestSiblings: false },
     ],
+    'no-inner-declarations': 'off',
   },
   ignorePatterns: ['node_modules/', 'lib/'],
 }

@@ -19,6 +19,7 @@ export default class Log extends Component {
       groupBounding: boundingInterface,
       orderReversed: PropTypes.number,
       logsCount: PropTypes.number,
+      expandedLog: PropTypes.bool,
     }
   }
 
@@ -27,31 +28,36 @@ export default class Log extends Component {
   }
 
   render() {
-    const { log, orderReversed, logsCount } = this.props
+    const { log, orderReversed, logsCount, expandedLog } = this.props
     const orderInHistoryDisplayStack =
       Math.min(logsCount, _config.logStreamHistoryRenderDepth) -
       orderReversed -
       1
 
     const historyRenderStyle = {
-      zIndex: orderInHistoryDisplayStack,
-      opacity: `${
-        _rootStyles.opacityDefault -
-        _config.logStreamHistoryRenderOpacityUnitDecrease * orderReversed
-      }`,
-      transform: `translateY(calc(-${100 * orderInHistoryDisplayStack}% + ${
-        _config.logStreamHistoryRenderUnitOffsetPx * orderInHistoryDisplayStack
-      }px)) scale(${1 - 0.2 * orderReversed})`,
+      zIndex: 100 + orderInHistoryDisplayStack,
+      opacity: expandedLog
+        ? undefined
+        : `${
+            _rootStyles.opacityDefault -
+            _config.logStreamHistoryRenderOpacityUnitDecrease * orderReversed
+          }`,
     }
 
     return (
-      orderReversed < _config.logStreamHistoryRenderDepth && (
+      (expandedLog || orderReversed < _config.logStreamHistoryRenderDepth) && (
         <div
-          className={`hyper-log${orderReversed === 0 ? '' : ' log-in-history'}`}
+          className={`hyper-log${
+            orderReversed === 0 ? ' log-current' : ' log-in-history'
+          }${expandedLog ? ' log-expand' : ' log-not-expand'}`}
           style={historyRenderStyle}
         >
           <LogHeader log={log} />
-          <LogBody log={log} orderReversed={orderReversed} />
+          <LogBody
+            log={log}
+            orderReversed={orderReversed}
+            expandedLog={expandedLog}
+          />
         </div>
       )
     )

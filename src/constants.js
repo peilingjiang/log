@@ -30,7 +30,7 @@ export const boundingDefault = Object.seal({
 export const logInterface = PropTypes.exact({
   id: PropTypes.string,
   groupId: PropTypes.string,
-  element: PropTypes.object,
+  element: PropTypes.instanceOf(Element),
   args: PropTypes.array,
   timestamp: PropTypes.exact({
     now: PropTypes.number,
@@ -39,12 +39,15 @@ export const logInterface = PropTypes.exact({
   stack: stackInterface,
 })
 
+// export const logGroupInterface = PropTypes.object
 export const logGroupInterface = PropTypes.exact({
+  name: PropTypes.string,
   ////
   logs: PropTypes.arrayOf(logInterface),
   ////
   groupId: PropTypes.string,
-  element: PropTypes.object,
+  element: PropTypes.instanceOf(Element),
+  groupElementId: PropTypes.string,
   bounding: boundingInterface,
   followType: PropTypes.string,
 })
@@ -53,10 +56,10 @@ export const logGroupInterface = PropTypes.exact({
 
 // the meaningful line of where the log is from should not be the log wrapper interface
 // instead, we trace back to the actual caller
-export const stackActualCallerDepth = 2
+export const stackActualCallerDepth = 5
 
 // out of 8 possible positions around the anchor element, we only allow the first N best ones
-export const positionFindingWorstAllowed = 7
+export const positionFindingWorstAllowed = 5
 
 export const _L = 'left'
 export const _R = 'right'
@@ -72,12 +75,13 @@ export const logStreamGapToAnchorPx = 10
 
 export const _config = Object.seal({
   logStreamHistoryRenderDepth: 3,
-  logStreamHistoryRenderUnitOffsetPx: 4,
+  logStreamHistoryRenderUnitOffsetPx: 2,
   logStreamHistoryRenderOpacityUnitDecrease: 0.3,
 })
 
 export const _rootStyles = Object.seal({
   lightGrey: '#cfcfcf',
+  elementOutlineBound: '#ffa500',
 
   opacityDefault: 0.95,
 })

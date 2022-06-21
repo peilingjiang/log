@@ -1,5 +1,5 @@
-import { getFramesFromError, getLocationsFromFrames } from 'get-current-line'
-import { mapStackTrace } from 'sourcemapped-stacktrace'
+import StackTrace from 'stacktrace-js'
+import { v5 as uuidv5 } from 'uuid'
 
 import { stackActualCallerDepth } from '../constants.js'
 import { g } from '../global.js'
@@ -13,6 +13,33 @@ export const getTimestamp = () => {
 
 export const getObjectIds = obj => {
   return Object.keys(obj)
+}
+
+export const idFromString = str =>
+  uuidv5(
+    str,
+    uuidv5.URL // ? any potential problems?
+  )
+
+/* -------------------------------------------------------------------------- */
+// element
+
+export const bindableElement = element => {
+  return element.id && element.id !== 'root'
+}
+
+export const stringifyDOMElement = (ele, _depth = 1) => {
+  if (!ele) return ''
+  const accessors = ['tagName', 'id', 'className']
+
+  return (
+    accessors
+      .map(accessor => (ele[accessor] ? `${ele[accessor]} ` : ''))
+      .join('')
+      .slice(0, -1) +
+    ' ' +
+    (_depth > 0 && ele.parentNode ? stringifyDOMElement(ele.parentNode, 0) : '')
+  )
 }
 
 /* -------------------------------------------------------------------------- */
@@ -59,38 +86,28 @@ export const cloneLogGroups = logGroups => {
   return newLogGroups
 }
 
+export const keyWithSmallestValue = obj => {
+  const smallestValue = Math.min(...Object.keys(obj).map(key => obj[key]))
+  return Object.keys(obj).filter(key => obj[key] === smallestValue)[0]
+}
+
 /* -------------------------------------------------------------------------- */
 // parse stack
 
-export const parseStack = (error, callback) => {
-  if (g.useSourceMaps)
-    // https://github.com/novocaine/sourcemapped-stacktrace
-    mapStackTrace(error.stack, mappedStack => {
-      // TODO somehow make async
-      const actualCallerStack = mappedStack[stackActualCallerDepth]
-      // https://github.com/bevry/get-current-line/blob/ccf9e903710123b73cc117a6a9250f519e21e4bf/source/index.ts#L85
-      const result = actualCallerStack.match(
-        /\s+at\s(?:(?<method>.+?)\s\()?(?<path>.+?):(?<line>\d+):(?<char>\d+)\)?\s*$/
-      ).groups
+export const parseStack = callback => {
+  StackTrace.get({
+    offline: !g.useSourceMaps,
+  }).then(stackframes => {
+    const actualStackframe = stackframes[stackActualCallerDepth]
 
-      result.method = result.method || '<anonymous>'
-      result.file = result.path.replace(/^.*[\\/]/, '')
-      result.line = Number(result.line)
-      result.char = Number(result.char)
-
-      callback(result)
-    })
-  else {
-    const result = getLocationsFromFrames(getFramesFromError(error))[
-      stackActualCallerDepth
-    ]
-
-    result.method = result.method || '<anonymous>'
-    result.path = result.file
-    result.file = result.path.replace(/^.*[\\/]/, '')
+    const result = {}
+    result.method = actualStackframe.functionName
+    result.file = actualStackframe.fileName.replace(/^.*[\\/]/, '')
+    result.line = actualStackframe.lineNumber
+    result.char = actualStackframe.columnNumber
 
     callback(result)
-  }
+  })
 }
 
 /* -------------------------------------------------------------------------- */

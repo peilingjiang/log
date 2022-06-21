@@ -1,4 +1,96 @@
+.hyper-log-streams-holder {
+  position: fixed;
+
+  display: flex;
+  flex-direction: column;
+
+  width: min-content;
+  height: min-content;
+}
+
+/* -------------------------------------------------------------------------- */
+
 .hyper-log-stream {
-  position: absolute;
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+
   block-size: fit-content;
+
+  .hyper-log-stream-name {
+    color: $black;
+    font-size: $font-size-small;
+    margin: 0;
+    padding: $padding-xs 0 0 0;
+    white-space: nowrap;
+    user-select: none;
+  }
+
+  .logs-wrapper {
+    display: flex;
+    flex-direction: column;
+
+    margin: 0;
+    padding: 1px !important;
+
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      width: 0px;
+      background: transparent;
+    }
+  }
+
+  &.stream-expand .logs-wrapper {
+    overflow: scroll;
+    max-height: 20rem;
+    max-width: 20rem;
+  }
+}
+
+.stream-hovered,
+.stream-expand,
+.stream-current {
+  .hyper-log-stream-menu {
+    opacity: 1 !important;
+    pointer-events: initial !important;
+  }
+}
+
+.hyper-log-stream-menu {
+  position: absolute;
+
+  display: flex;
+  flex-direction: column;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity $transition-fast;
+
+  top: 0;
+  // right: calc(100% + $padding-small);
+  right: calc(100%);
+  z-index: 999;
+
+  padding: 0 $padding-small;
+  // filter: drop-shadow(0 0 3px $white);
+
+  .stream-menu-item {
+    display: inline-flex;
+    gap: $padding-small;
+    justify-content: flex-start;
+    align-items: center;
+
+    background: rgba($light-grey, $opacity-default);
+    padding: $padding-small $padding-mid;
+
+    user-select: none;
+    cursor: pointer;
+
+    img,
+    svg {
+      height: $font-size-small;
+      // height: auto;
+    }
+  }
 }

@@ -1,6 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 
+import './globalLogObject.js'
+import './objectLog.js'
 import LogHost from './LogHost.js'
 
 import './css/main.scss'
