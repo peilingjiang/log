@@ -1,0 +1,35 @@
+body {
+  overflow: hidden;
+}
+
+.playground {
+  display: flex;
+  position: relative;
+  width: 100%;
+  height: fit-content;
+
+  padding: 0;
+
+  * {
+    user-select: none;
+  }
+}
+
+.moon {
+  // position: absolute;
+  width: 100%;
+}
+
+.little-cat {
+  position: absolute;
+
+  width: 100px;
+  height: 100px;
+
+  margin: 0;
+  padding: 0;
+
+  cursor: grab;
+
+  z-index: 1;
+}

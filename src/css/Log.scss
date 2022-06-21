@@ -23,16 +23,17 @@
     outline: $outline-dark;
   }
 
-  &.log-expand {
-    margin-bottom: $padding-xs !important;
-  }
+  // &.log-expand {
+  //   margin-bottom: $padding-xs !important;
+  // }
 }
 
 .hyper-log-body {
   display: flex;
-  gap: $padding-x-large;
+  flex-direction: column;
+  gap: $padding-xs;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
 
   padding: $padding-small;
   overflow-wrap: break-word;
@@ -45,6 +46,25 @@
   //   animation: select 100ms step-end forwards;
   // }
 
+  .hyper-log-body-header {
+    display: inline-flex;
+    gap: $padding-large;
+
+    .timestamp {
+      color: $grey;
+    }
+
+    .source-location {
+      color: $dark-grey;
+    }
+
+    .timestamp,
+    .source-location {
+      font-size: $font-size-small;
+      white-space: nowrap;
+    }
+  }
+
   .hyper-log-formatted-content,
   .hyper-log-formatted-content * {
     width: max-content;
@@ -56,10 +76,27 @@
     overflow-wrap: break-word !important;
     line-height: 120%;
   }
+}
 
-  .source-location {
-    color: $dark-grey;
-    font-size: $font-size-small;
-    white-space: nowrap;
+.hyper-log-body-content {
+  display: inline-flex;
+  align-items: center;
+  flex-direction: row;
+  gap: $padding-xs;
+}
+
+/* -------------------------------------------------------------------------- */
+
+.shape-stream {
+  .hyper-shape-log {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+
+    .shape-log-note {
+      font-size: $font-size-small;
+      color: $light-grey;
+      padding: 0 $padding-xs;
+    }
   }
 }

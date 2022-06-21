@@ -1,12 +1,13 @@
 import { v4 as uuid } from 'uuid'
-import { v5 as uuidv5 } from 'uuid'
-import { boundingDefault, _DEF, _L, _T } from '../constants.js'
+
+import { boundingDefault, _config, _DEF, _H } from '../constants.js'
 
 import { g } from '../global.js'
 import {
   assertArguments,
   assertArray,
   assertExistence,
+  assertNumber,
   assertObject,
   assertString,
   cloneLogGroups,
@@ -17,7 +18,14 @@ import {
   stringifyDOMElement,
 } from './utils.js'
 
-export const newLog = (args, element, groupId, timestamp, parsedStack) => {
+export const newLog = (
+  args,
+  element,
+  groupId,
+  timestamp,
+  parsedStack,
+  requests
+) => {
   assertArguments([
     {
       value: args,
@@ -44,11 +52,15 @@ export const newLog = (args, element, groupId, timestamp, parsedStack) => {
     stack: parsedStack,
     ////
     // customization
-    color: _DEF,
+    color: requests.color || _DEF,
+    unit: requests.unit || '',
+    history: assertNumber(requests.history)
+      ? requests.history
+      : _config.logStreamHistoryRenderDepth - 1,
   }
 }
 
-export const addLog = (logHost, args, element = null, gotId = null) => {
+export const addLog = (logHost, args, element = null, requests = {}) => {
   const timestamp = getTimestamp()
 
   // Traditional
@@ -62,40 +74,73 @@ export const addLog = (logHost, args, element = null, gotId = null) => {
     const groupElementId = idFromString(stringifyDOMElement(element))
 
     // add log to logHost
-    logHost.setState(
-      prevState => {
-        const newState = {
-          ...prevState,
-          logGroups: cloneLogGroups(prevState.logGroups),
+    logHost.setState(prevState => {
+      const newState = {
+        ...prevState,
+        logGroups: cloneLogGroups(prevState.logGroups),
+      }
+
+      const prevIds = getObjectIds(prevState.logGroups)
+
+      // can't find id among current groups
+      if (prevIds.length === 0 || !prevIds.includes(groupId))
+        newState.logGroups[groupId] = {
+          name: requests.name || `${parsedStack.file}:${parsedStack.line}`,
+          ////
+          logs: [],
+          ////
+          groupId: groupId,
+          groupElementId: groupElementId,
+          element: element,
+          ////
+          format: 'shape',
+          ////
+          orientation: _H,
+          snap: false,
+          snapElement: null,
+          snapElementId: null,
+          snapAnchorSide: 'right',
+          // snapTargetSide: 'right',
+          snapAnchorPercent: 0.5,
+          ////
+          bounding: boundingDefault,
+          followType: assertExistence(element) ? 'stick' : 'independent',
+          ////
+          paused: false,
+          deleted: false,
+          ////
+          // customization
         }
 
-        const prevIds = getObjectIds(prevState.logGroups)
-
-        // can't find id among current groups
-        if (prevIds.length === 0 || !prevIds.includes(groupId))
-          newState.logGroups[groupId] = {
-            name: `${parsedStack.file}:${parsedStack.line}`,
-            logs: [],
-            groupId: groupId,
-            groupElementId: groupElementId,
-            element: element,
-            bounding: boundingDefault,
-            followType: assertExistence(element) ? 'stick' : 'independent',
-            paused: false,
-            deleted: false,
-            ////
-            // customization
-          }
-
-        newState.logGroups[groupId].logs.push(
-          newLog(args, element, groupId, timestamp, parsedStack)
+      if (requests.snap && requests.snap.snapElement) {
+        const thisGroup = newState.logGroups[groupId]
+        thisGroup.snap = true
+        thisGroup.snapElement = requests.snap.snapElement
+        thisGroup.snapAnchorSide =
+          requests.snap.snapAnchorSide || thisGroup.snapAnchorSide
+        // thisGroup.snapTargetSide =
+        //   requests.snap.snapTargetSide || thisGroup.snapTargetSide
+        thisGroup.snapAnchorPercent = assertNumber(
+          requests.snap.snapAnchorPercent
         )
-
-        return newState
-      },
-      () => {
-        if (gotId) gotId(groupId, groupElementId)
+          ? requests.snap.snapAnchorPercent
+          : thisGroup.snapAnchorPercent
       }
-    )
+
+      const aFreshNewLog = newLog(
+        args,
+        element,
+        groupId,
+        timestamp,
+        parsedStack,
+        requests
+      )
+      newState.logGroups[groupId].logs.push(aFreshNewLog)
+
+      // if (gotId && aFreshNewLog)
+      //   gotId(groupId, groupElementId, aFreshNewLog.id)
+
+      return newState
+    })
   })
 }

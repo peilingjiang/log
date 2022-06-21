@@ -1,7 +1,8 @@
 import StackTrace from 'stacktrace-js'
+import tinycolor from 'tinycolor2'
 import { v5 as uuidv5 } from 'uuid'
 
-import { stackActualCallerDepth } from '../constants.js'
+import { stackActualCallerDepth, validUnits } from '../constants.js'
 import { g } from '../global.js'
 
 export const getTimestamp = () => {
@@ -71,6 +72,17 @@ export const mergeBoundingRects = rects => {
 
 export const copyObject = obj => {
   return JSON.parse(JSON.stringify(obj))
+}
+
+export const deepCopyArrayOfLogs = arr => {
+  const newArr = []
+  for (let i = 0; i < arr.length; i++) {
+    newArr.push({
+      ...arr[i],
+    })
+  }
+
+  return newArr
 }
 
 export const cloneLogGroups = logGroups => {
@@ -165,4 +177,30 @@ export const assertTypeOfArg = arg => {
 export const tinyColorToRGBStyleString = tinyColor => {
   const { r, g, b } = tinyColor.toRgb()
   return `${r}, ${g}, ${b}`
+}
+
+export const hexAndOpacityToRGBA = (hex, opacity) => {
+  return `rgba(${tinyColorToRGBStyleString(tinycolor(hex))}, ${opacity})`
+}
+
+/* -------------------------------------------------------------------------- */
+// units
+
+export const _unitIsValid = unit => {
+  return validUnits.includes(unit)
+}
+
+export const _checkIfContainsValidUnit = arg => {
+  for (const unit of validUnits) {
+    if (arg.includes(unit) && assertNumber(arg.replace(unit, ''))) return true
+  }
+  return false
+}
+
+export const checkForUnit = log => {
+  if (log.args.length !== 1) return false
+  return (
+    (!!log.unit && _unitIsValid(log.unit) && assertNumber(log.args[0])) ||
+    (assertString(log.args[0]) && _checkIfContainsValidUnit(log.args[0]))
+  )
 }

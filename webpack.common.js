@@ -41,6 +41,10 @@ export const config = {
           },
         ],
       },
+      {
+        test: /\.(png|jpg|jpeg|gif)$/i,
+        type: 'asset/resource',
+      },
     ],
   },
   devtool: 'source-map',

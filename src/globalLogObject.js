@@ -1,39 +1,47 @@
 export class HyperLog {
   constructor(component, addLogFunction) {
     this.component = component
-    this.requests = []
+    this.requests = {}
 
-    addLogFunction(this.processRequests.bind(this))
+    addLogFunction(this.requests)
 
     return this
   }
 
-  processRequests(groupId, groupElementId) {
+  processRequests(groupId, groupElementId, thisLogId) {
     this.groupId = groupId
     this.groupElementId = groupElementId
+    this.logId = thisLogId
 
-    while (this.requests.length) {
-      const request = this.requests.shift()
-      // process this request
-      this[`_${request.type}`](...request.values)
-    }
+    // while (this.requests.length) {
+    //   const request = this.requests.shift()
+    //   // process this request
+    //   this[`_${request.type}`](...request.values)
+    // }
   }
 
   name(name = '') {
-    this.requests.push({
-      type: 'name',
-      values: [name],
-    })
-
+    this.requests.name = name
     return this
   }
 
   color(color = 'default') {
-    this.requests.push({
-      type: 'color',
-      values: [color],
-    })
+    this.requests.color = color
+    return this
+  }
 
+  unit(unit = '') {
+    this.requests.unit = unit
+    return this
+  }
+
+  history(history = 2) {
+    this.requests.history = history
+    return this
+  }
+
+  snap(options = {}) {
+    if (options.snapElement) this.requests.snap = options
     return this
   }
 
@@ -52,16 +60,14 @@ export class HyperLog {
   }
 
   _color(color = 'default') {
-    if (this.groupId) {
-      const logGroup = this.component.state.logGroups[this.groupId]
-      const logs = logGroup.logs
+    if (this.groupId && this.logId) {
+      this.component.updateLog(this.groupId, this.logId, { color })
+    }
+  }
 
-      for (const log of logs) {
-        this.component.updateLog(this.groupId, log.id, {
-          ...log,
-          color,
-        })
-      }
+  _unit(unit = '') {
+    if (this.groupId && this.logId) {
+      this.component.updateLog(this.groupId, this.logId, { unit })
     }
   }
 

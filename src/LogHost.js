@@ -1,14 +1,10 @@
 import React, { Component, createRef } from 'react'
-
-import LogStream from './organizations/LogStream.js'
-
-import { g } from './global.js'
-import { addLog } from './methods/addLog.js'
-import { boundingDefault } from './constants.js'
-import LogStreamsHolder from './LogStreamsHolder.js'
-import { HyperLog } from './globalLogObject.js'
 import isEqual from 'react-fast-compare'
-import { copyObject } from './methods/utils.js'
+
+import { addLog } from './methods/addLog.js'
+import LogStreamsHolder from './organizations/LogStreamsHolder.js'
+import { HyperLog } from './globalLogObject.js'
+import { deepCopyArrayOfLogs } from './methods/utils.js'
 
 export default class LogHost extends Component {
   constructor(props) {
@@ -60,11 +56,9 @@ export default class LogHost extends Component {
   defineLogs() {
     // window.log
     window.log = (...args) => {
-      const newHyperLog = new HyperLog(this, gotId => {
-        addLog(this, args, null, gotId)
+      return new HyperLog(this, requests => {
+        addLog(this, args, null, requests)
       })
-
-      return newHyperLog
     }
     // window.log = (...args) => {
     //   addLog(this, args, null)
@@ -77,11 +71,9 @@ export default class LogHost extends Component {
     //   addLog(logHost, args, this)
     // }
     HTMLElement.prototype.log = function (...args) {
-      const newHyperLog = new HyperLog(logHost, gotId => {
-        addLog(logHost, args, this, gotId)
+      return new HyperLog(logHost, requests => {
+        addLog(logHost, args, this, requests)
       })
-
-      return newHyperLog
     }
   }
 
@@ -91,27 +83,34 @@ export default class LogHost extends Component {
   updateLogGroup(logGroupId, logGroup) {
     const { logGroups } = this.state
 
-    logGroups[logGroupId] = logGroup
-
     this.setState({
-      logGroups,
+      logGroups: {
+        ...logGroups,
+        [logGroupId]: logGroup,
+      },
     })
   }
 
   updateLog(logGroupId, logId, log) {
     if (!this.state.logGroups[logGroupId]) return
+    console.log(log)
 
-    this.setState(prevState => {
-      const newState = copyObject(prevState)
-      const { logGroups } = newState
-
-      for (const originalLog of logGroups[logGroupId].logs) {
-        if (originalLog.id === logId) {
-          for (const key in log) originalLog[key] = log[key]
-        }
+    const prevLogs = deepCopyArrayOfLogs(this.state.logGroups[logGroupId].logs)
+    console.log(prevLogs)
+    for (const originalLog of prevLogs) {
+      if (originalLog.id === logId) {
+        for (const key in log) originalLog[key] = log[key]
       }
+    }
 
-      return newState
+    this.setState({
+      logGroups: {
+        ...this.state.logGroups,
+        [logGroupId]: {
+          ...this.state.logGroups[logGroupId],
+          logs: [...prevLogs],
+        },
+      },
     })
   }
 
@@ -125,18 +124,69 @@ export default class LogHost extends Component {
     return null
   }
 
+  _getSnapElementFromGroups(logGroups, snapElementId) {
+    for (let groupId in logGroups) {
+      const logGroup = logGroups[groupId]
+      if (logGroup.snapElementId === snapElementId) return logGroup.snapElement
+    }
+    return null
+  }
+
+  _getSnapAnchorSideFromGroups(logGroups, snapElementId) {
+    for (let groupId in logGroups) {
+      const logGroup = logGroups[groupId]
+      if (logGroup.snapElementId === snapElementId)
+        return logGroup.snapAnchorSide
+    }
+    return null
+  }
+
   renderAugmentedLogs(logGroups) {
     this.streamsHoldersRefs = []
 
+    const streamsHolders = []
+
     const streamsHoldersByElement = {}
+    const streamsHolderSnapByElement = {}
+
     for (const logGroupId in logGroups) {
       const thisGroup = logGroups[logGroupId]
-      if (!streamsHoldersByElement[thisGroup.groupElementId])
-        streamsHoldersByElement[thisGroup.groupElementId] = []
-      streamsHoldersByElement[thisGroup.groupElementId].push(thisGroup)
+
+      if (thisGroup.snap) {
+        if (!streamsHolderSnapByElement[thisGroup.snapElementId])
+          streamsHolderSnapByElement[thisGroup.snapElementId] = []
+        streamsHolderSnapByElement[thisGroup.snapElementId].push(thisGroup)
+      } else {
+        if (!streamsHoldersByElement[thisGroup.groupElementId])
+          streamsHoldersByElement[thisGroup.groupElementId] = []
+        streamsHoldersByElement[thisGroup.groupElementId].push(thisGroup)
+      }
     }
 
-    const streamsHolders = []
+    for (const snapElementId in streamsHolderSnapByElement) {
+      const newHolderRef = createRef()
+      this.streamsHoldersRefs.push(newHolderRef)
+      streamsHolders.push(
+        <LogStreamsHolder
+          key={snapElementId}
+          ref={newHolderRef}
+          element={null}
+          elementId={null}
+          logGroups={streamsHolderSnapByElement[snapElementId]}
+          updateLogGroup={this.updateLogGroup}
+          updateLog={this.updateLog}
+          hostRef={this.ref}
+          snap={true}
+          snapElement={this._getSnapElementFromGroups(logGroups, snapElementId)}
+          snapElementId={snapElementId}
+          snapAnchorSide={this._getSnapAnchorSideFromGroups(
+            logGroups,
+            snapElementId
+          )}
+        />
+      )
+    }
+
     for (let groupElementId in streamsHoldersByElement) {
       const newHolderRef = createRef()
       this.streamsHoldersRefs.push(newHolderRef)
@@ -150,6 +200,7 @@ export default class LogHost extends Component {
           updateLogGroup={this.updateLogGroup}
           updateLog={this.updateLog}
           hostRef={this.ref}
+          snap={false}
         />
       )
     }

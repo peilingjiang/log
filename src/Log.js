@@ -20,6 +20,8 @@ export default class Log extends Component {
       orderReversed: PropTypes.number,
       logsCount: PropTypes.number,
       expandedLog: PropTypes.bool,
+      snap: PropTypes.bool,
+      orientation: PropTypes.string,
     }
   }
 
@@ -28,11 +30,9 @@ export default class Log extends Component {
   }
 
   render() {
-    const { log, orderReversed, logsCount, expandedLog } = this.props
+    const { log, orderReversed, logsCount, expandedLog, snap } = this.props
     const orderInHistoryDisplayStack =
-      Math.min(logsCount, _config.logStreamHistoryRenderDepth) -
-      orderReversed -
-      1
+      Math.min(logsCount, snap ? 1 : log.history + 1) - orderReversed - 1
 
     const historyRenderStyle = {
       zIndex: 100 + orderInHistoryDisplayStack,
@@ -45,7 +45,7 @@ export default class Log extends Component {
     }
 
     return (
-      (expandedLog || orderReversed < _config.logStreamHistoryRenderDepth) && (
+      (expandedLog || orderReversed < (snap ? 1 : log.history + 1)) && (
         <div
           className={`hyper-log${
             orderReversed === 0 ? ' log-current' : ' log-in-history'

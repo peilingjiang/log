@@ -41,22 +41,38 @@ export const logInterface = PropTypes.exact({
   ////
   // customization
   color: PropTypes.string,
+  unit: PropTypes.string,
+  history: PropTypes.number,
 })
 
-// export const logGroupInterface = PropTypes.object
 export const logGroupInterface = PropTypes.exact({
   name: PropTypes.string,
   ////
-  logs: PropTypes.arrayOf(logInterface),
+  logs: PropTypes.arrayOf(logInterface).isRequired,
   ////
-  groupId: PropTypes.string,
+  groupId: PropTypes.string.isRequired,
   element: PropTypes.instanceOf(Element),
-  groupElementId: PropTypes.string,
-  bounding: boundingInterface,
-  followType: PropTypes.string,
+  groupElementId: PropTypes.string.isRequired,
   ////
-  paused: PropTypes.bool,
-  deleted: PropTypes.bool,
+  format: PropTypes.string.isRequired, // text, shape
+  ////
+  // shape format special
+  orientation: PropTypes.string.isRequired, // horizontal, vertical
+  snap: PropTypes.bool.isRequired, // snap to element or not
+  snapElement: PropTypes.oneOfType([
+    PropTypes.instanceOf(Element),
+    PropTypes.string,
+    PropTypes.number,
+  ]), // element or 'window' or null
+  snapElementId: PropTypes.string,
+  snapAnchorSide: PropTypes.string.isRequired, // 'top' 0, 'right' 1, 'bottom' 2, 'left' 3, 'center' 4
+  snapAnchorPercent: PropTypes.number.isRequired, // 0.0 to 1.0 ONLY for window
+  ////
+  bounding: boundingInterface.isRequired,
+  followType: PropTypes.string.isRequired,
+  ////
+  paused: PropTypes.bool.isRequired,
+  deleted: PropTypes.bool.isRequired,
   ////
   // customization
 })
@@ -74,8 +90,14 @@ export const _L = 'left'
 export const _R = 'right'
 export const _T = 'top'
 export const _B = 'bottom'
+export const _C = 'center'
+
+export const _H = 'horizontal'
+export const _V = 'vertical'
 
 export const _DEF = 'default'
+
+export const validUnits = ['px', '%', 'em', 'rem', 'vh', 'vw', 'vmin', 'vmax']
 
 /* -------------------------------------------------------------------------- */
 
@@ -88,9 +110,14 @@ export const _config = Object.seal({
   logStreamHistoryRenderDepth: 3,
   logStreamHistoryRenderUnitOffsetPx: 2,
   logStreamHistoryRenderOpacityUnitDecrease: 0.25,
+  ////
+  shapeRectWidth: '17px',
+  ////
+  snapThresholdPx: 15,
 })
 
 export const _rootStyles = Object.seal({
+  darkGrey: '#666',
   lightGrey: '#cfcfcf',
   elementOutlineBound: '#ffa500',
 

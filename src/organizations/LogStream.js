@@ -8,20 +8,30 @@ import Log from '../Log.js'
 import {
   boundingDefault,
   logGroupInterface,
+  _C,
+  _H,
   _L,
+  _R,
   _rootStyles,
+  _T,
 } from '../constants.js'
 import {
   assertExistence,
   bindableElement,
+  checkForUnit,
   getElementBounding,
   idFromString,
   stringifyDOMElement,
   // mergeBoundingRects,
 } from '../methods/utils.js'
-import { findPosition, pxWrap } from '../methods/findPosition.js'
+import { pxWrap } from '../methods/findPosition.js'
 import LogStreamMenu from './LogStreamMenu.js'
 import LogStreamName from '../components/LogStreamName.js'
+import ShapeLog from '../components/ShapeLog.js'
+import {
+  defaultBoundingAlignmentFromSnapSide,
+  findNearestSnapPoint,
+} from '../methods/snap.js'
 
 // for augmented logs
 
@@ -53,18 +63,15 @@ export default class LogStream extends Component {
       startRelink: this.startRelink.bind(this),
       pauseStream: this.pauseStream.bind(this),
       deleteStream: this.deleteStream.bind(this),
+      shapeIt: this.shapeIt.bind(this),
+      startSnap: this.startSnap.bind(this),
+      undoSnap: this.undoSnap.bind(this),
     }
   }
 
-  componentDidMount() {
-    // this.optimizePosition()
-  }
+  componentDidMount() {}
 
   componentDidUpdate() {
-    // this.optimizePosition()
-    // // reset height
-    // if (this.ref.current)
-    //   this.ref.current.style.height = pxWrap(this._getChildrenHeightsSum())
     // scroll to the bottom
     if (this.logsWrapperRef.current && this.state.expand)
       this.logsWrapperRef.current.scrollTop =
@@ -121,13 +128,8 @@ export default class LogStream extends Component {
       hostRef.current.appendChild(sudoPointerElement)
 
       const leaderLine = new LeaderLine(
-        // this.ref.current,
         LeaderLine.pointAnchor(e.target),
         sudoPointerElement,
-        // LeaderLine.pointAnchor(sudoPointerElement, {
-        //   x: '50%',
-        //   y: '50%',
-        // }),
         {
           path: 'straight',
           endPlug: 'arrow2',
@@ -214,6 +216,151 @@ export default class LogStream extends Component {
     })
   }
 
+  // special ones
+
+  shapeIt(newFormat) {
+    const { logGroup, updateLogGroup } = this.props
+    const newGroup = {
+      ...logGroup,
+      format: newFormat,
+    }
+    if (newFormat === 'text') newGroup.orientation = _H
+
+    updateLogGroup(logGroup.groupId, newGroup)
+  }
+
+  startSnap(e) {
+    const { logGroup, updateLogGroup, hostRef } = this.props
+    const undoSnap = this.undoSnap.bind(this)
+
+    if (hostRef.current) {
+      const streamRef = this.ref
+      // make this stream the current active stream
+      streamRef.current.classList.add('stream-current')
+      // hide hyper log elements from pointer events
+      hostRef.current.classList.add('no-pointer-events')
+
+      const sudoPointerElement = document.createElement('div')
+      sudoPointerElement.classList.add('sudo-pointer-element')
+      sudoPointerElement.id = 'sudo-pointer-element'
+      sudoPointerElement.style.top = pxWrap(e.clientY)
+      sudoPointerElement.style.left = pxWrap(e.clientX)
+
+      hostRef.current.appendChild(sudoPointerElement)
+
+      const leaderLine = new LeaderLine(
+        LeaderLine.pointAnchor(e.target),
+        sudoPointerElement,
+        {
+          path: 'straight',
+          endPlug: 'arrow2',
+        }
+      )
+      // leaderLine.size = 3
+      leaderLine.color = _rootStyles.elementOutlineBound
+
+      let snapElement, snapAnchorPoint
+
+      // ! move
+      function _mousemove(event) {
+        const nearest = findNearestSnapPoint(event.clientX, event.clientY)
+
+        // document.body.classList.remove('forced-outline-bound-inside')
+        const highlightedElements = document.querySelectorAll(
+          '.forced-outline-bound-mid'
+        )
+        for (let i = 0; i < highlightedElements.length; i++)
+          if (!event.target.isSameNode(highlightedElements[i]))
+            highlightedElements[i].classList.remove('forced-outline-bound-mid')
+
+        if (nearest) {
+          const { nearestPointElement, nearestPoint } = nearest
+          sudoPointerElement.style.top = pxWrap(nearestPoint.y)
+          sudoPointerElement.style.left = pxWrap(nearestPoint.x)
+
+          snapElement = nearestPointElement
+          snapAnchorPoint = nearestPoint
+
+          nearestPointElement.classList.add('forced-outline-bound-mid')
+          sudoPointerElement.classList.add('show-sudo-pointer')
+        } else {
+          sudoPointerElement.style.top = pxWrap(event.clientY)
+          sudoPointerElement.style.left = pxWrap(event.clientX)
+          snapElement = snapAnchorPoint = null
+          sudoPointerElement.classList.remove('show-sudo-pointer')
+        }
+
+        leaderLine.position()
+
+        // highlight the element
+        // document.body.classList.add('forced-outline-bound-inside')
+      }
+
+      document.addEventListener('mousemove', _mousemove)
+
+      // ! up
+      document.addEventListener('mouseup', function _(e) {
+        document.removeEventListener('mouseup', _)
+        document.removeEventListener('mousemove', _mousemove)
+
+        streamRef.current.classList.remove('stream-current')
+        hostRef.current.classList.remove('no-pointer-events')
+        // document.body.classList.remove('forced-outline-bound-inside')
+        ;[...document.querySelectorAll('.forced-outline-bound-mid')].forEach(
+          el => {
+            el.classList.remove('forced-outline-bound-mid')
+          }
+        )
+
+        if (sudoPointerElement) sudoPointerElement.remove()
+        leaderLine.remove()
+
+        // check if there's an element to snap to
+        if (snapElement) {
+          // update stream element to e.target
+          const snapBounding = defaultBoundingAlignmentFromSnapSide(
+            snapAnchorPoint.side
+          ) // TODO allow change
+          updateLogGroup(logGroup.groupId, {
+            ...logGroup,
+            snap: true,
+            snapElement: snapElement,
+            snapElementId: idFromString(
+              stringifyDOMElement(snapElement) + ' ' + snapAnchorPoint.side
+            ),
+            snapAnchorSide: snapAnchorPoint.side,
+            bounding: {
+              ...logGroup.bounding,
+              horizontalAlign: snapBounding.horizontalAlign,
+              verticalAlign: snapBounding.verticalAlign,
+            },
+            orientation: snapBounding.orientation,
+          })
+        } else {
+          undoSnap()
+        }
+      })
+    }
+  }
+
+  undoSnap() {
+    const { logGroup, updateLogGroup } = this.props
+    updateLogGroup(logGroup.groupId, {
+      ...logGroup,
+      snap: false,
+      snapElement: null,
+      snapAnchorSide: _R,
+      bounding: {
+        ...logGroup.bounding,
+        left: pxWrap(0),
+        top: pxWrap(0),
+        horizontalAlign: _L,
+        verticalAlign: _T,
+      },
+      orientation: _H,
+    })
+  }
+
   /* -------------------------------------------------------------------------- */
 
   _getChildRects() {
@@ -265,31 +412,83 @@ export default class LogStream extends Component {
   render() {
     const { expand } = this.state
     const {
-      logGroup: { name, logs, bounding, groupId },
+      logGroup: {
+        name,
+        logs,
+        bounding,
+        groupId,
+        format,
+        ////
+        snap,
+        // snapElement,
+        // snapAnchorSide,
+        // snapTargetSide, // ! dropped
+        // snapAnchorPercent,
+        ////
+        orientation,
+      },
       updateLogGroup,
     } = this.props
+
+    const isShape = format === 'shape'
 
     const logElements = []
     let orderReversed = logs.length
     for (let log of logs) {
       logElements.push(
-        <Log
-          key={`${log.id} ${log.timestamp.now}`}
-          log={log}
-          groupBounding={bounding}
-          orderReversed={--orderReversed}
-          logsCount={logs.length}
-          expandedLog={expand}
-        />
+        !isShape || !checkForUnit(log) ? (
+          <Log
+            key={`${log.id} ${log.timestamp.now}`}
+            log={log}
+            groupBounding={bounding}
+            orderReversed={--orderReversed}
+            logsCount={logs.length}
+            expandedLog={expand}
+            snap={snap}
+          />
+        ) : (
+          <ShapeLog
+            key={`S ${log.id} ${log.timestamp.now}`}
+            log={log}
+            groupBounding={bounding}
+            orderReversed={--orderReversed}
+            logsCount={logs.length}
+            expandedLog={expand}
+            snap={snap}
+            orientation={orientation}
+          />
+        )
       )
+    }
+
+    // prep for logWrapper styles
+    const logWrapperStyles = {}
+    if (orientation === _H) {
+      logWrapperStyles.alignItems =
+        bounding.horizontalAlign === _L ? 'flex-start' : 'flex-end'
+      logWrapperStyles.justifyContent =
+        bounding.verticalAlign === _T ? 'flex-start' : 'flex-end'
+      logWrapperStyles.flexDirection = 'column'
+    } else {
+      // vertical
+      logWrapperStyles.alignItems =
+        bounding.verticalAlign === _T ? 'flex-start' : 'flex-end'
+      logWrapperStyles.justifyContent =
+        bounding.horizontalAlign === _L ? 'flex-start' : 'flex-end'
+      logWrapperStyles.flexDirection = 'row'
     }
 
     return (
       <div
-        className={`hyper-log-stream${expand ? ' stream-expand' : ''}`}
+        className={`hyper-log-stream${expand ? ' stream-expand' : ''}${
+          isShape ? ' shape-stream' : ''
+        }${orientation === _H ? ' stream-horizontal' : 'stream-vertical'}`}
         style={{
           alignItems:
             bounding.horizontalAlign === _L ? 'flex-start' : 'flex-end',
+          // transform: snap
+          //   ? undefined
+          //   : `translate(${bounding.left}, ${bounding.top})`,
           transform: `translate(${bounding.left}, ${bounding.top})`,
         }}
         data-id={groupId}
@@ -303,13 +502,20 @@ export default class LogStream extends Component {
           logGroup={this.props.logGroup}
           updateLogGroup={updateLogGroup}
           streamRef={this.ref}
+          snap={snap}
         />
+
         <LogStreamMenu
           logGroup={this.props.logGroup}
           streamState={this.state}
           functions={this.menuFunctions}
+          snap={snap}
         />
-        <div className="logs-wrapper" ref={this.logsWrapperRef}>
+        <div
+          className="logs-wrapper"
+          ref={this.logsWrapperRef}
+          style={logWrapperStyles}
+        >
           {logElements}
         </div>
       </div>

@@ -37,7 +37,7 @@ export default class Button extends Component {
               () => {
                 log(this.state.submitButton)
                   .name('submit')
-                  .color('#7900ff')
+                  .color('#c999ff')
                   .options({})
               }
             )

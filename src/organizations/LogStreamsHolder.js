@@ -1,11 +1,12 @@
 import React, { Component, createRef } from 'react'
 import PropTypes from 'prop-types'
 
-import LogStream from './organizations/LogStream.js'
-import { assertExistence } from './methods/utils.js'
-import { findPosition, pxWrap } from './methods/findPosition.js'
-import { logStreamGapToAnchorPx, _L, _R, _T } from './constants.js'
+import LogStream from './LogStream.js'
+import { assertExistence } from '../methods/utils.js'
+import { findPosition, pxWrap } from '../methods/findPosition.js'
+import { logStreamGapToAnchorPx, _L, _R, _T } from '../constants.js'
 import isEqual from 'react-fast-compare'
+import { getSnapPosition } from '../methods/snap.js'
 
 export default class LogStreamsHolder extends Component {
   static get propTypes() {
@@ -16,6 +17,11 @@ export default class LogStreamsHolder extends Component {
       updateLogGroup: PropTypes.func,
       updateLog: PropTypes.func,
       hostRef: PropTypes.object,
+      ////
+      snap: PropTypes.bool,
+      snapElement: PropTypes.instanceOf(Element),
+      snapElementId: PropTypes.string,
+      snapAnchorSide: PropTypes.string,
     }
   }
 
@@ -37,11 +43,15 @@ export default class LogStreamsHolder extends Component {
   }
 
   componentDidMount() {
-    this.optimizePosition()
+    if (this.props.snap) {
+      this.snapToPosition()
+    } else this.optimizePosition()
   }
 
   componentDidUpdate() {
-    this.optimizePosition()
+    if (this.props.snap) this.snapToPosition()
+    else this.optimizePosition()
+
     // // reset height
     // if (this.ref.current)
     //   this.ref.current.style.height = pxWrap(this._getChildrenHeightsSum())
@@ -100,6 +110,22 @@ export default class LogStreamsHolder extends Component {
         })
       })
     }
+  }
+
+  snapToPosition() {
+    const { snapElement, snapAnchorSide } = this.props
+
+    const snapPosition = getSnapPosition(snapElement, snapAnchorSide)
+    this.setState({
+      bounding: {
+        left: snapPosition.left,
+        right: snapPosition.right,
+        top: snapPosition.top,
+        bottom: snapPosition.bottom,
+        verticalAlign: snapPosition.verticalAlign,
+        horizontalAlign: snapPosition.horizontalAlign,
+      },
+    })
   }
 
   render() {

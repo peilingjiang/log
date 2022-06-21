@@ -14,7 +14,6 @@
   position: relative;
 
   display: flex;
-  flex-direction: column;
 
   block-size: fit-content;
 
@@ -35,12 +34,14 @@
     }
   }
 
+  :not(.shape-stream) .logs-wrapper {
+    padding: 1px !important;
+  }
+
   .logs-wrapper {
     display: flex;
-    flex-direction: column;
 
     margin: 0;
-    padding: 1px !important;
 
     scrollbar-width: none;
     &::-webkit-scrollbar {
@@ -49,10 +50,25 @@
     }
   }
 
-  &.stream-expand .logs-wrapper {
+  &.stream-expand:not(.shape-stream) .logs-wrapper {
+    gap: $padding-xs;
     overflow: scroll;
     max-height: 20rem;
     max-width: 20rem;
+  }
+
+  &.stream-expand.shape-stream .logs-wrapper {
+    gap: $padding-xxs;
+    overflow: scroll;
+    max-height: 30rem;
+  }
+
+  &.stream-horizontal {
+    flex-direction: column;
+  }
+
+  &.stream-vertical {
+    flex-direction: row;
   }
 }
 
@@ -103,6 +119,10 @@
 
     svg path {
       fill: $dark-grey;
+    }
+
+    &.special-menu-item {
+      margin-top: $padding-small;
     }
   }
 }

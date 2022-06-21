@@ -18,7 +18,7 @@ export const findPosition = (anchorElement, logElement) => {
   // get all rects of page elements
   const existingPageRects = []
   const existingPageElements = document.querySelectorAll(
-    'body * :not(.hyper-log-host, .hyper-log-streams-holder, .hyper-log-streams-holder *)'
+    'body * :not(.hyper-log-host, .hyper-log-streams-holder, .hyper-log-streams-holder *, .leader-line, .leader-line *)'
   )
 
   for (let e of existingPageElements) {
@@ -86,7 +86,7 @@ export const isOverlapped = (rect1, rect2) => {
 
 /* -------------------------------------------------------------------------- */
 
-const _getPos = (
+export const _getPos = (
   leftNum,
   topNum,
   rightNum,
