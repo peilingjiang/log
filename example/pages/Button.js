@@ -8,8 +8,8 @@ export default class Button extends Component {
 
     this.state = {
       text: '',
-      submitButton: 0,
-      clearButton: 0,
+      submitClickedTimes: 0,
+      clearClickedTimes: 0,
     }
   }
 
@@ -32,13 +32,12 @@ export default class Button extends Component {
           onClick={e => {
             this.setState(
               {
-                submitButton: this.state.submitButton + 1,
+                submitClickedTimes: this.state.submitClickedTimes + 1,
               },
               () => {
-                log(this.state.submitButton)
+                log(this.state.submitClickedTimes)
                   .name('submit')
                   .color('#c999ff')
-                  .options({})
               }
             )
           }}
@@ -51,9 +50,9 @@ export default class Button extends Component {
             this.setState(
               {
                 text: '',
-                clearButton: this.state.clearButton + 1,
+                clearClickedTimes: this.state.clearClickedTimes + 1,
               },
-              () => e.target.log(this.state.clearButton).name('clear')
+              () => e.target.log(this.state.clearClickedTimes).name('clear')
             )
           }}
         >

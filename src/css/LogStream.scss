@@ -34,14 +34,15 @@
     }
   }
 
-  :not(.shape-stream) .logs-wrapper {
-    padding: 1px !important;
+  &.shape-stream .logs-wrapper {
+    padding: 0;
   }
 
   .logs-wrapper {
     display: flex;
 
     margin: 0;
+    padding: 1px;
 
     scrollbar-width: none;
     &::-webkit-scrollbar {

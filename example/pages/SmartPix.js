@@ -2,7 +2,7 @@ import React, { Component, createRef } from 'react'
 
 import '../css/pages/SmartPix.scss'
 
-import Moon from '../media/moon.jpg'
+// import Moon from '../media/moon.jpg'
 import Cat from '../media/cat.png'
 
 export default class SmartPix extends Component {
@@ -46,7 +46,7 @@ export default class SmartPix extends Component {
         () => {
           this.catRef.current
             .log(this.state.catX)
-            .name('catX')
+            .name('offsetX')
             .unit('px')
             .history(0)
         }

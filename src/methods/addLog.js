@@ -93,7 +93,7 @@ export const addLog = (logHost, args, element = null, requests = {}) => {
           groupElementId: groupElementId,
           element: element,
           ////
-          format: 'shape',
+          format: 'text',
           ////
           orientation: _H,
           snap: false,
