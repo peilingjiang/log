@@ -31,15 +31,16 @@ export const findNearestSnapPoint = (mX, mY) => {
   else return null
 }
 
-export const getSnapPosition = (anchorElement, anchorSide) => {
+export const getSnapPosition = (anchorElement, anchorSide, holderElement) => {
   const elementBounding = getElementBounding(anchorElement)
+  const holderBounding = getElementBounding(holderElement)
   const { left, right, top, bottom, width, height } = elementBounding
   const { innerWidth, innerHeight } = window
 
   switch (anchorSide) {
     case _T:
       return _getPos(
-        left + width / 2,
+        left + width / 2 - holderBounding.width / 2,
         undefined,
         undefined,
         innerHeight - top,
@@ -49,16 +50,30 @@ export const getSnapPosition = (anchorElement, anchorSide) => {
     case _L:
       return _getPos(
         undefined,
-        top + height / 2,
+        top + height / 2 - holderBounding.height / 2,
         innerWidth - left,
         undefined,
         _R,
         _T
       )
     case _B:
-      return _getPos(left + width / 2, bottom, undefined, undefined, _L, _T)
+      return _getPos(
+        left + width / 2 - holderBounding.width / 2,
+        bottom,
+        undefined,
+        undefined,
+        _L,
+        _T
+      )
     case _R:
-      return _getPos(right, top + height / 2, undefined, undefined, _L, _T)
+      return _getPos(
+        right,
+        top + height / 2 - holderBounding.height / 2,
+        undefined,
+        undefined,
+        _L,
+        _T
+      )
   }
 }
 
@@ -127,4 +142,11 @@ export const defaultBoundingAlignmentFromSnapSide = snapSide => {
         orientation: _H,
       }
   }
+}
+
+export const _getAlignment = (orientation, horizontalAlign, verticalAlign) => {
+  // Get alignItems value
+  if (orientation === _H)
+    return horizontalAlign === _L ? 'flex-start' : 'flex-end'
+  else return verticalAlign === _T ? 'flex-start' : 'flex-end'
 }

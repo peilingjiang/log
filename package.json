@@ -1,7 +1,12 @@
 {
-  "name": "log",
-  "version": "0.0.1",
-  "description": "",
+  "name": "log-here-now",
+  "version": "0.0.1-beta.0",
+  "description": "Log right here, right now.",
+  "main": "lib/log.min.js",
+  "directories": {
+    "lib": "lib",
+    "example": "example"
+  },
   "scripts": {
     "start": "webpack-dev-server --config example/webpack.config.js --env development",
     "build": "webpack --config webpack.config.js --env production",
@@ -32,7 +37,7 @@
     "lint-staged": "^13.0.2",
     "mini-css-extract-plugin": "^2.6.1",
     "prettier": "^2.7.1",
-    "sass": "^1.52.3",
+    "sass": "^1.53.0",
     "sass-loader": "^13.0.0",
     "style-loader": "^3.3.1",
     "webpack": "^5.73.0",
@@ -40,13 +45,11 @@
     "webpack-dev-server": "^4.9.2"
   },
   "dependencies": {
-    "get-current-line": "^6.6.0",
     "leader-line-new": "^1.1.9",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-fast-compare": "^3.2.0",
     "react-router-dom": "^6.3.0",
-    "sourcemapped-stacktrace": "^1.1.11",
     "stacktrace-js": "^2.0.2",
     "tinycolor2": "^1.4.2",
     "uuid": "^8.3.2"
@@ -55,5 +58,8 @@
   "lint-staged": {
     "*.js": "eslint --cache --fix",
     "*.{js,json,md,html,scss}": "prettier --write"
-  }
+  },
+  "files": [
+    "lib"
+  ]
 }

@@ -1,3 +1,5 @@
+import { _R } from './constants.js'
+
 export class HyperLog {
   constructor(component, addLogFunction) {
     this.component = component
@@ -41,7 +43,22 @@ export class HyperLog {
   }
 
   snap(options = {}) {
+    options = Object.assign(
+      {
+        snap: true,
+        snapElement: null,
+        snapAnchorSide: _R,
+        snapAnchorPercent: 0.5, // TODO
+      },
+      options
+    )
+
     if (options.snapElement) this.requests.snap = options
+    return this
+  }
+
+  shape(shape = true) {
+    this.requests.format = shape ? 'shape' : 'text'
     return this
   }
 

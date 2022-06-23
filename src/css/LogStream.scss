@@ -100,6 +100,8 @@
   padding: 0 $padding-small;
   // filter: drop-shadow(0 0 3px $white);
 
+  user-select: none;
+
   .stream-menu-item {
     display: inline-flex;
     gap: $padding-small;
@@ -117,6 +119,10 @@
     //   height: $font-size-small;
     //   // height: auto;
     // }
+
+    * {
+      user-select: none;
+    }
 
     svg path {
       fill: $dark-grey;

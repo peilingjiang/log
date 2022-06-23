@@ -1,7 +1,7 @@
 import React, { Component, createRef } from 'react'
 import PropTypes from 'prop-types'
 
-import { logGroupInterface } from '../constants.js'
+import { logGroupInterface, _V } from '../constants.js'
 import { pxTrim, pxWrap } from '../methods/findPosition.js'
 
 import Move from '../icons/move.svg'
@@ -16,6 +16,7 @@ export default class LogStreamName extends Component {
       streamRef: PropTypes.object,
       ////
       snap: PropTypes.bool,
+      orientation: PropTypes.string,
     }
   }
 
@@ -39,7 +40,7 @@ export default class LogStreamName extends Component {
   }
 
   handleDbClick(e) {
-    const { groupId, logGroup, updateLogGroup, snap } = this.props
+    const { groupId, logGroup, updateLogGroup } = this.props
 
     e.preventDefault()
     e.stopPropagation()
@@ -111,13 +112,16 @@ export default class LogStreamName extends Component {
   }
 
   render() {
-    const { name, snap } = this.props
+    const { name, snap, orientation } = this.props
     return (
       <p
         className={`hyper-log-stream-name${
           snap ? ' cursor-grab' : ' cursor-grab'
         }`}
         ref={this.ref}
+        style={{
+          writingMode: snap && orientation === _V ? 'vertical-lr' : undefined,
+        }}
       >
         {/* {!snap && <Move />} {name || 'logs'} */}
         <Move /> {name || 'logs'}

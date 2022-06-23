@@ -93,7 +93,7 @@ export const addLog = (logHost, args, element = null, requests = {}) => {
           groupElementId: groupElementId,
           element: element,
           ////
-          format: 'text',
+          format: requests.format || 'text',
           ////
           orientation: _H,
           snap: false,
@@ -104,7 +104,7 @@ export const addLog = (logHost, args, element = null, requests = {}) => {
           snapAnchorPercent: 0.5,
           ////
           bounding: boundingDefault,
-          followType: assertExistence(element) ? 'stick' : 'independent',
+          followType: assertExistence(element) ? 'stick' : 'independent', // TODO remove?
           ////
           paused: false,
           deleted: false,

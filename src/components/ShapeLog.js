@@ -41,8 +41,9 @@ export default class ShapeLog extends Log {
     const noteStyle =
       snap && !isHorizontal
         ? {
-            transform: `rotate(90deg)`,
+            // transform: `rotate(90deg)`,
             // transformOrigin: 'left bottom',
+            writingMode: 'vertical-rl',
             padding: '0.5rem 0',
           }
         : {}

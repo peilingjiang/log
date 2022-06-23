@@ -48,7 +48,8 @@ export default class SmartPix extends Component {
             .log(this.state.catX)
             .name('offsetX')
             .unit('px')
-            .history(0)
+            .history(2)
+            .shape()
         }
       )
     }

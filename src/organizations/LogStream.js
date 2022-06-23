@@ -31,6 +31,7 @@ import ShapeLog from '../components/ShapeLog.js'
 import {
   defaultBoundingAlignmentFromSnapSide,
   findNearestSnapPoint,
+  _getAlignment,
 } from '../methods/snap.js'
 
 // for augmented logs
@@ -220,11 +221,15 @@ export default class LogStream extends Component {
 
   shapeIt(newFormat) {
     const { logGroup, updateLogGroup } = this.props
+
+    const unsnapExtraState =
+      newFormat === 'text' ? this._unsnapState(logGroup) : {}
+
     const newGroup = {
       ...logGroup,
       format: newFormat,
+      ...unsnapExtraState,
     }
-    if (newFormat === 'text') newGroup.orientation = _H
 
     updateLogGroup(logGroup.groupId, newGroup)
   }
@@ -331,6 +336,8 @@ export default class LogStream extends Component {
             snapAnchorSide: snapAnchorPoint.side,
             bounding: {
               ...logGroup.bounding,
+              left: pxWrap(0),
+              top: pxWrap(0),
               horizontalAlign: snapBounding.horizontalAlign,
               verticalAlign: snapBounding.verticalAlign,
             },
@@ -347,6 +354,12 @@ export default class LogStream extends Component {
     const { logGroup, updateLogGroup } = this.props
     updateLogGroup(logGroup.groupId, {
       ...logGroup,
+      ...this._unsnapState(logGroup),
+    })
+  }
+
+  _unsnapState(logGroup) {
+    return {
       snap: false,
       snapElement: null,
       snapAnchorSide: _R,
@@ -358,7 +371,7 @@ export default class LogStream extends Component {
         verticalAlign: _T,
       },
       orientation: _H,
-    })
+    }
   }
 
   /* -------------------------------------------------------------------------- */
@@ -461,20 +474,19 @@ export default class LogStream extends Component {
       )
     }
 
+    const alignItemsValue = _getAlignment(
+      orientation,
+      bounding.horizontalAlign,
+      bounding.verticalAlign
+    )
+
     // prep for logWrapper styles
     const logWrapperStyles = {}
+    logWrapperStyles.alignItems = alignItemsValue
     if (orientation === _H) {
-      logWrapperStyles.alignItems =
-        bounding.horizontalAlign === _L ? 'flex-start' : 'flex-end'
-      logWrapperStyles.justifyContent =
-        bounding.verticalAlign === _T ? 'flex-start' : 'flex-end'
       logWrapperStyles.flexDirection = 'column'
     } else {
       // vertical
-      logWrapperStyles.alignItems =
-        bounding.verticalAlign === _T ? 'flex-start' : 'flex-end'
-      logWrapperStyles.justifyContent =
-        bounding.horizontalAlign === _L ? 'flex-start' : 'flex-end'
       logWrapperStyles.flexDirection = 'row'
     }
 
@@ -484,8 +496,7 @@ export default class LogStream extends Component {
           isShape ? ' shape-stream' : ''
         }${orientation === _H ? ' stream-horizontal' : 'stream-vertical'}`}
         style={{
-          alignItems:
-            bounding.horizontalAlign === _L ? 'flex-start' : 'flex-end',
+          alignItems: alignItemsValue,
           // transform: snap
           //   ? undefined
           //   : `translate(${bounding.left}, ${bounding.top})`,
@@ -503,6 +514,7 @@ export default class LogStream extends Component {
           updateLogGroup={updateLogGroup}
           streamRef={this.ref}
           snap={snap}
+          orientation={orientation}
         />
 
         <LogStreamMenu

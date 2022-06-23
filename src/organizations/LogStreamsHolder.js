@@ -115,7 +115,11 @@ export default class LogStreamsHolder extends Component {
   snapToPosition() {
     const { snapElement, snapAnchorSide } = this.props
 
-    const snapPosition = getSnapPosition(snapElement, snapAnchorSide)
+    const snapPosition = getSnapPosition(
+      snapElement,
+      snapAnchorSide,
+      this.ref.current
+    )
     this.setState({
       bounding: {
         left: snapPosition.left,
