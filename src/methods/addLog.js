@@ -111,6 +111,9 @@ export const addLog = (logHost, args, element = null, requests = {}) => {
           ////
           // customization
         }
+      else if (prevIds.includes(groupId)) {
+        if (prevState.logGroups[groupId].paused) return prevState
+      }
 
       if (requests.snap && requests.snap.snapElement) {
         const thisGroup = newState.logGroups[groupId]
@@ -135,6 +138,7 @@ export const addLog = (logHost, args, element = null, requests = {}) => {
         parsedStack,
         requests
       )
+
       newState.logGroups[groupId].logs.push(aFreshNewLog)
 
       // if (gotId && aFreshNewLog)

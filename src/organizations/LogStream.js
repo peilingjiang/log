@@ -81,8 +81,8 @@ export default class LogStream extends Component {
 
   shouldComponentUpdate(nextProps, nextState) {
     return (
-      (!nextProps.logGroup.paused || !this.props.logGroup.paused) &&
-      (!isEqual(nextProps, this.props) || !isEqual(nextState, this.state))
+      // (!nextProps.logGroup.paused || !this.props.logGroup.paused) &&
+      !isEqual(nextProps, this.props) || !isEqual(nextState, this.state)
     )
   }
 
@@ -513,8 +513,6 @@ export default class LogStream extends Component {
           logGroup={this.props.logGroup}
           updateLogGroup={updateLogGroup}
           streamRef={this.ref}
-          snap={snap}
-          orientation={orientation}
         />
 
         <LogStreamMenu

@@ -14,9 +14,6 @@ export default class LogStreamName extends Component {
       logGroup: logGroupInterface,
       updateLogGroup: PropTypes.func,
       streamRef: PropTypes.object,
-      ////
-      snap: PropTypes.bool,
-      orientation: PropTypes.string,
     }
   }
 
@@ -58,7 +55,7 @@ export default class LogStreamName extends Component {
   }
 
   handleMouseDown(e) {
-    const { groupId, logGroup, updateLogGroup, streamRef, snap } = this.props
+    const { groupId, logGroup, updateLogGroup, streamRef } = this.props
 
     e.preventDefault()
     e.stopPropagation()
@@ -112,7 +109,10 @@ export default class LogStreamName extends Component {
   }
 
   render() {
-    const { name, snap, orientation } = this.props
+    const {
+      name,
+      logGroup: { snap, orientation, paused },
+    } = this.props
     return (
       <p
         className={`hyper-log-stream-name${
@@ -124,7 +124,14 @@ export default class LogStreamName extends Component {
         }}
       >
         {/* {!snap && <Move />} {name || 'logs'} */}
-        <Move /> {name || 'logs'}
+        <Move />{' '}
+        <span
+          style={{
+            textDecoration: paused ? 'line-through' : undefined,
+          }}
+        >
+          {name || 'logs'}
+        </span>
       </p>
     )
   }

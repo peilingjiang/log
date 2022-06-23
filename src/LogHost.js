@@ -54,6 +54,8 @@ export default class LogHost extends Component {
   // }
 
   defineLogs() {
+    const logHost = this
+
     // window.log
     window.log = (...args) => {
       return new HyperLog(this, requests => {
@@ -66,7 +68,6 @@ export default class LogHost extends Component {
     // }
 
     // element.log
-    const logHost = this
     // HTMLElement.prototype.log = function (...args) {
     //   addLog(logHost, args, this)
     // }
@@ -74,6 +75,10 @@ export default class LogHost extends Component {
       return new HyperLog(logHost, requests => {
         addLog(logHost, args, this, requests)
       })
+    }
+
+    Number.prototype.log = function (...args) {
+      console.log(arguments.callee)
     }
   }
 
