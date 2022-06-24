@@ -64,7 +64,7 @@ export default class LogStreamMenu extends Component {
           className="stream-menu-item cursor-crosshair"
           onMouseDown={startRelink}
         >
-          <Relink /> relink
+          <Relink /> attach
         </p>
 
         <p className="stream-menu-item" onMouseDown={pauseStream}>

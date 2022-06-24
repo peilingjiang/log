@@ -16,12 +16,14 @@ export default class LogHost extends Component {
     }
 
     this.ref = createRef()
-    this.streamsHoldersRefs = []
+    this.streamsHoldersRefs = {}
 
     this.windowResizeTimer = null
 
     this.updateLogGroup = this.updateLogGroup.bind(this)
     this.updateLog = this.updateLog.bind(this)
+
+    this._resizeHandler = this._resizeHandler.bind(this)
   }
 
   componentDidMount() {
@@ -31,22 +33,31 @@ export default class LogHost extends Component {
     this.defineLogs()
 
     // add event listeners
-    window.addEventListener('resize', () => {
-      clearTimeout(this.windowResizeTimer)
-      this.windowResizeTimer = setTimeout(() => {
-        // window resized
-        // for (let groupId in this.state.logGroups) {
-        //   const logGroup = this.state.logGroups[groupId]
-        //   this.updateLogGroup(groupId, {
-        //     ...logGroup,
-        //     bounding: boundingDefault,
-        //   })
-        // }
-        this.streamsHoldersRefs.forEach(ref => {
-          ref.current.optimizePosition()
-        })
-      }, 50)
-    })
+    window.addEventListener('resize', this._resizeHandler)
+  }
+
+  // componentDidUpdate() {}
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this._resizeHandler)
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return !isEqual(nextProps, this.props) || !isEqual(nextState, this.state)
+  }
+
+  _resizeHandler() {
+    clearTimeout(this.windowResizeTimer)
+    this.windowResizeTimer = setTimeout(() => {
+      // window resized
+      for (let refId in this.streamsHoldersRefs) {
+        const ref = this.streamsHoldersRefs[refId]
+        if (ref.current) {
+          if (ref.current.props.snap) ref.current.snapToPosition()
+          else ref.current.optimizePosition()
+        }
+      }
+    }, 50)
   }
 
   // shouldComponentUpdate(nextProps, nextState) {
@@ -77,9 +88,7 @@ export default class LogHost extends Component {
       })
     }
 
-    Number.prototype.log = function (...args) {
-      console.log(arguments.callee)
-    }
+    // Number.prototype.log = function (...args) {}
   }
 
   /* -------------------------------------------------------------------------- */
@@ -88,20 +97,28 @@ export default class LogHost extends Component {
   updateLogGroup(logGroupId, logGroup) {
     const { logGroups } = this.state
 
-    this.setState({
-      logGroups: {
-        ...logGroups,
-        [logGroupId]: logGroup,
-      },
-    })
+    // 1
+    if (!isEqual(logGroup, logGroups[logGroupId]))
+      this.setState({
+        logGroups: {
+          ...logGroups,
+          [logGroupId]: logGroup,
+        },
+      })
+
+    // 2
+
+    // logGroups[logGroupId] = logGroup
+    // this.setState({
+    //   logGroups,
+    // })
   }
 
   updateLog(logGroupId, logId, log) {
     if (!this.state.logGroups[logGroupId]) return
-    console.log(log)
 
     const prevLogs = deepCopyArrayOfLogs(this.state.logGroups[logGroupId].logs)
-    console.log(prevLogs)
+
     for (const originalLog of prevLogs) {
       if (originalLog.id === logId) {
         for (const key in log) originalLog[key] = log[key]
@@ -147,8 +164,8 @@ export default class LogHost extends Component {
   }
 
   renderAugmentedLogs(logGroups) {
-    this.streamsHoldersRefs = []
-
+    // we remove old streamsHoldersRefs if corresponding holder has gone
+    const currentlyExistingLogGroupHolderIds = []
     const streamsHolders = []
 
     const streamsHoldersByElement = {}
@@ -169,18 +186,22 @@ export default class LogHost extends Component {
     }
 
     for (const snapElementId in streamsHolderSnapByElement) {
-      const newHolderRef = createRef()
-      this.streamsHoldersRefs.push(newHolderRef)
+      if (!this.streamsHoldersRefs[snapElementId])
+        this.streamsHoldersRefs[snapElementId] = createRef()
+      currentlyExistingLogGroupHolderIds.push(snapElementId)
+
       streamsHolders.push(
         <LogStreamsHolder
           key={snapElementId}
-          ref={newHolderRef}
+          ref={this.streamsHoldersRefs[snapElementId]}
           element={null}
           elementId={null}
           logGroups={streamsHolderSnapByElement[snapElementId]}
           updateLogGroup={this.updateLogGroup}
           updateLog={this.updateLog}
           hostRef={this.ref}
+          // there might be multiple snapped streams with same snap settings,
+          // that's why we construct a holder for them
           snap={true}
           snapElement={this._getSnapElementFromGroups(logGroups, snapElementId)}
           snapElementId={snapElementId}
@@ -193,12 +214,14 @@ export default class LogHost extends Component {
     }
 
     for (let groupElementId in streamsHoldersByElement) {
-      const newHolderRef = createRef()
-      this.streamsHoldersRefs.push(newHolderRef)
+      if (!this.streamsHoldersRefs[groupElementId])
+        this.streamsHoldersRefs[groupElementId] = createRef()
+      currentlyExistingLogGroupHolderIds.push(groupElementId)
+
       streamsHolders.push(
         <LogStreamsHolder
           key={groupElementId}
-          ref={newHolderRef}
+          ref={this.streamsHoldersRefs[groupElementId]}
           element={this._getElementFromLogGroups(logGroups, groupElementId)}
           elementId={groupElementId}
           logGroups={streamsHoldersByElement[groupElementId]}
@@ -209,6 +232,13 @@ export default class LogHost extends Component {
         />
       )
     }
+
+    // remove old streamsHoldersRefs if corresponding holder has gone
+    for (let groupElementId in this.streamsHoldersRefs)
+      if (!currentlyExistingLogGroupHolderIds.includes(groupElementId)) {
+        this.streamsHoldersRefs[groupElementId] = undefined
+        delete this.streamsHoldersRefs[groupElementId]
+      }
 
     return streamsHolders
   }

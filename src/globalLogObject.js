@@ -5,21 +5,21 @@ export class HyperLog {
     this.component = component
     this.requests = {}
 
+    // call addLog
     addLogFunction(this.requests)
 
     return this
   }
 
-  processRequests(groupId, groupElementId, thisLogId) {
-    this.groupId = groupId
-    this.groupElementId = groupElementId
-    this.logId = thisLogId
-
-    // while (this.requests.length) {
-    //   const request = this.requests.shift()
-    //   // process this request
-    //   this[`_${request.type}`](...request.values)
-    // }
+  el(element = null) {
+    this.requests.element = element
+    return this
+  }
+  ele(e = null) {
+    return this.el(e)
+  }
+  element(e = null) {
+    return this.el(e)
   }
 
   name(name = '') {
@@ -45,6 +45,7 @@ export class HyperLog {
   snap(options = {}) {
     options = Object.assign(
       {
+        // snap feature defaults
         snap: true,
         snapElement: null,
         snapAnchorSide: _R,
@@ -61,32 +62,4 @@ export class HyperLog {
     this.requests.format = shape ? 'shape' : 'text'
     return this
   }
-
-  options(options = {}) {
-    return this
-  }
-
-  /* -------------------------------------------------------------------------- */
-
-  _name(name = '') {
-    if (this.groupId)
-      this.component.updateLogGroup(this.groupId, {
-        ...this.component.state.logGroups[this.groupId],
-        name,
-      })
-  }
-
-  _color(color = 'default') {
-    if (this.groupId && this.logId) {
-      this.component.updateLog(this.groupId, this.logId, { color })
-    }
-  }
-
-  _unit(unit = '') {
-    if (this.groupId && this.logId) {
-      this.component.updateLog(this.groupId, this.logId, { unit })
-    }
-  }
-
-  _options(options = {}) {}
 }

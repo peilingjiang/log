@@ -12,4 +12,8 @@ logHostElement.id = 'log-root'
 document.body.appendChild(logHostElement)
 
 const root = ReactDOM.createRoot(document.getElementById('log-root'))
-root.render(<LogHost />)
+root.render(
+  <React.StrictMode>
+    <LogHost />
+  </React.StrictMode>
+)
