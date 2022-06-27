@@ -2,9 +2,10 @@
 
 @import 'root.scss';
 
-@import 'Log.scss';
-@import 'LogStream.scss';
 @import 'LogHost.scss';
+@import 'LogStream.scss';
+@import 'LogStreamComponents.scss';
+@import 'Log.scss';
 
 @import 'Formatter.scss';
 

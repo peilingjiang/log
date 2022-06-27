@@ -1,9 +1,14 @@
 $black: #333;
 $dark-grey: #666;
+$dark-mid-grey: #777;
 $grey: #999;
 $light-grey: #cfcfcf;
-
+$light: #efefef;
 $white: #fff;
+
+$elegant-red: #e23e57;
+$elegant-yellow: #f07b3f;
+$elegant-green: #00b8a9;
 
 $undefined: #ff06b7;
 $number: #008eec;
@@ -34,6 +39,7 @@ $font-size-small: 0.675rem;
 $font-size-default: 0.75rem;
 
 $transition-fast: 100ms;
+$transition-normal: 300ms;
 
 $outline-light: 1px solid $light-grey;
 $outline-dark: 1px solid $black;
@@ -78,4 +84,10 @@ $rem-to-px: 16;
   * {
     pointer-events: none !important;
   }
+}
+
+/* -------------------------------------------------------------------------- */
+
+@mixin font-fixed {
+  font-family: 'Inconsolata', 'Courier New', Courier, monospace;
 }

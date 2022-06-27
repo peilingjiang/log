@@ -112,7 +112,11 @@ export const addLog = (logHost, args, element = null, requests = {}) => {
           // customization
         }
       else if (prevIds.includes(groupId)) {
-        if (prevState.logGroups[groupId].paused) return prevState
+        if (
+          prevState.logGroups[groupId].paused ||
+          prevState.logGroups[groupId].deleted
+        )
+          return prevState
       }
 
       if (requests.snap && requests.snap.snapElement) {

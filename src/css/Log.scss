@@ -13,8 +13,6 @@
 
   overflow: hidden;
 
-  transition: all 100ms;
-
   &.log-in-history {
     pointer-events: none;
   }
@@ -60,6 +58,7 @@
 
     .timestamp,
     .source-location {
+      @include font-fixed;
       font-size: $font-size-small;
       white-space: nowrap;
     }
@@ -67,8 +66,8 @@
 
   .hyper-log-formatted-content,
   .hyper-log-formatted-content * {
+    @include font-fixed;
     width: max-content;
-    font-family: 'Inconsolata', 'Courier New', Courier, monospace;
     font-weight: 500;
     word-wrap: break-word;
     white-space: pre-line;

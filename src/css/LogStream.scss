@@ -11,49 +11,62 @@
 /* -------------------------------------------------------------------------- */
 
 .hyper-log-stream {
-  position: relative;
-
   display: flex;
-
+  position: relative;
   block-size: fit-content;
-
-  .hyper-log-stream-name {
-    display: inline-flex;
-    align-items: center;
-    gap: $padding-xxs;
-
-    color: $black;
-    font-size: $font-size-small;
-    margin: 0;
-    padding: $padding-xs 0;
-    white-space: nowrap;
-    user-select: none;
-
-    svg {
-      font-size: $font-size-small;
-    }
-  }
 
   &.shape-stream .logs-wrapper {
     padding: 0;
   }
 
   .logs-wrapper {
+    position: relative;
     display: flex;
 
     margin: 0;
-    padding: 1px;
+    padding: 1px; // !important
+    // transition: width $transition-normal, height $transition-normal;
 
     scrollbar-width: none;
     &::-webkit-scrollbar {
-      width: 0px;
+      width: 0;
+      height: 0;
       background: transparent;
+    }
+  }
+
+  &.stream-expand .logs-wrapper {
+    padding: $padding-xs;
+    z-index: -1;
+
+    border-top: 1px solid $dark-grey;
+    border-bottom: 1px solid $dark-grey;
+    background: $light;
+
+    /* width */
+    &::-webkit-scrollbar {
+      width: $padding-xs;
+    }
+
+    /* Track */
+    &::-webkit-scrollbar-track {
+      background: $light;
+    }
+
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+      background: $grey;
+    }
+
+    /* Handle on hover */
+    &::-webkit-scrollbar-thumb:hover {
+      background: $dark-grey;
     }
   }
 
   &.stream-expand:not(.shape-stream) .logs-wrapper {
     gap: $padding-xs;
-    overflow: scroll;
+    overflow-y: scroll;
     max-height: 20rem;
     max-width: 20rem;
   }
@@ -70,66 +83,5 @@
 
   &.stream-vertical {
     flex-direction: row;
-  }
-}
-
-.stream-hovered,
-.stream-expand,
-.stream-current {
-  &:not(.in-grabbing) .hyper-log-stream-menu {
-    opacity: 1 !important;
-    pointer-events: initial !important;
-  }
-}
-
-.hyper-log-stream-menu {
-  position: absolute;
-
-  display: flex;
-  flex-direction: column;
-
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity $transition-fast;
-
-  top: 0;
-  // right: calc(100% + $padding-small);
-  right: calc(100%);
-  z-index: 999;
-
-  padding: 0 $padding-small;
-  // filter: drop-shadow(0 0 3px $white);
-
-  user-select: none;
-
-  .stream-menu-item {
-    display: inline-flex;
-    gap: $padding-small;
-    justify-content: flex-start;
-    align-items: center;
-
-    background: rgba($light-grey, $opacity-default);
-    padding: $padding-small $padding-mid;
-
-    user-select: none;
-    cursor: pointer;
-
-    // img,
-    // svg {
-    //   height: $font-size-small;
-    //   // height: auto;
-    // }
-
-    * {
-      user-select: none;
-    }
-
-    svg path {
-      fill: $dark-grey;
-    }
-
-    &.special-menu-item {
-      margin-top: $padding-small;
-    }
   }
 }

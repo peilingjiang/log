@@ -18,7 +18,7 @@ export const findPosition = (anchorElement, logElement) => {
   // get all rects of page elements
   const existingPageRects = []
   const existingPageElements = document.querySelectorAll(
-    'body * :not(.hyper-log-host, .hyper-log-streams-holder, .hyper-log-streams-holder *, .leader-line, .leader-line *)'
+    'body * :not(.hyper-log-host, .hyper-log-streams-holder, .hyper-log-streams-holder *, #sudo-pointer-element, .leader-line, .leader-line *)'
   )
 
   for (let e of existingPageElements) {

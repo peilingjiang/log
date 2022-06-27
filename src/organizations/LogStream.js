@@ -3,12 +3,11 @@ import PropTypes from 'prop-types'
 import isEqual from 'react-fast-compare'
 import LeaderLine from 'leader-line-new'
 
-import Log from '../Log.js'
+import Log from '../components/Log.js'
 
 import {
   boundingDefault,
   logGroupInterface,
-  _C,
   _H,
   _L,
   _R,
@@ -16,7 +15,6 @@ import {
   _T,
 } from '../constants.js'
 import {
-  assertExistence,
   bindableElement,
   checkForUnit,
   getElementBounding,
@@ -24,7 +22,7 @@ import {
   stringifyDOMElement,
   // mergeBoundingRects,
 } from '../methods/utils.js'
-import { pxWrap } from '../methods/findPosition.js'
+import { pxTrim, pxWrap } from '../methods/findPosition.js'
 import LogStreamMenu from './LogStreamMenu.js'
 import LogStreamName from '../components/LogStreamName.js'
 import ShapeLog from '../components/ShapeLog.js'
@@ -43,6 +41,9 @@ export default class LogStream extends Component {
       updateLogGroup: PropTypes.func,
       updateLog: PropTypes.func,
       hostRef: PropTypes.object,
+      ////
+      handleStreamHover: PropTypes.func,
+      handleStreamDragAround: PropTypes.func,
     }
   }
 
@@ -51,13 +52,19 @@ export default class LogStream extends Component {
 
     this.state = {
       expand: false,
+      hovered: false,
+      grabbing: false,
+      current: false,
     }
+    this.inExternalOperation = false
 
     this.ref = createRef()
     this.logsWrapperRef = createRef()
 
     this.handleMouseEnter = this.handleMouseEnter.bind(this)
     this.handleMouseOut = this.handleMouseOut.bind(this)
+    this.handleDragAround = this.handleDragAround.bind(this)
+    this.handlePositionReset = this.handlePositionReset.bind(this)
 
     this.menuFunctions = {
       expandStream: this.expandStream.bind(this),
@@ -114,9 +121,9 @@ export default class LogStream extends Component {
   startRelink(e) {
     const { logGroup, updateLogGroup, updateLog, hostRef } = this.props
     if (hostRef.current) {
-      const streamRef = this.ref
       // make this stream the current active stream
-      streamRef.current.classList.add('stream-current')
+      this.setState({ current: true })
+      const streamSetState = this.setState.bind(this)
       // hide hyper log elements from pointer events
       hostRef.current.classList.add('no-pointer-events')
 
@@ -167,7 +174,7 @@ export default class LogStream extends Component {
         document.removeEventListener('mouseup', _)
         document.removeEventListener('mousemove', _mousemove)
 
-        streamRef.current.classList.remove('stream-current')
+        streamSetState({ current: false })
         hostRef.current.classList.remove('no-pointer-events')
         document.body.classList.remove('forced-outline-bound-inside')
         ;[...document.querySelectorAll('.forced-outline-bound')].forEach(el => {
@@ -209,7 +216,8 @@ export default class LogStream extends Component {
   deleteStream() {
     const { logGroup, updateLogGroup } = this.props
 
-    logGroup.element.classList.remove('forced-outline-bound')
+    if (logGroup.element)
+      logGroup.element.classList.remove('forced-outline-bound')
 
     updateLogGroup(logGroup.groupId, {
       ...logGroup,
@@ -239,9 +247,9 @@ export default class LogStream extends Component {
     const undoSnap = this.undoSnap.bind(this)
 
     if (hostRef.current) {
-      const streamRef = this.ref
       // make this stream the current active stream
-      streamRef.current.classList.add('stream-current')
+      this.setState({ current: true })
+      const streamSetState = this.setState.bind(this)
       // hide hyper log elements from pointer events
       hostRef.current.classList.add('no-pointer-events')
 
@@ -308,7 +316,7 @@ export default class LogStream extends Component {
         document.removeEventListener('mouseup', _)
         document.removeEventListener('mousemove', _mousemove)
 
-        streamRef.current.classList.remove('stream-current')
+        streamSetState({ current: false })
         hostRef.current.classList.remove('no-pointer-events')
         // document.body.classList.remove('forced-outline-bound-inside')
         ;[...document.querySelectorAll('.forced-outline-bound-mid')].forEach(
@@ -399,31 +407,99 @@ export default class LogStream extends Component {
 
   /* -------------------------------------------------------------------------- */
 
-  handleMouseEnter(e) {
-    this.ref.current.classList.add('stream-hovered')
-    this.ref.current.classList.add('up-front')
-    if (this.ref.current.parentNode)
-      this.ref.current.parentNode.classList.add('up-front')
+  handleMouseEnter() {
+    // this.ref.current.classList.add('stream-hovered')
+    // this.ref.current.classList.add('up-front')
+    // if (this.ref.current.parentNode)
+    //   this.ref.current.parentNode.classList.add('up-front')
 
     // add outline to the target element
     if (this.props.logGroup.element)
       this.props.logGroup.element.classList.add('forced-outline-bound')
+    this.setState({ hovered: true })
+    this.props.handleStreamHover(true)
   }
 
-  handleMouseOut(e) {
-    this.ref.current.classList.remove('stream-hovered')
-    this.ref.current.classList.remove('up-front')
-    if (this.ref.current.parentNode)
-      this.ref.current.parentNode.classList.remove('up-front')
+  handleMouseOut() {
+    // this.ref.current.classList.remove('stream-hovered')
+    // this.ref.current.classList.remove('up-front')
+    // if (this.ref.current.parentNode)
+    //   this.ref.current.parentNode.classList.remove('up-front')
+    if (!this.state.grabbing) {
+      if (this.props.logGroup.element)
+        this.props.logGroup.element.classList.remove('forced-outline-bound')
+      this.setState({ hovered: false })
+      this.props.handleStreamHover(false)
+    }
+  }
 
-    if (this.props.logGroup.element)
-      this.props.logGroup.element.classList.remove('forced-outline-bound')
+  handleDragAround(e) {
+    const { logGroup, updateLogGroup, handleStreamDragAround } = this.props
+    const streamSetState = this.setState.bind(this)
+
+    e.preventDefault()
+    e.stopPropagation()
+
+    // if (snap) return
+
+    this.setState({ grabbing: true })
+    handleStreamDragAround(true)
+
+    const startPos = {
+      x: e.clientX,
+      y: e.clientY,
+      left: pxTrim(logGroup.bounding.left),
+      top: pxTrim(logGroup.bounding.top),
+    }
+
+    const handleMouseMove = e => {
+      e.preventDefault()
+      e.stopPropagation()
+
+      const { clientX, clientY } = e
+
+      updateLogGroup(logGroup.groupId, {
+        ...logGroup,
+        bounding: {
+          ...logGroup.bounding,
+          left: pxWrap(startPos.left + clientX - startPos.x),
+          top: pxWrap(startPos.top + clientY - startPos.y),
+        },
+      })
+    }
+
+    document.addEventListener('mousemove', handleMouseMove)
+    document.addEventListener('mouseup', function _() {
+      document.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseup', _)
+
+      streamSetState({ grabbing: false })
+      handleStreamDragAround(false)
+    })
+  }
+
+  handlePositionReset(e) {
+    const { logGroup, updateLogGroup } = this.props
+
+    e.preventDefault()
+    e.stopPropagation()
+
+    // if (snap) return
+
+    updateLogGroup(logGroup.groupId, {
+      ...logGroup,
+      bounding: {
+        ...logGroup.bounding,
+        left: pxWrap(0),
+        top: pxWrap(0),
+      },
+    })
   }
 
   /* -------------------------------------------------------------------------- */
 
   render() {
-    const { expand } = this.state
+    const { expand, hovered, grabbing, current } = this.state
     const {
       logGroup: {
         name,
@@ -431,6 +507,7 @@ export default class LogStream extends Component {
         bounding,
         groupId,
         format,
+        paused,
         ////
         snap,
         // snapElement,
@@ -440,33 +517,36 @@ export default class LogStream extends Component {
         ////
         orientation,
       },
-      updateLogGroup,
     } = this.props
 
+    // the format definition of the thread
     const isShape = format === 'shape'
 
     const logElements = []
+
     let orderReversed = logs.length
     for (let log of logs) {
       logElements.push(
+        // to add a valid shape log, the stream must be a shape (format)
+        // and this log must have a valid unit
         !isShape || !checkForUnit(log) ? (
           <Log
             key={`${log.id} ${log.timestamp.now}`}
             log={log}
-            groupBounding={bounding}
             orderReversed={--orderReversed}
-            logsCount={logs.length}
             expandedLog={expand}
-            snap={snap}
+            // groupBounding={bounding}
+            // logsCount={logs.length}
+            // snap={snap}
           />
         ) : (
           <ShapeLog
             key={`S ${log.id} ${log.timestamp.now}`}
             log={log}
-            groupBounding={bounding}
             orderReversed={--orderReversed}
-            logsCount={logs.length}
             expandedLog={expand}
+            // groupBounding={bounding}
+            // logsCount={logs.length}
             snap={snap}
             orientation={orientation}
           />
@@ -494,7 +574,9 @@ export default class LogStream extends Component {
       <div
         className={`hyper-log-stream${expand ? ' stream-expand' : ''}${
           isShape ? ' shape-stream' : ''
-        }${orientation === _H ? ' stream-horizontal' : 'stream-vertical'}`}
+        }${orientation === _H ? ' stream-horizontal' : 'stream-vertical'}${
+          hovered ? ' stream-hovered up-front' : ''
+        }${current ? ' stream-current' : ''}`}
         style={{
           alignItems: alignItemsValue,
           // transform: snap
@@ -509,18 +591,24 @@ export default class LogStream extends Component {
       >
         <LogStreamName
           name={name}
-          groupId={groupId}
-          logGroup={this.props.logGroup}
-          updateLogGroup={updateLogGroup}
-          streamRef={this.ref}
+          paused={paused}
+          orientation={orientation}
+          snap={snap}
+          streamGrabbing={grabbing}
+          handleDragAround={this.handleDragAround}
+          handlePositionReset={this.handlePositionReset}
         />
 
         <LogStreamMenu
-          logGroup={this.props.logGroup}
+          paused={paused}
+          format={format}
+          orientation={orientation}
           streamState={this.state}
           functions={this.menuFunctions}
           snap={snap}
+          useShape={checkForUnit(logs[logs.length - 1])}
         />
+
         <div
           className="logs-wrapper"
           ref={this.logsWrapperRef}

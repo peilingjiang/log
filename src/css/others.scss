@@ -22,7 +22,7 @@
   background: transparent;
   border-radius: 50%;
 
-  z-index: 1000;
+  z-index: 9999;
   transform: translate(-50%, -50%);
   pointer-events: none;
 
@@ -32,6 +32,6 @@
 }
 
 .leader-line {
-  z-index: 9999;
+  z-index: 9998;
   // pointer-events: none;
 }

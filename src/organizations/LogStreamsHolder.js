@@ -29,6 +29,8 @@ export default class LogStreamsHolder extends Component {
     super(props)
 
     this.state = {
+      hovered: false,
+      grabbing: false,
       bounding: {
         left: '0px',
         right: '0px',
@@ -40,6 +42,9 @@ export default class LogStreamsHolder extends Component {
     }
 
     this.ref = createRef()
+
+    this.handleStreamHover = this.handleStreamHover.bind(this)
+    this.handleStreamDragAround = this.handleStreamDragAround.bind(this)
   }
 
   componentDidMount() {
@@ -132,14 +137,28 @@ export default class LogStreamsHolder extends Component {
     })
   }
 
+  /* -------------------------------------------------------------------------- */
+
+  handleStreamHover(newState = true) {
+    this.setState({ hovered: newState })
+  }
+
+  handleStreamDragAround(newState = true) {
+    this.setState({ grabbing: newState })
+  }
+
+  /* -------------------------------------------------------------------------- */
+
   render() {
     const { elementId, logGroups, updateLogGroup, updateLog, hostRef } =
       this.props
-    const { bounding } = this.state
+    const { hovered, grabbing, bounding } = this.state
 
     return (
       <div
-        className="hyper-log-streams-holder"
+        className={`hyper-log-streams-holder${
+          hovered || grabbing ? ' up-front' : ''
+        }`}
         ref={this.ref}
         style={{
           left: bounding.left,
@@ -162,6 +181,8 @@ export default class LogStreamsHolder extends Component {
               updateLogGroup={updateLogGroup}
               updateLog={updateLog}
               hostRef={hostRef}
+              handleStreamHover={this.handleStreamHover}
+              handleStreamDragAround={this.handleStreamDragAround}
             />
           ))}
       </div>

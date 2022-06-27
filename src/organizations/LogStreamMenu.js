@@ -1,14 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-
-import { logGroupInterface } from '../constants.js'
-import {
-  assertNumber,
-  assertString,
-  checkForUnit,
-  _checkIfContainsValidUnit,
-  _unitIsValid,
-} from '../methods/utils.js'
+import isEqual from 'react-fast-compare'
 
 import Expand from '../icons/expand.svg'
 import Fold from '../icons/fold.svg'
@@ -24,18 +16,29 @@ import Unsnap from '../icons/unsnap.svg'
 
 export default class LogStreamMenu extends Component {
   static propTypes = {
-    logGroup: logGroupInterface,
+    paused: PropTypes.bool,
+    format: PropTypes.string,
+    orientation: PropTypes.string,
     streamState: PropTypes.object,
     functions: PropTypes.object,
     ////
     snap: PropTypes.bool,
+    ////
+    useShape: PropTypes.bool,
   }
 
   componentDidMount() {}
 
+  shouldComponentUpdate(nextProps) {
+    return !isEqual(nextProps, this.props)
+  }
+
   render() {
     const {
-      logGroup,
+      paused,
+      format,
+      orientation,
+      useShape,
       streamState: { expand },
       functions: {
         expandStream,
@@ -46,66 +49,104 @@ export default class LogStreamMenu extends Component {
         startSnap,
         undoSnap,
       },
-    } = this.props
-    const {
-      logGroup: { logs, format },
       snap,
     } = this.props
 
     const isShape = format === 'shape'
 
+    const specialItems = []
+
+    if (useShape) {
+      specialItems.push(
+        <p
+          key={'shape'}
+          className="stream-menu-item special-menu-item"
+          onClick={() => {
+            shapeIt(!isShape ? 'shape' : 'text')
+          }}
+          title={isShape ? 'show as text' : 'show as shape'}
+        >
+          {!isShape ? <Shape /> : <Text />}
+          <span>{!isShape ? 'shape' : 'text'}</span>
+        </p>
+      )
+    }
+
+    if (isShape) {
+      specialItems.push(
+        !snap ? (
+          <p
+            key={'menu-snap'}
+            className={`stream-menu-item special-menu-item cursor-crosshair`}
+            onMouseDown={startSnap}
+            title="snap to element point"
+          >
+            <Snap />
+            <span>snap</span>
+          </p>
+        ) : (
+          <p
+            key={'menu-snap'}
+            className="stream-menu-item special-menu-item"
+            onMouseDown={undoSnap}
+            title="unsnap"
+          >
+            <Unsnap />
+            <span>unsnap</span>
+          </p>
+        )
+      )
+    }
+
     return (
-      <div className="hyper-log-stream-menu">
-        <p className="stream-menu-item" onClick={expandStream}>
-          {expand ? <Fold /> : <Expand />} {expand ? 'fold' : 'expand'}
+      <div className={`hyper-log-stream-menu stream-menu-${orientation}`}>
+        <p
+          className="stream-menu-item menu-expand-item"
+          onClick={expandStream}
+          title="expand"
+        >
+          {/* {expand ? <Fold /> : <Expand />} {expand ? 'fold' : 'expand'} */}
+          {expand ? <Fold /> : <Expand />}
+          <span>{expand ? 'fold' : 'expand'}</span>
         </p>
 
         <p
           className="stream-menu-item cursor-crosshair"
           onMouseDown={startRelink}
+          title="attach to element"
         >
-          <Relink /> attach
+          {/* <Relink /> attach */}
+          <Relink />
+          <span>attach</span>
         </p>
 
-        <p className="stream-menu-item" onMouseDown={pauseStream}>
-          {logGroup.paused ? <Restart /> : <Pause />}{' '}
-          {logGroup.paused ? 'resume' : 'pause'}
-        </p>
-
-        <p className="stream-menu-item" onMouseDown={deleteStream}>
-          <Delete /> delete
-        </p>
-
+        {/* -------------------------------------------------------------------------- */}
         {/* special items */}
-        {isShape && (
-          <p
-            key={'menu-snap'}
-            className="stream-menu-item special-menu-item cursor-crosshair"
-            onMouseDown={startSnap}
-          >
-            <Snap /> snap
-          </p>
-        )}
-        {isShape && snap && (
-          <p
-            key={'menu-unsnap'}
-            className="stream-menu-item"
-            onMouseDown={undoSnap}
-          >
-            <Unsnap /> unsnap
-          </p>
-        )}
+        {specialItems.length ? specialItems : null}
+        {/* -------------------------------------------------------------------------- */}
 
-        {checkForUnit(logs[logs.length - 1]) && (
-          <p
-            className="stream-menu-item special-menu-item"
-            onClick={() => {
-              shapeIt(!isShape ? 'shape' : 'text')
-            }}
-          >
-            {!isShape ? <Shape /> : <Text />} {!isShape ? 'shape' : 'text'}
-          </p>
-        )}
+        <p
+          key={'menu-pause'}
+          className={`stream-menu-item menu-${
+            paused ? 'resume' : 'pause'
+          }-item`}
+          onMouseDown={pauseStream}
+          title={paused ? 'resume' : 'pause'}
+        >
+          {paused ? <Restart /> : <Pause />}
+          <span>{paused ? 'resume' : 'pause'}</span>
+        </p>
+
+        <p
+          key={'menu-delete'}
+          className="stream-menu-item menu-delete-item"
+          onMouseDown={deleteStream}
+          title="delete"
+        >
+          <Delete />
+          <span>delete</span>
+          {/* <Delete /> */}
+        </p>
       </div>
     )
   }

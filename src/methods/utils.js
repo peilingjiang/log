@@ -22,6 +22,10 @@ export const idFromString = str =>
     uuidv5.URL // ? any potential problems?
   )
 
+export const arrayLast = (arr, n = 1) => {
+  return n >= arr.length ? arr : arr.slice(arr.length - n)
+}
+
 /* -------------------------------------------------------------------------- */
 // element
 

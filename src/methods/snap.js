@@ -1,5 +1,5 @@
 import { _B, _C, _config, _H, _L, _R, _T, _V } from '../constants.js'
-import { pxWrap, _getPos } from './findPosition.js'
+import { _getPos } from './findPosition.js'
 import { bindableElement, getElementBounding } from './utils.js'
 
 export const findNearestSnapPoint = (mX, mY) => {

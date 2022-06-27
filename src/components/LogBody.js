@@ -1,29 +1,38 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
-import { logInterface, _DEF, _rootStyles } from '../constants.js'
+import { _DEF, _rootStyles } from '../constants.js'
 import { Formatter } from '../formatter/Main.js'
 import { hexAndOpacityToRGBA } from '../methods/utils.js'
+import isEqual from 'react-fast-compare'
 // import { tinyColorToRGBStyleString } from '../methods/utils.js'
 
 export default class LogBody extends Component {
   static get propTypes() {
     return {
-      log: logInterface,
+      // log: logInterface,
+      args: PropTypes.array,
+      timestamp: PropTypes.object,
+      stack: PropTypes.object,
+      color: PropTypes.string,
+      unit: PropTypes.string,
+      ////
       orderReversed: PropTypes.number,
       expandedLog: PropTypes.bool,
     }
   }
 
+  shouldComponentUpdate(nextProps) {
+    return !isEqual(this.props, nextProps)
+  }
+
   render() {
     const {
-      log: {
-        args,
-        timestamp: { now },
-        stack: { file, line },
-        color,
-        unit,
-      },
+      args,
+      timestamp: { now },
+      stack: { file, line },
+      color,
+      unit,
       // orderReversed,
       expandedLog,
     } = this.props
