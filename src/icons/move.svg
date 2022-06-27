@@ -1,12 +1,12 @@
 <svg width="70" height="70" viewBox="0 0 70 70" fill="none"
   xmlns="http://www.w3.org/2000/svg">
-  <rect x="10" y="10" width="12" height="12" rx="6" fill="#666666"/>
-  <rect x="10" y="29" width="12" height="12" rx="6" fill="#666666"/>
-  <rect x="10" y="48" width="12" height="12" rx="6" fill="#666666"/>
-  <rect x="29" y="10" width="12" height="12" rx="6" fill="#666666"/>
-  <rect x="29" y="29" width="12" height="12" rx="6" fill="#666666"/>
-  <rect x="29" y="48" width="12" height="12" rx="6" fill="#666666"/>
-  <rect x="48" y="10" width="12" height="12" rx="6" fill="#666666"/>
-  <rect x="48" y="29" width="12" height="12" rx="6" fill="#666666"/>
-  <rect x="48" y="48" width="12" height="12" rx="6" fill="#666666"/>
+  <circle cx="8" cy="8" r="8" fill="#666666"/>
+  <circle cx="8" cy="35" r="8" fill="#666666"/>
+  <circle cx="8" cy="62" r="8" fill="#666666"/>
+  <circle cx="35" cy="8" r="8" fill="#666666"/>
+  <circle cx="35" cy="35" r="8" fill="#666666"/>
+  <circle cx="35" cy="62" r="8" fill="#666666"/>
+  <circle cx="62" cy="8" r="8" fill="#666666"/>
+  <circle cx="62" cy="35" r="8" fill="#666666"/>
+  <circle cx="62" cy="62" r="8" fill="#666666"/>
 </svg>

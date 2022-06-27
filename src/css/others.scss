@@ -1,14 +1,14 @@
 .forced-outline-bound {
-  outline: 5px solid rgba($element-outline-bound, $opacity-mid);
+  outline: 5px solid rgba($element-outline-bound, $opacity-high);
 }
 
 .forced-outline-bound-mid {
-  outline: 5px solid rgba($element-outline-bound, $opacity-mid);
+  outline: 5px solid rgba($element-outline-bound, $opacity-high);
   outline-offset: -2.5px;
 }
 
 .forced-outline-bound-inside {
-  outline: 5px solid rgba($element-outline-bound, $opacity-mid);
+  outline: 5px solid rgba($element-outline-bound, $opacity-high);
   outline-offset: -5px;
 }
 
@@ -27,7 +27,7 @@
   pointer-events: none;
 
   &.show-sudo-pointer {
-    background: $string !important;
+    background: $elegant-red !important;
   }
 }
 

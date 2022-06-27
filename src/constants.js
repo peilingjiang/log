@@ -119,7 +119,10 @@ export const _config = Object.seal({
 export const _rootStyles = Object.seal({
   darkGrey: '#666',
   lightGrey: '#cfcfcf',
-  elementOutlineBound: '#ffa500',
+
+  elegantRed: '#e23e57',
+
+  elementOutlineBound: '#fba300',
 
   opacityDefault: 0.95,
 })

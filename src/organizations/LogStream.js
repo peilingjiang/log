@@ -270,7 +270,7 @@ export default class LogStream extends Component {
         }
       )
       // leaderLine.size = 3
-      leaderLine.color = _rootStyles.elementOutlineBound
+      leaderLine.color = _rootStyles.elegantRed
 
       let snapElement, snapAnchorPoint
 
