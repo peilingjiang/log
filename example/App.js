@@ -9,10 +9,11 @@ export default class App extends Component {
   render() {
     return (
       <>
-        <header>
+        <header id="examples-header">
           HyperLog Examples{' '}
           <Link
             to={'/'}
+            id="home-link"
             style={{
               marginLeft: '1rem',
               fontSize: '0.875rem',

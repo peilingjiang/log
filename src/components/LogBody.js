@@ -1,19 +1,21 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import isEqual from 'react-fast-compare'
 
 import { _DEF, _rootStyles } from '../constants.js'
-import { Formatter } from '../formatter/Main.js'
+import { Formatter } from '../formatter/Formatter.js'
 import { hexAndOpacityToRGBA } from '../methods/utils.js'
-import isEqual from 'react-fast-compare'
 // import { tinyColorToRGBStyleString } from '../methods/utils.js'
 
 export default class LogBody extends Component {
   static get propTypes() {
     return {
       // log: logInterface,
-      args: PropTypes.array,
-      timestamp: PropTypes.object,
-      stack: PropTypes.object,
+      args: PropTypes.array.isRequired,
+      id: PropTypes.string.isRequired,
+      count: PropTypes.number.isRequired,
+      timestamp: PropTypes.number.isRequired,
+      stack: PropTypes.object.isRequired,
       color: PropTypes.string,
       unit: PropTypes.string,
       ////
@@ -29,7 +31,9 @@ export default class LogBody extends Component {
   render() {
     const {
       args,
-      timestamp: { now },
+      id,
+      count,
+      timestamp,
       stack: { file, line },
       color,
       unit,
@@ -49,14 +53,15 @@ export default class LogBody extends Component {
       >
         {expandedLog && (
           <div className="hyper-log-body-header">
-            <p className="timestamp">{Math.round(now)}</p>
+            <p className="timestamp">{Math.round(timestamp)}</p>
             <p className="source-location">
               {file}:{line}
             </p>
           </div>
         )}
         <div className="hyper-log-body-content">
-          <Formatter args={args} />
+          {count > 1 && <span className="hyper-log-count">{count}</span>}
+          <Formatter args={args} logId={id} />
           {unit ? `${unit}` : ''}
         </div>
       </div>

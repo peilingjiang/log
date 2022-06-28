@@ -47,6 +47,10 @@
   .hyper-log-body-header {
     display: inline-flex;
     gap: $padding-large;
+    justify-content: space-between;
+    align-items: center;
+
+    width: 100%;
 
     .timestamp {
       color: $grey;
@@ -63,25 +67,28 @@
       white-space: nowrap;
     }
   }
-
-  .hyper-log-formatted-content,
-  .hyper-log-formatted-content * {
-    @include font-fixed;
-    width: max-content;
-    font-weight: 500;
-    word-wrap: break-word;
-    white-space: pre-line;
-    max-width: $max-log-width;
-    overflow-wrap: break-word !important;
-    line-height: 120%;
-  }
 }
 
 .hyper-log-body-content {
   display: inline-flex;
   align-items: center;
   flex-direction: row;
-  gap: $padding-xs;
+  gap: $padding-small;
+
+  .hyper-log-count {
+    @include font-fixed;
+    color: $white;
+    background: $grey;
+    font-size: $font-size-small;
+    line-height: 100%;
+    white-space: nowrap;
+    // width: calc($font-size-small + $padding-xxs * 2);
+    padding: $padding-xxs $padding-xs;
+    // border-radius: 50%;
+
+    display: flex;
+    justify-content: center;
+  }
 }
 
 /* -------------------------------------------------------------------------- */

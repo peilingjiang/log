@@ -5,7 +5,7 @@
 
   color: $black;
   font-size: $font-size-small;
-  margin: $padding-xs 0 0 0;
+  margin: $padding-xs 0;
   white-space: nowrap;
   user-select: none;
 
@@ -48,6 +48,7 @@ $menu-height-text: calc(
     margin $transition-fast;
 
   // z-index: 9990;
+  // margin: 0;
   padding: 0;
   border-radius: calc($radius-small + $padding-xxs);
   background: rgba($light-grey, $opacity-high);
@@ -55,12 +56,12 @@ $menu-height-text: calc(
   user-select: none;
 
   &.stream-menu-horizontal {
-    margin: 0 0 $padding-xs 0;
+    margin: $padding-xs 0;
     flex-direction: row;
   }
 
   &.stream-menu-vertical {
-    margin: 0 $padding-xs 0 0;
+    margin: 0 $padding-xs;
     flex-direction: column;
   }
 
@@ -151,13 +152,13 @@ $menu-height-text: calc(
     &.stream-menu-horizontal {
       height: $menu-height !important;
       width: fit-content !important;
-      margin: $padding-xs 0;
+      margin: $padding-xs 0 0 0;
     }
 
     &.stream-menu-vertical {
       width: $menu-height !important;
       height: fit-content !important;
-      margin: 0 $padding-xs;
+      margin: 0 0 0 $padding-xs;
     }
   }
 }

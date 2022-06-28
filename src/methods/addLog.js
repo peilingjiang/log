@@ -1,3 +1,4 @@
+import isEqual from 'react-fast-compare'
 import { v4 as uuid } from 'uuid'
 
 import { boundingDefault, _config, _DEF, _H } from '../constants.js'
@@ -48,8 +49,9 @@ export const newLog = (
     groupId: groupId,
     element: element,
     args: [...args],
-    timestamp: timestamp,
+    timestamps: [timestamp],
     stack: parsedStack,
+    count: 1,
     ////
     // customization
     color: requests.color || _DEF,
@@ -134,6 +136,32 @@ export const addLog = (logHost, args, element = null, requests = {}) => {
           : thisGroup.snapAnchorPercent
       }
 
+      // check if got exactly the same as the last log
+      // if so, just increment count
+      const logs = newState.logGroups[groupId].logs
+      if (logs.length) {
+        const lastLog = logs[logs.length - 1]
+        if (isEqual(lastLog.args, args)) {
+          return {
+            ...newState,
+            logGroups: {
+              ...newState.logGroups,
+              [groupId]: {
+                ...newState.logGroups[groupId],
+                logs: [
+                  ...logs.slice(0, logs.length - 2),
+                  {
+                    ...lastLog,
+                    timestamps: [...lastLog.timestamps, timestamp],
+                    count: lastLog.count + 1,
+                  },
+                ],
+              },
+            },
+          }
+        }
+      }
+
       const aFreshNewLog = newLog(
         args,
         element,
@@ -142,12 +170,7 @@ export const addLog = (logHost, args, element = null, requests = {}) => {
         parsedStack,
         requests
       )
-
       newState.logGroups[groupId].logs.push(aFreshNewLog)
-
-      // if (gotId && aFreshNewLog)
-      //   gotId(groupId, groupElementId, aFreshNewLog.id)
-
       return newState
     })
   })

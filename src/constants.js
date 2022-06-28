@@ -32,12 +32,15 @@ export const logInterface = PropTypes.exact({
   groupId: PropTypes.string,
   element: PropTypes.instanceOf(Element),
   args: PropTypes.array,
-  timestamp: PropTypes.exact({
-    now: PropTypes.number,
-    // ! change 3 places to re-enable this Date type
-    // date: PropTypes.object,
-  }),
+  timestamps: PropTypes.arrayOf(
+    PropTypes.exact({
+      now: PropTypes.number,
+      // ! change 3 places to re-enable this Date type
+      // date: PropTypes.object,
+    })
+  ),
   stack: stackInterface,
+  count: PropTypes.number,
   ////
   // customization
   color: PropTypes.string,
@@ -85,6 +88,9 @@ export const stackActualCallerDepth = 5
 
 // out of 8 possible positions around the anchor element, we only allow the first N best ones
 export const positionFindingWorstAllowed = 5
+
+export const minimalStringShowLength = 7
+export const foldedArrayShowItemCount = 2
 
 export const _L = 'left'
 export const _R = 'right'

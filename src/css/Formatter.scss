@@ -1,13 +1,119 @@
 @import 'root.scss';
 
-.f-undefined {
-  color: $undefined;
+.hyper-log-body {
+  .hyper-log-formatted-content,
+  .hyper-log-formatted-content * {
+    @include font-fixed;
+    // width: max-content;
+    display: flex;
+    flex-direction: column;
+    gap: $padding-xxs;
+
+    font-weight: 500;
+    word-wrap: break-word;
+    white-space: pre-line;
+    max-width: $max-log-width;
+    overflow-wrap: break-word !important;
+    line-height: 120%;
+  }
 }
 
-.f-number {
-  color: $number;
-}
+.hyper-log-formatted-content {
+  .f-undefined {
+    color: $undefined;
+  }
 
-.f-string {
-  color: $string;
+  .f-number {
+    color: $number;
+  }
+
+  .f-string {
+    color: $string;
+
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: flex-start;
+
+    &.f-string-minimal {
+      * {
+        white-space: nowrap;
+      }
+    }
+  }
+
+  .f-boolean {
+    color: $boolean;
+  }
+
+  /* -------------------------------------------------------------------------- */
+
+  .f-folded-display {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+      Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue',
+      sans-serif !important;
+    font-size: $font-size-xs;
+  }
+
+  .f-array,
+  .f-object {
+    // fold/unfold icon
+    svg {
+      font-size: $font-size-xs;
+      flex-shrink: 0;
+
+      path {
+        fill: $purple;
+      }
+    }
+  }
+
+  .simple-inline-element {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: $padding-xxs;
+  }
+
+  .unfolded-inner {
+    display: flex;
+    flex-direction: column;
+    gap: $padding-xs;
+
+    margin: 0 0 0 $padding-xs;
+    padding: 0 $padding-xs 0 $padding-mid;
+    border-left: 1px solid $dark-mid-grey;
+
+    background: rgba($grey, $opacity-xh);
+  }
+
+  .dimmed-info {
+    color: $dark-mid-grey;
+  }
+
+  .bold-info {
+    font-weight: 700;
+  }
+
+  /* -------------------------------------------------------------------------- */
+
+  .f-array {
+    display: flex;
+    align-items: center;
+    gap: $padding-xxs;
+    flex-direction: row;
+
+    // &.f-array-folded {
+    // }
+
+    &.f-array-unfolded {
+      flex-direction: column;
+      align-items: flex-start;
+
+      // !
+      .inner-item {
+        flex-direction: row;
+        gap: $padding-mid;
+      }
+    }
+  }
 }

@@ -1,7 +1,6 @@
 import React, { Component, createRef } from 'react'
 import PropTypes from 'prop-types'
 import isEqual from 'react-fast-compare'
-import LeaderLine from 'leader-line-new'
 
 import Log from '../components/Log.js'
 
@@ -31,6 +30,7 @@ import {
   findNearestSnapPoint,
   _getAlignment,
 } from '../methods/snap.js'
+import { setupLeaderLine } from '../other/leaderLine.js'
 
 // for augmented logs
 
@@ -127,24 +127,14 @@ export default class LogStream extends Component {
       // hide hyper log elements from pointer events
       hostRef.current.classList.add('no-pointer-events')
 
-      const sudoPointerElement = document.createElement('div')
-      sudoPointerElement.classList.add('sudo-pointer-element')
-      sudoPointerElement.id = 'sudo-pointer-element'
-      sudoPointerElement.style.top = pxWrap(e.clientY)
-      sudoPointerElement.style.left = pxWrap(e.clientX)
-
-      hostRef.current.appendChild(sudoPointerElement)
-
-      const leaderLine = new LeaderLine(
-        LeaderLine.pointAnchor(e.target),
-        sudoPointerElement,
-        {
-          path: 'straight',
-          endPlug: 'arrow2',
-        }
+      // leaderLine
+      const { sudoPointerElement, leaderLine } = setupLeaderLine(
+        e,
+        sudoPointerElement => {
+          hostRef.current.appendChild(sudoPointerElement)
+        },
+        _rootStyles.elementOutlineBound
       )
-      // leaderLine.size = 3
-      leaderLine.color = _rootStyles.elementOutlineBound
 
       // ! move
       function _mousemove(event) {
@@ -253,24 +243,14 @@ export default class LogStream extends Component {
       // hide hyper log elements from pointer events
       hostRef.current.classList.add('no-pointer-events')
 
-      const sudoPointerElement = document.createElement('div')
-      sudoPointerElement.classList.add('sudo-pointer-element')
-      sudoPointerElement.id = 'sudo-pointer-element'
-      sudoPointerElement.style.top = pxWrap(e.clientY)
-      sudoPointerElement.style.left = pxWrap(e.clientX)
-
-      hostRef.current.appendChild(sudoPointerElement)
-
-      const leaderLine = new LeaderLine(
-        LeaderLine.pointAnchor(e.target),
-        sudoPointerElement,
-        {
-          path: 'straight',
-          endPlug: 'arrow2',
-        }
+      // leaderLine
+      const { sudoPointerElement, leaderLine } = setupLeaderLine(
+        e,
+        sudoPointerElement => {
+          hostRef.current.appendChild(sudoPointerElement)
+        },
+        _rootStyles.elegantRed
       )
-      // leaderLine.size = 3
-      leaderLine.color = _rootStyles.elegantRed
 
       let snapElement, snapAnchorPoint
 
@@ -498,6 +478,13 @@ export default class LogStream extends Component {
 
   /* -------------------------------------------------------------------------- */
 
+  _offsetFromAutoAttach() {
+    const {
+      logGroup: { bounding },
+    } = this.props
+    return pxTrim(bounding.left) || pxTrim(bounding.top)
+  }
+
   render() {
     const { expand, hovered, grabbing, current } = this.state
     const {
@@ -531,7 +518,7 @@ export default class LogStream extends Component {
         // and this log must have a valid unit
         !isShape || !checkForUnit(log) ? (
           <Log
-            key={`${log.id} ${log.timestamp.now}`}
+            key={`${log.id} ${log.timestamps.at(-1).now}`}
             log={log}
             orderReversed={--orderReversed}
             expandedLog={expand}
@@ -541,7 +528,7 @@ export default class LogStream extends Component {
           />
         ) : (
           <ShapeLog
-            key={`S ${log.id} ${log.timestamp.now}`}
+            key={`S ${log.id} ${log.timestamps.at(-1).now}`}
             log={log}
             orderReversed={--orderReversed}
             expandedLog={expand}
@@ -583,6 +570,7 @@ export default class LogStream extends Component {
           //   ? undefined
           //   : `translate(${bounding.left}, ${bounding.top})`,
           transform: `translate(${bounding.left}, ${bounding.top})`,
+          position: this._offsetFromAutoAttach() ? 'absolute' : 'relative',
         }}
         data-id={groupId}
         ref={this.ref}
@@ -599,6 +587,14 @@ export default class LogStream extends Component {
           handlePositionReset={this.handlePositionReset}
         />
 
+        <div
+          className="logs-wrapper"
+          ref={this.logsWrapperRef}
+          style={logWrapperStyles}
+        >
+          {logElements}
+        </div>
+
         <LogStreamMenu
           paused={paused}
           format={format}
@@ -608,14 +604,6 @@ export default class LogStream extends Component {
           snap={snap}
           useShape={checkForUnit(logs[logs.length - 1])}
         />
-
-        <div
-          className="logs-wrapper"
-          ref={this.logsWrapperRef}
-          style={logWrapperStyles}
-        >
-          {logElements}
-        </div>
       </div>
     )
   }

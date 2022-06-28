@@ -24,11 +24,12 @@ export default env => {
           reconnect: 1,
           logging: 'none',
         },
-        port: 9999,
+        port: 9000,
         hot: true,
         host: '0.0.0.0',
         open: true,
         historyApiFallback: true,
+        server: 'https',
       },
       optimization: {
         minimize: false,

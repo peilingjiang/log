@@ -1,3 +1,5 @@
+@import 'root.scss';
+
 .hyper-log-streams-holder {
   position: fixed;
 
@@ -39,8 +41,8 @@
     padding: $padding-xs;
     z-index: -1;
 
-    border-top: 1px solid $dark-grey;
-    border-bottom: 1px solid $dark-grey;
+    border-top: 2px solid $grey;
+    border-bottom: 2px solid $grey;
     background: $light;
 
     /* width */
@@ -67,14 +69,14 @@
   &.stream-expand:not(.shape-stream) .logs-wrapper {
     gap: $padding-xs;
     overflow-y: scroll;
-    max-height: 20rem;
-    max-width: 20rem;
+    max-height: $max-log-wrapper-height-text;
+    // max-width: 20rem;
   }
 
   &.stream-expand.shape-stream .logs-wrapper {
     gap: $padding-xxs;
     overflow: scroll;
-    max-height: 30rem;
+    max-height: $max-log-wrapper-height-shape;
   }
 
   &.stream-horizontal {

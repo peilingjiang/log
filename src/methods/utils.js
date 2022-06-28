@@ -26,6 +26,10 @@ export const arrayLast = (arr, n = 1) => {
   return n >= arr.length ? arr : arr.slice(arr.length - n)
 }
 
+export const arrayFirst = (arr, n = 1) => {
+  return n >= arr.length ? arr : arr.slice(0, n)
+}
+
 /* -------------------------------------------------------------------------- */
 // element
 
@@ -145,6 +149,10 @@ export const assertString = a => {
   return typeof a === 'string' || a instanceof String
 }
 
+export const assertBoolean = a => {
+  return typeof a === 'boolean'
+}
+
 export const assertClass = (a, nameOfObjectClass) => {
   return a instanceof nameOfObjectClass
 }
@@ -170,6 +178,7 @@ export const assertTypeOfArg = arg => {
   if (arg === null) return 'null'
   if (assertNumber(arg)) return 'number'
   if (assertString(arg)) return 'string'
+  if (assertBoolean(arg)) return 'boolean'
   if (assertArray(arg)) return 'array'
   if (assertObject(arg)) return 'object'
   return 'unknown'

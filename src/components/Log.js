@@ -46,7 +46,7 @@ export default class Log extends Component {
   render() {
     const { log, orderReversed, expandedLog } = this.props
     const {
-      log: { args, timestamp, stack, color, unit },
+      log: { args, id, count, timestamps, stack, color, unit },
     } = this.props
 
     if (!expandedLog && orderReversed > log.history) return undefined
@@ -60,7 +60,9 @@ export default class Log extends Component {
         {/* <LogHeader log={log} /> */}
         <LogBody
           args={args}
-          timestamp={timestamp}
+          id={id}
+          count={count}
+          timestamp={timestamps.at(-1).now}
           stack={stack}
           color={color}
           unit={unit}

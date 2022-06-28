@@ -1,15 +1,15 @@
 .forced-outline-bound {
-  outline: 5px solid rgba($element-outline-bound, $opacity-high);
+  outline: 6px solid rgba($element-outline-bound, $opacity-high);
 }
 
 .forced-outline-bound-mid {
-  outline: 5px solid rgba($element-outline-bound, $opacity-high);
-  outline-offset: -2.5px;
+  outline: 6px solid rgba($element-outline-bound, $opacity-high);
+  outline-offset: -3px;
 }
 
 .forced-outline-bound-inside {
-  outline: 5px solid rgba($element-outline-bound, $opacity-high);
-  outline-offset: -5px;
+  outline: 6px solid rgba($element-outline-bound, $opacity-high);
+  outline-offset: -6px;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -17,10 +17,10 @@
 .sudo-pointer-element {
   position: absolute;
 
-  width: 10px;
-  height: 10px;
+  width: 6px;
+  height: 6px;
   background: transparent;
-  border-radius: 50%;
+  // border-radius: 50%;
 
   z-index: 9999;
   transform: translate(-50%, -50%);

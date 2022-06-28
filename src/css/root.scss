@@ -13,16 +13,21 @@ $elegant-green: #00b8a9;
 $undefined: #ff06b7;
 $number: #008eec;
 $string: #ff7337;
+$boolean: #00aeaa;
 
 $element-outline-bound: #fba300;
+$purple: #57068c;
 
 $opacity-default: 0.95;
 $opacity-mid: 0.75;
 $opacity-high: 0.5;
+$opacity-xh: 0.15;
 
 /* -------------------------------------------------------------------------- */
 
-$max-log-width: 12rem;
+$max-log-width: 16rem;
+$max-log-wrapper-height-text: 22rem;
+$max-log-wrapper-height-shape: 32rem;
 
 $radius-small: 0.25rem;
 $radius-large: 0.5rem;
@@ -64,6 +69,10 @@ $rem-to-px: 16;
 
 .up-front {
   z-index: 999999999 !important;
+}
+
+.cursor-pointer {
+  cursor: pointer !important;
 }
 
 .cursor-crosshair {
