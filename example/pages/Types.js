@@ -6,6 +6,7 @@ export default class Types extends Component {
   }
 
   componentDidMount() {
+    console.log('Start logging...')
     log(undefined)
     log([[]])
     log(1, 'log', [1, 'log'], [1, 'log', ['log']])

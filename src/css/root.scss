@@ -95,6 +95,10 @@ $rem-to-px: 16;
   }
 }
 
+.trans-fast {
+  transition: all $transition-fast;
+}
+
 /* -------------------------------------------------------------------------- */
 
 @mixin font-fixed {

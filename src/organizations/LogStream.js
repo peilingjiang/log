@@ -430,6 +430,8 @@ export default class LogStream extends Component {
       y: e.clientY,
       left: pxTrim(logGroup.bounding.left),
       top: pxTrim(logGroup.bounding.top),
+      offsetLeft: this.ref.current.offsetLeft,
+      offsetTop: this.ref.current.offsetTop,
     }
 
     const handleMouseMove = e => {
@@ -442,8 +444,12 @@ export default class LogStream extends Component {
         ...logGroup,
         bounding: {
           ...logGroup.bounding,
-          left: pxWrap(startPos.left + clientX - startPos.x),
-          top: pxWrap(startPos.top + clientY - startPos.y),
+          // left: pxWrap(startPos.left + clientX - startPos.x),
+          // top: pxWrap(startPos.top + clientY - startPos.y),
+          ////
+          // left: pxWrap(startPos.left + clientX - startPos.x + startPos.offsetLeft),
+          left: pxWrap(startPos.left + clientX - startPos.x), // TODO robust solution
+          top: pxWrap(startPos.top + clientY - startPos.y + startPos.offsetTop),
         },
       })
     }

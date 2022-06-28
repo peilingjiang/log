@@ -167,6 +167,7 @@ export default class LogStreamsHolder extends Component {
           bottom: bounding.bottom,
           alignItems:
             bounding.horizontalAlign === _L ? 'flex-start' : 'flex-end',
+          // alignItems: 'flex-start',
           justifyContent:
             bounding.verticalAlign === _T ? 'flex-start' : 'flex-end',
         }}
