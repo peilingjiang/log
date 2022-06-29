@@ -19,6 +19,7 @@ export default class ShapeLog extends Log {
     // get value
 
     let value = args[0]
+    // TODO should the default unit be px?
     if (assertNumber(value)) value = `${value}${unit || 'px'}`
 
     /* -------------------------------------------------------------------------- */

@@ -17,6 +17,7 @@ import {
   idFromString,
   parseStack,
   stringifyDOMElement,
+  _getStacks,
 } from './utils.js'
 
 export const newLog = (
@@ -69,10 +70,11 @@ export const addLog = (logHost, args, element = null, requests = {}) => {
   if (g.preserveConsole) window.console.log(...args)
 
   // HyperLog
-  parseStack(parsedStack => {
+  parseStack(_getStacks(logHost.state.logGroups), parsedStack => {
     const groupId = idFromString(
-      `${parsedStack.path}:${parsedStack.line}:${parsedStack.char}`
+      `${parsedStack.file}:${parsedStack.line}:${parsedStack.char}`
     )
+    // console.log(groupId, parsedStack);
     const groupElementId = idFromString(stringifyDOMElement(element))
 
     // add log to logHost
@@ -84,6 +86,7 @@ export const addLog = (logHost, args, element = null, requests = {}) => {
 
       const prevIds = getObjectIds(prevState.logGroups)
 
+      // ! first log of its group
       // can't find id among current groups
       if (prevIds.length === 0 || !prevIds.includes(groupId))
         newState.logGroups[groupId] = {
@@ -122,6 +125,7 @@ export const addLog = (logHost, args, element = null, requests = {}) => {
           // customization
         }
       else if (prevIds.includes(groupId)) {
+        // ! logStream paused or deleted
         if (
           prevState.logGroups[groupId].paused ||
           prevState.logGroups[groupId].deleted
@@ -129,6 +133,7 @@ export const addLog = (logHost, args, element = null, requests = {}) => {
           return prevState
       }
 
+      // ! snap
       if (requests.snap && requests.snap.snapElement) {
         const thisGroup = newState.logGroups[groupId]
         thisGroup.snap = true
@@ -157,7 +162,7 @@ export const addLog = (logHost, args, element = null, requests = {}) => {
               [groupId]: {
                 ...newState.logGroups[groupId],
                 logs: [
-                  ...logs.slice(0, logs.length - 2),
+                  ...logs.slice(0, logs.length - 1),
                   {
                     ...lastLog,
                     timestamps: [...lastLog.timestamps, timestamp],
@@ -170,6 +175,7 @@ export const addLog = (logHost, args, element = null, requests = {}) => {
         }
       }
 
+      // ! actually add a log here
       const aFreshNewLog = newLog(
         args,
         element,
@@ -179,6 +185,7 @@ export const addLog = (logHost, args, element = null, requests = {}) => {
         requests
       )
       newState.logGroups[groupId].logs.push(aFreshNewLog)
+
       return newState
     })
   })

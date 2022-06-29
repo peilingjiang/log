@@ -2,6 +2,6 @@
 
 export const g = Object.seal({
   preserveConsole: false,
-  useSourceMaps: true,
+  useSourceMaps: false,
   directionDown: true,
 })

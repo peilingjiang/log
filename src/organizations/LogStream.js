@@ -6,6 +6,7 @@ import Log from '../components/Log.js'
 
 import {
   boundingDefault,
+  expandedStreamDisableAutoScrollThresholdPx,
   logGroupInterface,
   _H,
   _L,
@@ -79,11 +80,19 @@ export default class LogStream extends Component {
 
   componentDidMount() {}
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     // scroll to the bottom
-    // if (this.logsWrapperRef.current && this.state.expand)
-    //   this.logsWrapperRef.current.scrollTop =
-    //     this.logsWrapperRef.current.scrollHeight
+    if (prevProps.logGroup.logs.length !== this.props.logGroup.logs.length)
+      if (
+        this.logsWrapperRef.current &&
+        this.state.expand &&
+        this.logsWrapperRef.current.scrollHeight -
+          this.logsWrapperRef.current.scrollTop <
+          expandedStreamDisableAutoScrollThresholdPx
+      ) {
+        this.logsWrapperRef.current.scrollTop =
+          this.logsWrapperRef.current.scrollHeight
+      }
   }
 
   shouldComponentUpdate(nextProps, nextState) {

@@ -2,11 +2,12 @@ import PropTypes from 'prop-types'
 import tinycolor from 'tinycolor2'
 
 export const stackInterface = PropTypes.exact({
-  line: PropTypes.number,
-  char: PropTypes.number,
-  method: PropTypes.string,
-  file: PropTypes.string,
-  path: PropTypes.string,
+  line: PropTypes.number.isRequired,
+  char: PropTypes.number.isRequired,
+  method: PropTypes.string.isRequired,
+  file: PropTypes.string.isRequired,
+  // path: PropTypes.string.isRequired,
+  raw: PropTypes.object.isRequired,
 })
 
 export const boundingInterface = PropTypes.exact({
@@ -110,6 +111,8 @@ export const positionFindingWorstAllowed = 5
 export const minimalStringShowLength = 7
 export const foldedArrayShowItemCount = 3
 export const foldedObjectShowItemCount = 3
+
+export const expandedStreamDisableAutoScrollThresholdPx = 700
 
 export const _L = 'left'
 export const _R = 'right'

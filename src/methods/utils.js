@@ -1,4 +1,6 @@
+import isEqual from 'react-fast-compare'
 import StackTrace from 'stacktrace-js'
+import ErrorStackParser from 'error-stack-parser'
 import tinycolor from 'tinycolor2'
 import { v5 as uuidv5 } from 'uuid'
 
@@ -114,20 +116,54 @@ export const keyWithSmallestValue = obj => {
 /* -------------------------------------------------------------------------- */
 // parse stack
 
-export const parseStack = callback => {
-  StackTrace.get({
-    offline: !g.useSourceMaps,
-  }).then(stackframes => {
-    const actualStackframe = stackframes[stackActualCallerDepth]
+export const getActualFrame = (frames, rawError) => {
+  const actualStackframe = frames[stackActualCallerDepth]
+  const result = {}
 
-    const result = {}
-    result.method = actualStackframe.functionName
-    result.file = actualStackframe.fileName.replace(/^.*[\\/]/, '')
-    result.line = actualStackframe.lineNumber
-    result.char = actualStackframe.columnNumber
+  result.line = actualStackframe.lineNumber
+  result.char = actualStackframe.columnNumber
+  result.method = actualStackframe.functionName || 'anonymous'
+  result.file = actualStackframe.fileName.replace(/^.*[\\/]/, '')
+  result.raw = rawError
 
-    callback(result)
-  })
+  return result
+}
+
+export const parseStack = (pastStacks, callback) => {
+  const sudoError = new Error()
+
+  // StackTrace.fromError(sudoError, {
+  //   offline: true,
+  // }).then(rawFrames => {
+  //   console.log('rawFrames', rawFrames);
+  // })
+  const rawFrames = ErrorStackParser.parse(sudoError)
+  const preprocessStack = getActualFrame(rawFrames, sudoError)
+
+  if (!g.useSourceMaps) {
+    return callback(preprocessStack)
+  } else {
+    for (const stack of pastStacks) {
+      if (isEqual(ErrorStackParser.parse(stack.raw), rawFrames)) {
+        return callback(stack)
+      }
+    }
+
+    StackTrace.fromError(sudoError, {
+      offline: false,
+    }).then(processedFrames => {
+      const processedStack = getActualFrame(processedFrames, sudoError)
+      callback(processedStack)
+    })
+  }
+}
+
+export const _getStacks = logGroups => {
+  return Object.keys(logGroups)
+    .map(logGroupId => {
+      return logGroups[logGroupId].logs.map(log => log.stack)
+    })
+    .flat(1)
 }
 
 /* -------------------------------------------------------------------------- */

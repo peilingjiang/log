@@ -5,7 +5,6 @@ import isEqual from 'react-fast-compare'
 import { _DEF, _rootStyles } from '../constants.js'
 import { Formatter } from '../formatter/Formatter.js'
 import { hexAndOpacityToRGBA } from '../methods/utils.js'
-// import { tinyColorToRGBStyleString } from '../methods/utils.js'
 
 export default class LogBody extends Component {
   static get propTypes() {
