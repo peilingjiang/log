@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import isEqual from 'react-fast-compare'
 
+import FormatterArray from './FormatterArray.js'
+import FormatterObject from './FormatterObject.js'
 import { assertTypeOfArg } from '../methods/utils.js'
-import { FormatterArray } from './FormatterArray.js'
 import { wrapString } from './utils.js'
 
 export class Formatter extends Component {
@@ -59,7 +60,7 @@ const formatArg = (arg, inheritId, minimal = false) => {
         )
       }
       return (
-        <span className="f-string" key={`${inheritId}-str`}>{`'${arg}'`}</span>
+        <span className="f-string" key={`${inheritId}-str`}>{`${arg}`}</span>
       )
 
     case 'boolean':
@@ -69,11 +70,32 @@ const formatArg = (arg, inheritId, minimal = false) => {
         </span>
       )
 
+    case 'function':
+      return (
+        <p className="f-function" key={`${inheritId}-func`}>
+          <span className="function-label">F</span>
+          <span className="function-name">
+            {arg.name ? arg.name : 'anonymous'}
+          </span>
+        </p>
+      )
+
     case 'array':
       return (
         <FormatterArray
           key={`${inheritId}-arr`}
           arr={arg}
+          inheritId={inheritId}
+          formatArg={formatArg}
+          minimal={minimal}
+        />
+      )
+
+    case 'object':
+      return (
+        <FormatterObject
+          key={`${inheritId}-obj`}
+          obj={arg}
           inheritId={inheritId}
           formatArg={formatArg}
           minimal={minimal}

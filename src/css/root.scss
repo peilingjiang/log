@@ -11,9 +11,10 @@ $elegant-yellow: #f07b3f;
 $elegant-green: #00b8a9;
 
 $undefined: #ff06b7;
-$number: #008eec;
-$string: #ff7337;
+$number: #008be8;
+$string: #ff4d00;
 $boolean: #00aeaa;
+$function: #13a600;
 
 $element-outline-bound: #fba300;
 $purple: #57068c;
@@ -25,13 +26,15 @@ $opacity-xh: 0.15;
 
 /* -------------------------------------------------------------------------- */
 
-$max-log-width: 16rem;
-$max-log-wrapper-height-text: 22rem;
+$max-log-width: 20rem;
+$max-log-unexpanded-stream-height: 22rem;
+$max-log-wrapper-height-text: 32rem;
 $max-log-wrapper-height-shape: 32rem;
 
 $radius-small: 0.25rem;
 $radius-large: 0.5rem;
 
+// PADDING
 $padding-xxs: 0.125rem;
 $padding-xs: 0.25rem;
 $padding-small: 0.5rem;
@@ -39,6 +42,9 @@ $padding-mid: 0.9rem;
 $padding-large: 1rem;
 $padding-x-large: 2rem;
 
+$scrollbar-width: $padding-xs;
+
+// FONT
 $font-size-xs: 0.5rem;
 $font-size-small: 0.675rem;
 $font-size-default: 0.75rem;

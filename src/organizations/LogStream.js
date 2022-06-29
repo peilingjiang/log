@@ -81,9 +81,9 @@ export default class LogStream extends Component {
 
   componentDidUpdate() {
     // scroll to the bottom
-    if (this.logsWrapperRef.current && this.state.expand)
-      this.logsWrapperRef.current.scrollTop =
-        this.logsWrapperRef.current.scrollHeight
+    // if (this.logsWrapperRef.current && this.state.expand)
+    //   this.logsWrapperRef.current.scrollTop =
+    //     this.logsWrapperRef.current.scrollHeight
   }
 
   shouldComponentUpdate(nextProps, nextState) {

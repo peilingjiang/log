@@ -1,20 +1,19 @@
 @import 'root.scss';
 
 .hyper-log-body {
-  .hyper-log-formatted-content,
-  .hyper-log-formatted-content * {
-    @include font-fixed;
-    // width: max-content;
+  .hyper-log-formatted-content {
     display: flex;
     flex-direction: column;
     gap: $padding-xxs;
+  }
 
+  .hyper-log-formatted-content * {
+    @include font-fixed;
     font-weight: 500;
     word-wrap: break-word;
     white-space: pre-line;
-    max-width: $max-log-width;
     overflow-wrap: break-word !important;
-    line-height: 120%;
+    line-height: 100%;
   }
 }
 
@@ -43,6 +42,26 @@
 
   .f-boolean {
     color: $boolean;
+  }
+
+  .f-function {
+    display: inline-flex;
+    align-items: center;
+    gap: $padding-xxs;
+
+    .function-label {
+      @include font-fixed;
+      color: $white;
+      background: $function;
+      font-size: $font-size-xs;
+      padding: $padding-xxs $padding-xs;
+      margin: 0;
+      line-height: 100%;
+    }
+
+    .function-name {
+      color: $function;
+    }
   }
 
   /* -------------------------------------------------------------------------- */
@@ -79,18 +98,25 @@
     flex-direction: column;
     gap: $padding-xs;
 
-    margin: 0 0 0 $padding-xs;
-    padding: 0 $padding-xs 0 $padding-mid;
+    margin: 0 0 0 calc($padding-xs - 0.5px);
+    padding: $padding-xxs $padding-xs $padding-xxs $padding-mid;
     border-left: 1px solid $dark-mid-grey;
 
     background: rgba($grey, $opacity-xh);
+
+    .inner-item {
+      display: inline-flex;
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: flex-start;
+    }
   }
 
-  .dimmed-info {
+  .info-dimmed {
     color: $dark-mid-grey;
   }
 
-  .bold-info {
+  .info-bold {
     font-weight: 700;
   }
 
@@ -98,9 +124,9 @@
 
   .f-array {
     display: flex;
+    flex-direction: row;
     align-items: center;
     gap: $padding-xxs;
-    flex-direction: row;
 
     // &.f-array-folded {
     // }
@@ -111,9 +137,38 @@
 
       // !
       .inner-item {
-        flex-direction: row;
         gap: $padding-mid;
       }
+    }
+  }
+
+  .f-object {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: $padding-xxs;
+
+    // min-width: fit-content;
+
+    // &.f-object-folded {
+    // }
+
+    &.f-object-unfolded {
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+
+      // !
+      .inner-item {
+        gap: $padding-xs;
+      }
+    }
+
+    .f-object-key {
+      // position: sticky;
+      // top: 0;
+      color: $purple;
     }
   }
 }

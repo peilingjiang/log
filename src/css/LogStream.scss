@@ -6,8 +6,13 @@
   display: flex;
   flex-direction: column;
 
-  width: min-content;
+  width: 100%;
   height: min-content;
+  height: 100vh;
+  // overflow-y: scroll;
+  // overflow-x: visible;
+
+  pointer-events: none;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -16,6 +21,8 @@
   display: flex;
   position: relative;
   block-size: fit-content;
+
+  pointer-events: initial;
 
   &.shape-stream .logs-wrapper {
     padding: 0;
@@ -38,7 +45,8 @@
   }
 
   &.stream-expand .logs-wrapper {
-    padding: $padding-xs;
+    padding: $padding-xs calc($padding-xs + 1px - $scrollbar-width) $padding-xs
+      calc($padding-xs + 1px);
     z-index: -1;
 
     border-top: 2px solid $grey;
@@ -47,7 +55,7 @@
 
     /* width */
     &::-webkit-scrollbar {
-      width: $padding-xs;
+      width: $scrollbar-width;
     }
 
     /* Track */
@@ -68,9 +76,8 @@
 
   &.stream-expand:not(.shape-stream) .logs-wrapper {
     gap: $padding-xs;
-    overflow-y: scroll;
+    overflow: scroll;
     max-height: $max-log-wrapper-height-text;
-    // max-width: 20rem;
   }
 
   &.stream-expand.shape-stream .logs-wrapper {

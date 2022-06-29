@@ -153,6 +153,10 @@ export const assertBoolean = a => {
   return typeof a === 'boolean'
 }
 
+export const assertFunction = a => {
+  return typeof a === 'function'
+}
+
 export const assertClass = (a, nameOfObjectClass) => {
   return a instanceof nameOfObjectClass
 }
@@ -179,6 +183,7 @@ export const assertTypeOfArg = arg => {
   if (assertNumber(arg)) return 'number'
   if (assertString(arg)) return 'string'
   if (assertBoolean(arg)) return 'boolean'
+  if (assertFunction(arg)) return 'function'
   if (assertArray(arg)) return 'array'
   if (assertObject(arg)) return 'object'
   return 'unknown'

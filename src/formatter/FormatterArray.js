@@ -1,13 +1,14 @@
-import React, { useState } from 'react'
+import React, { memo, useState } from 'react'
 import PropTypes from 'prop-types'
-import { v4 as uuid } from 'uuid'
+import isEqual from 'react-fast-compare'
+// import { v4 as uuid } from 'uuid'
 
-import { FolderIcon } from './FolderIcon.js'
+import { FoldedDisplay, FolderIcon } from './components.js'
 import { foldedArrayShowItemCount } from '../constants.js'
 import { arrayFirst } from '../methods/utils.js'
-import { FoldedDisplay } from './FoldedDisplay.js'
+import { isEmptyArray } from './utils.js'
 
-export const FormatterArray = ({ arr, inheritId, formatArg, minimal }) => {
+const FormatterArray = ({ arr, inheritId, formatArg, minimal }) => {
   const [folded, setFolded] = useState(true)
 
   const toggleFold = () => {
@@ -22,7 +23,7 @@ export const FormatterArray = ({ arr, inheritId, formatArg, minimal }) => {
         <>
           {'['}
           {arr.length === 1 ? (
-            formatArg(arr[0], `${inheritId}-min`, true)
+            formatArg(arr[0], `${inheritId}-arr-min`, true)
           ) : (
             <FoldedDisplay />
           )}
@@ -47,8 +48,10 @@ export const FormatterArray = ({ arr, inheritId, formatArg, minimal }) => {
     }
     content = (
       <>
-        <FolderIcon folded={folded} toggleFold={toggleFold} />
-        <span className="arr-length dimmed-info">{`(${arr.length})`}</span>
+        {!isEmptyArray(arr) && (
+          <FolderIcon folded={folded} toggleFold={toggleFold} />
+        )}
+        <span className="arr-length info-dimmed">{`(${arr.length})`}</span>
         {'['}
         {innerItems}
         {arr.length > foldedArrayShowItemCount ? <FoldedDisplay /> : null}
@@ -59,7 +62,7 @@ export const FormatterArray = ({ arr, inheritId, formatArg, minimal }) => {
     // unfolded
     content = (
       <>
-        <div className="simple-inline-element bold-info">
+        <div className="simple-inline-element info-bold">
           <FolderIcon folded={folded} toggleFold={toggleFold} />
           {'['}
         </div>
@@ -68,7 +71,7 @@ export const FormatterArray = ({ arr, inheritId, formatArg, minimal }) => {
           {arr.map((arg, i) => {
             return (
               <div key={`${inheritId}-${i}-in`} className="inner-item">
-                <div className="simple-inline-element inner-item-ind dimmed-info">
+                <div className="simple-inline-element inner-item-ind info-dimmed">
                   {i}
                 </div>
                 {formatArg(arg, `${inheritId}-${i}`, false)}
@@ -77,7 +80,7 @@ export const FormatterArray = ({ arr, inheritId, formatArg, minimal }) => {
           })}
         </div>
 
-        <div className="simple-inline-element bold-info">{']'}</div>
+        <div className="simple-inline-element info-bold">{']'}</div>
       </>
     )
   }
@@ -97,3 +100,5 @@ FormatterArray.propTypes = {
   formatArg: PropTypes.func.isRequired,
   minimal: PropTypes.bool.isRequired,
 }
+
+export default memo(FormatterArray, isEqual)

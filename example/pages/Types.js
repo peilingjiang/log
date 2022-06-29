@@ -7,9 +7,24 @@ export default class Types extends Component {
 
   componentDidMount() {
     console.log('Start logging...')
-    log(undefined)
+    log(undefined, null)
     log([[]])
     log(1, 'log', [1, 'log'], [1, 'log', ['log']])
+
+    console.log(
+      1,
+      'log',
+      [1, 'log'],
+      [
+        1,
+        'log',
+        [
+          "My name is James. What's your name? How are you feeling today?",
+          true,
+          234,
+        ],
+      ]
+    )
     log(
       1,
       'log',
@@ -24,7 +39,18 @@ export default class Types extends Component {
         ],
       ]
     )
+
     log(true)
+
+    console.log({
+      value: {
+        viewingDistanceCm: 43.9,
+        nearPointCm: { x: null, y: null },
+        latencyMs: 144,
+      },
+      timestamp: 29491.39999985695,
+      method: 'FaceMesh',
+    })
 
     log({
       value: {
@@ -35,6 +61,8 @@ export default class Types extends Component {
       timestamp: 29491.39999985695,
       method: 'FaceMesh',
     })
+
+    log(this)
   }
 
   render() {

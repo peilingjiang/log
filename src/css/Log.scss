@@ -26,14 +26,61 @@
   // }
 }
 
+.hyper-log-stream {
+  &:not(.stream-expand) {
+    .hyper-log-body {
+      max-width: $max-log-width;
+      max-height: $max-log-unexpanded-stream-height;
+      overflow: scroll;
+
+      scrollbar-width: none;
+
+      /* width */
+      &::-webkit-scrollbar {
+        scrollbar-gutter: stable both-edges;
+        position: absolute;
+        width: $scrollbar-width;
+        height: $scrollbar-width;
+        background: transparent;
+      }
+
+      /* Track */
+      &::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      /* Handle */
+      &::-webkit-scrollbar-thumb {
+        background: $grey;
+      }
+
+      /* Handle on hover */
+      &::-webkit-scrollbar-thumb:hover {
+        background: $dark-grey;
+      }
+
+      &:has(.unfolded-inner) {
+        // width: $max-log-width !important;
+      }
+    }
+  }
+
+  .stream-expand {
+    .hyper-log-body {
+      // overflow: scroll;
+    }
+  }
+}
+
 .hyper-log-body {
   display: flex;
   flex-direction: column;
   gap: $padding-xs;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: flex-start;
 
-  padding: $padding-small;
+  padding: $padding-small calc($padding-small - $scrollbar-width)
+    calc($padding-small - $scrollbar-width) $padding-small;
   overflow-wrap: break-word;
 
   background: rgba($light-grey, $opacity-default);
@@ -71,7 +118,7 @@
 
 .hyper-log-body-content {
   display: inline-flex;
-  align-items: center;
+  align-items: flex-start;
   flex-direction: row;
   gap: $padding-small;
 
@@ -79,7 +126,7 @@
     @include font-fixed;
     color: $white;
     background: $grey;
-    font-size: $font-size-small;
+    font-size: $font-size-xs;
     line-height: 100%;
     white-space: nowrap;
     // width: calc($font-size-small + $padding-xxs * 2);

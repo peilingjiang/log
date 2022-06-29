@@ -27,6 +27,22 @@ export const boundingDefault = Object.seal({
   verticalAlign: 'top',
 })
 
+export const logViewInterface = PropTypes.exact({
+  left: PropTypes.number.isRequired,
+  right: PropTypes.number.isRequired,
+  unfolded: PropTypes.array.isRequired,
+  highlighted: PropTypes.array.isRequired,
+  changed: PropTypes.array.isRequired,
+})
+
+export const logViewDefault = Object.seal({
+  left: '0px',
+  right: '0px',
+  unfolded: [],
+  highlighted: [],
+  changed: [],
+})
+
 export const logInterface = PropTypes.exact({
   id: PropTypes.string,
   groupId: PropTypes.string,
@@ -77,6 +93,8 @@ export const logGroupInterface = PropTypes.exact({
   paused: PropTypes.bool.isRequired,
   deleted: PropTypes.bool.isRequired,
   ////
+  view: logViewInterface.isRequired,
+  ////
   // customization
 })
 
@@ -90,7 +108,8 @@ export const stackActualCallerDepth = 5
 export const positionFindingWorstAllowed = 5
 
 export const minimalStringShowLength = 7
-export const foldedArrayShowItemCount = 2
+export const foldedArrayShowItemCount = 3
+export const foldedObjectShowItemCount = 3
 
 export const _L = 'left'
 export const _R = 'right'

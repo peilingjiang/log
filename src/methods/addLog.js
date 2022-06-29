@@ -111,6 +111,14 @@ export const addLog = (logHost, args, element = null, requests = {}) => {
           paused: false,
           deleted: false,
           ////
+          view: {
+            left: 0,
+            right: 0,
+            unfolded: [],
+            highlighted: [],
+            changed: [],
+          },
+          ////
           // customization
         }
       else if (prevIds.includes(groupId)) {
