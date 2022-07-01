@@ -12,6 +12,11 @@
   transform-origin: top;
 
   overflow: hidden;
+  pointer-events: initial;
+
+  * {
+    pointer-events: initial;
+  }
 
   &.log-in-history {
     pointer-events: none;
@@ -39,25 +44,12 @@
       &::-webkit-scrollbar {
         scrollbar-gutter: stable both-edges;
         position: absolute;
-        width: $scrollbar-width;
+        // width: $scrollbar-width;
         height: $scrollbar-width;
         background: transparent;
       }
 
-      /* Track */
-      &::-webkit-scrollbar-track {
-        background: transparent;
-      }
-
-      /* Handle */
-      &::-webkit-scrollbar-thumb {
-        background: $grey;
-      }
-
-      /* Handle on hover */
-      &::-webkit-scrollbar-thumb:hover {
-        background: $dark-grey;
-      }
+      @include scrollbar($scrollbar-width, transparent, $grey, $dark-grey);
 
       &:has(.unfolded-inner) {
         // width: $max-log-width !important;
@@ -72,6 +64,19 @@
   }
 }
 
+:not(.log-expand) {
+  .hyper-log-body {
+    padding: $padding-small calc($padding-small - $scrollbar-width)
+      calc($padding-small - $scrollbar-width) $padding-small;
+  }
+}
+
+.log-expand {
+  .hyper-log-body {
+    padding: $padding-small !important;
+  }
+}
+
 .hyper-log-body {
   display: flex;
   flex-direction: column;
@@ -79,8 +84,7 @@
   justify-content: flex-start;
   align-items: flex-start;
 
-  padding: $padding-small calc($padding-small - $scrollbar-width)
-    calc($padding-small - $scrollbar-width) $padding-small;
+  padding: $padding-small;
   overflow-wrap: break-word;
 
   background: rgba($light-grey, $opacity-default);
@@ -99,15 +103,29 @@
 
     width: 100%;
 
-    .timestamp {
+    &.timeline-log-body-header {
+      justify-content: flex-end;
+    }
+
+    .log-body-timestamp {
       color: $grey;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: $padding-xs;
+
+      svg {
+        font-size: $font-size-xs !important;
+      }
     }
 
     .source-location {
       color: $dark-grey;
     }
 
-    .timestamp,
+    .log-body-timestamp,
+    .log-body-timestamp *,
     .source-location {
       @include font-fixed;
       font-size: $font-size-small;
@@ -141,15 +159,57 @@
 /* -------------------------------------------------------------------------- */
 
 .shape-stream {
+  &.stream-expand {
+    .hyper-shape-log {
+      &:hover {
+        .shape-timestamp {
+          display: flex !important;
+        }
+      }
+    }
+  }
+
   .hyper-shape-log {
     display: inline-flex;
     flex-direction: row;
     align-items: center;
 
+    pointer-events: initial;
+
     .shape-log-note {
-      font-size: $font-size-small;
-      color: $light-grey;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: $padding-small;
+
       padding: 0 $padding-xs;
+
+      span {
+        @include font-fixed;
+
+        display: flex;
+        align-items: center;
+        gap: $padding-xs;
+
+        font-size: $font-size-small;
+        color: $light-grey;
+      }
+
+      .shape-timestamp {
+        display: none;
+      }
+
+      .shape-timestamp span {
+        font-size: $font-size-small;
+      }
+
+      svg {
+        font-size: $font-size-xs !important;
+
+        path {
+          fill: $light;
+        }
+      }
     }
   }
 }

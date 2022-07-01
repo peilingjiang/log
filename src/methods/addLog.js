@@ -16,6 +16,7 @@ import {
   getTimestamp,
   idFromString,
   parseStack,
+  randomColor,
   stringifyDOMElement,
   _getStacks,
 } from './utils.js'
@@ -64,6 +65,9 @@ export const newLog = (
 }
 
 export const addLog = (logHost, args, element = null, requests = {}) => {
+  // ! do not do anything when paused
+  if (logHost.state.logPaused) return
+
   const timestamp = getTimestamp()
 
   // Traditional
@@ -110,6 +114,8 @@ export const addLog = (logHost, args, element = null, requests = {}) => {
           ////
           bounding: boundingDefault,
           followType: assertExistence(element) ? 'stick' : 'independent', // TODO remove?
+          ////
+          groupColor: requests.color || randomColor(),
           ////
           paused: false,
           deleted: false,
@@ -184,9 +190,19 @@ export const addLog = (logHost, args, element = null, requests = {}) => {
         parsedStack,
         requests
       )
-      newState.logGroups[groupId].logs.push(aFreshNewLog)
+      // newState.logGroups[groupId].logs.push(aFreshNewLog)
+      // return newState
 
-      return newState
+      return {
+        ...newState,
+        logGroups: {
+          ...newState.logGroups,
+          [groupId]: {
+            ...newState.logGroups[groupId],
+            logs: [...logs, aFreshNewLog],
+          },
+        },
+      }
     })
   })
 }

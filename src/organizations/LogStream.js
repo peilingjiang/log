@@ -8,6 +8,8 @@ import {
   boundingDefault,
   expandedStreamDisableAutoScrollThresholdPx,
   logGroupInterface,
+  logInterface,
+  _Aug,
   _H,
   _L,
   _R,
@@ -32,19 +34,27 @@ import {
   _getAlignment,
 } from '../methods/snap.js'
 import { setupLeaderLine } from '../other/leaderLine.js'
+import { outlineToHighlightElement } from '../methods/attachElements.js'
 
 // for augmented logs
 
 export default class LogStream extends Component {
   static get propTypes() {
     return {
-      logGroup: logGroupInterface,
-      updateLogGroup: PropTypes.func,
-      updateLog: PropTypes.func,
-      hostRef: PropTypes.object,
+      logGroup: logGroupInterface.isRequired,
+      log: logInterface,
+      updateLogGroup: PropTypes.func.isRequired,
+      updateLog: PropTypes.func.isRequired,
+      hostRef: PropTypes.object.isRequired,
       ////
-      handleStreamHover: PropTypes.func,
-      handleStreamDragAround: PropTypes.func,
+      handleStreamHover: PropTypes.func.isRequired,
+      handleStreamDragAround: PropTypes.func.isRequired,
+      organization: PropTypes.string.isRequired,
+      ////
+      hostFunctions: PropTypes.object.isRequired,
+      ////
+      // for timeline single-log streams
+      timelineOffset: PropTypes.number,
     }
   }
 
@@ -80,15 +90,21 @@ export default class LogStream extends Component {
 
   componentDidMount() {}
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     // scroll to the bottom
-    if (prevProps.logGroup.logs.length !== this.props.logGroup.logs.length)
+    // if the stream is expanded
+    if (
+      this.props.organization === _Aug
+      // (prevProps.logGroup.logs.length !== this.props.logGroup.logs.length ||
+      //   (!prevProps.logGroup.expanded && this.props.logGroup.expanded))
+    )
       if (
         this.logsWrapperRef.current &&
         this.state.expand &&
-        this.logsWrapperRef.current.scrollHeight -
+        (this.logsWrapperRef.current.scrollHeight -
           this.logsWrapperRef.current.scrollTop <
-          expandedStreamDisableAutoScrollThresholdPx
+          expandedStreamDisableAutoScrollThresholdPx ||
+          (!prevState.expand && this.state.expand))
       ) {
         this.logsWrapperRef.current.scrollTop =
           this.logsWrapperRef.current.scrollHeight
@@ -101,25 +117,6 @@ export default class LogStream extends Component {
       !isEqual(nextProps, this.props) || !isEqual(nextState, this.state)
     )
   }
-
-  // optimizePosition() {
-  //   const { logGroup, updateLogGroup } = this.props
-
-  //   if (!assertExistence(logGroup.element)) {
-  //     return
-  //   }
-
-  //   const optimizedPosition = findPosition(
-  //     logGroup.element,
-  //     this.ref.current,
-  //     this._getChildRects()
-  //   )
-
-  //   updateLogGroup(logGroup.groupId, {
-  //     ...logGroup,
-  //     bounding: optimizedPosition,
-  //   })
-  // }
 
   /* -------------------------------------------------------------------------- */
 
@@ -152,19 +149,17 @@ export default class LogStream extends Component {
         leaderLine.position()
 
         // highlight the element
-        document.body.classList.remove('forced-outline-bound-inside')
+        outlineToHighlightElement(document.body, true, 'inside')
         const highlightedElements = document.querySelectorAll(
           '.forced-outline-bound'
         )
         for (let i = 0; i < highlightedElements.length; i++)
           if (!event.target.isSameNode(highlightedElements[i]))
-            highlightedElements[i].classList.remove('forced-outline-bound')
+            outlineToHighlightElement(highlightedElements[i], false)
 
         if (bindableElement(event.target))
-          event.target.classList.add('forced-outline-bound')
-        else {
-          document.body.classList.add('forced-outline-bound-inside')
-        }
+          outlineToHighlightElement(event.target, true)
+        else outlineToHighlightElement(document.body, true, 'inside')
       }
       document.addEventListener('mousemove', _mousemove)
 
@@ -175,10 +170,10 @@ export default class LogStream extends Component {
 
         streamSetState({ current: false })
         hostRef.current.classList.remove('no-pointer-events')
-        document.body.classList.remove('forced-outline-bound-inside')
-        ;[...document.querySelectorAll('.forced-outline-bound')].forEach(el => {
-          el.classList.remove('forced-outline-bound')
-        })
+        outlineToHighlightElement(document.body, false, 'inside')
+        ;[...document.querySelectorAll('.forced-outline-bound')].forEach(el =>
+          outlineToHighlightElement(el, false)
+        )
 
         if (sudoPointerElement) sudoPointerElement.remove()
         leaderLine.remove()
@@ -215,8 +210,7 @@ export default class LogStream extends Component {
   deleteStream() {
     const { logGroup, updateLogGroup } = this.props
 
-    if (logGroup.element)
-      logGroup.element.classList.remove('forced-outline-bound')
+    if (logGroup.element) outlineToHighlightElement(logGroup.element, false)
 
     updateLogGroup(logGroup.groupId, {
       ...logGroup,
@@ -267,13 +261,12 @@ export default class LogStream extends Component {
       function _mousemove(event) {
         const nearest = findNearestSnapPoint(event.clientX, event.clientY)
 
-        // document.body.classList.remove('forced-outline-bound-inside')
         const highlightedElements = document.querySelectorAll(
           '.forced-outline-bound-mid'
         )
         for (let i = 0; i < highlightedElements.length; i++)
           if (!event.target.isSameNode(highlightedElements[i]))
-            highlightedElements[i].classList.remove('forced-outline-bound-mid')
+            outlineToHighlightElement(highlightedElements[i], false, 'mid')
 
         if (nearest) {
           const { nearestPointElement, nearestPoint } = nearest
@@ -283,7 +276,7 @@ export default class LogStream extends Component {
           snapElement = nearestPointElement
           snapAnchorPoint = nearestPoint
 
-          nearestPointElement.classList.add('forced-outline-bound-mid')
+          outlineToHighlightElement(nearestPointElement, true, 'mid')
           sudoPointerElement.classList.add('show-sudo-pointer')
         } else {
           sudoPointerElement.style.top = pxWrap(event.clientY)
@@ -307,10 +300,9 @@ export default class LogStream extends Component {
 
         streamSetState({ current: false })
         hostRef.current.classList.remove('no-pointer-events')
-        // document.body.classList.remove('forced-outline-bound-inside')
         ;[...document.querySelectorAll('.forced-outline-bound-mid')].forEach(
           el => {
-            el.classList.remove('forced-outline-bound-mid')
+            outlineToHighlightElement(el, false, 'mid')
           }
         )
 
@@ -361,7 +353,7 @@ export default class LogStream extends Component {
       snapElement: null,
       snapAnchorSide: _R,
       bounding: {
-        ...logGroup.bounding,
+        ...(logGroup?.bounding || boundingDefault),
         left: pxWrap(0),
         top: pxWrap(0),
         horizontalAlign: _L,
@@ -373,29 +365,6 @@ export default class LogStream extends Component {
 
   /* -------------------------------------------------------------------------- */
 
-  _getChildRects() {
-    // Get stream element [display] size
-    // by merging the bounding rects of all its children
-    // return mergeBoundingRects(
-    //   [...this.ref.current.children].map(child => getElementBounding(child))
-    // )
-    // ...
-    // get the rect of the most recent one
-    return getElementBounding(
-      this.ref.current.children[this.ref.current.children.length - 1]
-    )
-  }
-
-  _getChildrenHeightsSum() {
-    return this.ref.current
-      ? [...this.ref.current.children]
-          .filter(ele => ele.classList.contains('logs-wrapper'))
-          .reduce((acc, child) => acc + child.offsetHeight, 0)
-      : 0
-  }
-
-  /* -------------------------------------------------------------------------- */
-
   handleMouseEnter() {
     // this.ref.current.classList.add('stream-hovered')
     // this.ref.current.classList.add('up-front')
@@ -403,8 +372,7 @@ export default class LogStream extends Component {
     //   this.ref.current.parentNode.classList.add('up-front')
 
     // add outline to the target element
-    if (this.props.logGroup.element)
-      this.props.logGroup.element.classList.add('forced-outline-bound')
+    outlineToHighlightElement(this.props.logGroup?.element, true)
     this.setState({ hovered: true })
     this.props.handleStreamHover(true)
   }
@@ -415,8 +383,7 @@ export default class LogStream extends Component {
     // if (this.ref.current.parentNode)
     //   this.ref.current.parentNode.classList.remove('up-front')
     if (!this.state.grabbing) {
-      if (this.props.logGroup.element)
-        this.props.logGroup.element.classList.remove('forced-outline-bound')
+      outlineToHighlightElement(this.props.logGroup?.element, false)
       this.setState({ hovered: false })
       this.props.handleStreamHover(false)
     }
@@ -493,6 +460,7 @@ export default class LogStream extends Component {
 
   /* -------------------------------------------------------------------------- */
 
+  // has the stream been dragged around?
   _offsetFromAutoAttach() {
     const {
       logGroup: { bounding },
@@ -509,6 +477,7 @@ export default class LogStream extends Component {
         bounding,
         groupId,
         format,
+        groupColor,
         paused,
         ////
         snap,
@@ -519,6 +488,8 @@ export default class LogStream extends Component {
         ////
         orientation,
       },
+      hostFunctions,
+      organization,
     } = this.props
 
     // the format definition of the thread
@@ -539,11 +510,13 @@ export default class LogStream extends Component {
             expandedLog={expand}
             // groupBounding={bounding}
             // logsCount={logs.length}
-            // snap={snap}
+            snap={snap}
+            hostFunctions={hostFunctions}
+            organization={organization}
           />
         ) : (
           <ShapeLog
-            key={`S ${log.id} ${log.timestamps.at(-1).now}`}
+            key={`${log.id} ${log.timestamps.at(-1).now}-shape`}
             log={log}
             orderReversed={--orderReversed}
             expandedLog={expand}
@@ -551,6 +524,8 @@ export default class LogStream extends Component {
             // logsCount={logs.length}
             snap={snap}
             orientation={orientation}
+            hostFunctions={hostFunctions}
+            organization={organization}
           />
         )
       )
@@ -564,6 +539,9 @@ export default class LogStream extends Component {
 
     // prep for logWrapper styles
     const logWrapperStyles = {}
+    // const wrapperBorderStyle = expand ? `2px solid ${groupColor}` : null
+    // logWrapperStyles.borderTop = wrapperBorderStyle
+    // logWrapperStyles.borderBottom = wrapperBorderStyle
     logWrapperStyles.alignItems = alignItemsValue
     if (orientation === _H) {
       logWrapperStyles.flexDirection = 'column'
@@ -615,9 +593,10 @@ export default class LogStream extends Component {
           format={format}
           orientation={orientation}
           streamState={this.state}
-          functions={this.menuFunctions}
+          menuFunctions={this.menuFunctions}
           snap={snap}
           useShape={checkForUnit(logs[logs.length - 1])}
+          organization={organization}
         />
       </div>
     )

@@ -15,13 +15,16 @@ import {
 export default class Log extends Component {
   static get propTypes() {
     return {
-      log: logInterface,
-      orderReversed: PropTypes.number,
-      expandedLog: PropTypes.bool,
+      log: logInterface.isRequired,
+      orderReversed: PropTypes.number.isRequired,
+      expandedLog: PropTypes.bool.isRequired,
       // groupBounding: boundingInterface,
       // logsCount: PropTypes.number,
-      snap: PropTypes.bool,
+      snap: PropTypes.bool.isRequired,
       orientation: PropTypes.string,
+      ////
+      hostFunctions: PropTypes.object.isRequired,
+      organization: PropTypes.string.isRequired,
     }
   }
 
@@ -44,7 +47,8 @@ export default class Log extends Component {
   }
 
   render() {
-    const { log, orderReversed, expandedLog } = this.props
+    const { log, orderReversed, expandedLog, hostFunctions, organization } =
+      this.props
     const {
       log: { args, id, count, timestamps, stack, color, unit },
     } = this.props
@@ -69,6 +73,8 @@ export default class Log extends Component {
           ////
           orderReversed={orderReversed}
           expandedLog={expandedLog}
+          hostFunctions={hostFunctions}
+          organization={organization}
         />
       </div>
     )
@@ -81,4 +87,5 @@ export const logBaseStyles = (orderReversed, expanded) => ({
     ? undefined
     : _rootStyles.opacityDefault -
       _config.logStreamHistoryRenderOpacityUnitDecrease * orderReversed,
+  zIndex: 99999 - orderReversed,
 })

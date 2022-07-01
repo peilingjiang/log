@@ -62,4 +62,10 @@ export class HyperLog {
     this.requests.format = shape ? 'shape' : 'text'
     return this
   }
+
+  /* -------------------------------------------------------------------------- */
+
+  // get lifeCycle() {
+  //   return
+  // }
 }

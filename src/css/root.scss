@@ -43,6 +43,7 @@ $padding-large: 1rem;
 $padding-x-large: 2rem;
 
 $scrollbar-width: $padding-xs;
+$scrollbar-width-large: $padding-small;
 
 // FONT
 $font-size-xs: 0.5rem;
@@ -105,8 +106,36 @@ $rem-to-px: 16;
   transition: all $transition-fast;
 }
 
+.rotate-180 {
+  transform: rotate(180deg);
+}
+
 /* -------------------------------------------------------------------------- */
 
 @mixin font-fixed {
   font-family: 'Inconsolata', 'Courier New', Courier, monospace;
+}
+
+/* -------------------------------------------------------------------------- */
+
+@mixin scrollbar($track-width, $track-color, $thumb-color, $thumb-color-hover) {
+  /* width */
+  &::-webkit-scrollbar {
+    width: $track-width;
+  }
+
+  /* Track */
+  &::-webkit-scrollbar-track {
+    background: $track-color;
+  }
+
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    background: $thumb-color;
+  }
+
+  /* Handle on hover */
+  &::-webkit-scrollbar-thumb:hover {
+    background: $thumb-color-hover;
+  }
 }

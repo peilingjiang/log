@@ -2,9 +2,11 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import isEqual from 'react-fast-compare'
 
-import { _DEF, _rootStyles } from '../constants.js'
+import { _Aug, _DEF, _rootStyles } from '../constants.js'
 import { Formatter } from '../formatter/Formatter.js'
 import { hexAndOpacityToRGBA } from '../methods/utils.js'
+
+import Arrow from '../icons/arrow.svg'
 
 export default class LogBody extends Component {
   static get propTypes() {
@@ -15,11 +17,14 @@ export default class LogBody extends Component {
       count: PropTypes.number.isRequired,
       timestamp: PropTypes.number.isRequired,
       stack: PropTypes.object.isRequired,
-      color: PropTypes.string,
+      color: PropTypes.string.isRequired,
       unit: PropTypes.string,
       ////
-      orderReversed: PropTypes.number,
-      expandedLog: PropTypes.bool,
+      orderReversed: PropTypes.number.isRequired,
+      expandedLog: PropTypes.bool.isRequired,
+      ////
+      hostFunctions: PropTypes.object.isRequired,
+      organization: PropTypes.string.isRequired,
     }
   }
 
@@ -38,7 +43,11 @@ export default class LogBody extends Component {
       unit,
       // orderReversed,
       expandedLog,
+      hostFunctions,
+      organization,
     } = this.props
+
+    const isAugmented = organization === _Aug
 
     return (
       <div
@@ -51,8 +60,27 @@ export default class LogBody extends Component {
         }}
       >
         {expandedLog && (
-          <div className="hyper-log-body-header">
-            <p className="timestamp">{Math.round(timestamp)}</p>
+          <div
+            className={`hyper-log-body-header${
+              isAugmented ? '' : ' timeline-log-body-header'
+            }`}
+          >
+            {isAugmented ? (
+              <p
+                className="log-body-timestamp cursor-pointer"
+                onClick={() => {
+                  hostFunctions.changeOrganization('timeline')
+                }}
+              >
+                <span>{Math.round(timestamp)}</span>
+                <Arrow />
+              </p>
+            ) : // ) : (
+            //   <p className="log-body-timestamp">
+            //     <span>{Math.round(timestamp)}</span>
+            //   </p>
+            // )}
+            null}
             <p className="source-location">
               {file}:{line}
             </p>

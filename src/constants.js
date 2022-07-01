@@ -91,6 +91,8 @@ export const logGroupInterface = PropTypes.exact({
   bounding: boundingInterface.isRequired,
   followType: PropTypes.string.isRequired,
   ////
+  groupColor: PropTypes.string.isRequired,
+  ////
   paused: PropTypes.bool.isRequired,
   deleted: PropTypes.bool.isRequired,
   ////
@@ -113,6 +115,13 @@ export const foldedArrayShowItemCount = 3
 export const foldedObjectShowItemCount = 3
 
 export const expandedStreamDisableAutoScrollThresholdPx = 700
+export const timelineDisableAutoScrollThresholdPx = 200
+
+export const timelineGroupWiseOffsetPx = {
+  shared: 100,
+  max: 15,
+  min: 5,
+}
 
 export const _L = 'left'
 export const _R = 'right'
@@ -126,6 +135,10 @@ export const _V = 'vertical'
 export const _DEF = 'default'
 
 export const validUnits = ['px', '%', 'em', 'rem', 'vh', 'vw', 'vmin', 'vmax']
+
+// organization
+export const _Aug = 'augmented'
+export const _Time = 'timeline'
 
 /* -------------------------------------------------------------------------- */
 

@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import isEqual from 'react-fast-compare'
 
+import { _Aug } from '../constants.js'
+
 import Expand from '../icons/expand.svg'
 import Fold from '../icons/fold.svg'
 import Relink from '../icons/relink.svg'
@@ -16,15 +18,17 @@ import Unsnap from '../icons/unsnap.svg'
 
 export default class LogStreamMenu extends Component {
   static propTypes = {
-    paused: PropTypes.bool,
-    format: PropTypes.string,
-    orientation: PropTypes.string,
-    streamState: PropTypes.object,
-    functions: PropTypes.object,
+    paused: PropTypes.bool.isRequired,
+    format: PropTypes.string.isRequired,
+    orientation: PropTypes.string.isRequired,
+    streamState: PropTypes.object.isRequired,
+    menuFunctions: PropTypes.object.isRequired,
     ////
-    snap: PropTypes.bool,
+    snap: PropTypes.bool.isRequired,
     ////
-    useShape: PropTypes.bool,
+    useShape: PropTypes.bool.isRequired,
+    ////
+    organization: PropTypes.string.isRequired,
   }
 
   componentDidMount() {}
@@ -39,8 +43,9 @@ export default class LogStreamMenu extends Component {
       format,
       orientation,
       useShape,
+      organization,
       streamState: { expand },
-      functions: {
+      menuFunctions: {
         expandStream,
         startRelink,
         pauseStream,
@@ -53,6 +58,7 @@ export default class LogStreamMenu extends Component {
     } = this.props
 
     const isShape = format === 'shape'
+    const isAugmented = organization === _Aug
 
     const specialItems = []
 
@@ -72,7 +78,7 @@ export default class LogStreamMenu extends Component {
       )
     }
 
-    if (isShape) {
+    if (isShape && isAugmented) {
       specialItems.push(
         !snap ? (
           <p
@@ -110,43 +116,49 @@ export default class LogStreamMenu extends Component {
           <span>{expand ? 'fold' : 'expand'}</span>
         </p>
 
-        <p
-          className="stream-menu-item cursor-crosshair"
-          onMouseDown={startRelink}
-          title="attach to element"
-        >
-          {/* <Relink /> attach */}
-          <Relink />
-          <span>attach</span>
-        </p>
+        {isAugmented && (
+          <p
+            className="stream-menu-item cursor-crosshair"
+            onMouseDown={startRelink}
+            title="attach to element"
+          >
+            {/* <Relink /> attach */}
+            <Relink />
+            <span>attach</span>
+          </p>
+        )}
 
         {/* -------------------------------------------------------------------------- */}
         {/* special items */}
         {specialItems.length ? specialItems : null}
         {/* -------------------------------------------------------------------------- */}
 
-        <p
-          key={'menu-pause'}
-          className={`stream-menu-item menu-${
-            paused ? 'resume' : 'pause'
-          }-item`}
-          onMouseDown={pauseStream}
-          title={paused ? 'resume' : 'pause'}
-        >
-          {paused ? <Restart /> : <Pause />}
-          <span>{paused ? 'resume' : 'pause'}</span>
-        </p>
+        {isAugmented && (
+          <p
+            key={'menu-pause'}
+            className={`stream-menu-item menu-${
+              paused ? 'resume' : 'pause'
+            }-item`}
+            onMouseDown={pauseStream}
+            title={paused ? 'resume' : 'pause'}
+          >
+            {paused ? <Restart /> : <Pause />}
+            <span>{paused ? 'resume' : 'pause'}</span>
+          </p>
+        )}
 
-        <p
-          key={'menu-delete'}
-          className="stream-menu-item menu-delete-item"
-          onMouseDown={deleteStream}
-          title="delete"
-        >
-          <Delete />
-          <span>delete</span>
-          {/* <Delete /> */}
-        </p>
+        {isAugmented && (
+          <p
+            key={'menu-delete'}
+            className="stream-menu-item menu-delete-item"
+            onMouseDown={deleteStream}
+            title="delete"
+          >
+            <Delete />
+            <span>delete</span>
+            {/* <Delete /> */}
+          </p>
+        )}
       </div>
     )
   }

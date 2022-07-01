@@ -1,11 +1,11 @@
 import React, { Component, createRef } from 'react'
 import PropTypes from 'prop-types'
+import isEqual from 'react-fast-compare'
 
 import LogStream from './LogStream.js'
 import { assertExistence } from '../methods/utils.js'
 import { findPosition, pxWrap } from '../methods/findPosition.js'
-import { logStreamGapToAnchorPx, _L, _R, _T } from '../constants.js'
-import isEqual from 'react-fast-compare'
+import { logStreamGapToAnchorPx, _Aug, _L, _R, _T } from '../constants.js'
 import { getSnapPosition } from '../methods/snap.js'
 
 export default class LogStreamsHolder extends Component {
@@ -13,15 +13,17 @@ export default class LogStreamsHolder extends Component {
     return {
       element: PropTypes.instanceOf(Element),
       elementId: PropTypes.string,
-      logGroups: PropTypes.array,
-      updateLogGroup: PropTypes.func,
-      updateLog: PropTypes.func,
-      hostRef: PropTypes.object,
+      logGroups: PropTypes.array.isRequired,
+      updateLogGroup: PropTypes.func.isRequired,
+      updateLog: PropTypes.func.isRequired,
+      hostRef: PropTypes.object.isRequired,
       ////
-      snap: PropTypes.bool,
+      snap: PropTypes.bool.isRequired,
       snapElement: PropTypes.instanceOf(Element),
       snapElementId: PropTypes.string,
       snapAnchorSide: PropTypes.string,
+      ////
+      hostFunctions: PropTypes.object.isRequired,
     }
   }
 
@@ -150,8 +152,14 @@ export default class LogStreamsHolder extends Component {
   /* -------------------------------------------------------------------------- */
 
   render() {
-    const { elementId, logGroups, updateLogGroup, updateLog, hostRef } =
-      this.props
+    const {
+      elementId,
+      logGroups,
+      updateLogGroup,
+      updateLog,
+      hostRef,
+      hostFunctions,
+    } = this.props
     const { hovered, grabbing, bounding } = this.state
 
     return (
@@ -184,6 +192,8 @@ export default class LogStreamsHolder extends Component {
               hostRef={hostRef}
               handleStreamHover={this.handleStreamHover}
               handleStreamDragAround={this.handleStreamDragAround}
+              organization={_Aug}
+              hostFunctions={hostFunctions}
             />
           ))}
       </div>

@@ -10,9 +10,7 @@ export default class Types extends Component {
 
     log(undefined, null)
 
-    log([[]])
-
-    log(1, 'log', [1, 'log'], [1, 'log', ['log']])
+    log([[[[[]]]]])
 
     log(
       1,
@@ -29,17 +27,21 @@ export default class Types extends Component {
       ]
     )
 
-    log(true)
+    for (let i = 0; i < 10; i++) {
+      setTimeout(() => {
+        log({
+          value: {
+            viewingDistanceCm: 40 * Math.random(),
+            nearPointCm: { x: Math.random(), y: Math.random() },
+            latencyMs: 100,
+          },
+          timestamp: performance.now(),
+          method: 'Random',
+        })
+      }, Math.random() * 1000)
+    }
 
-    log({
-      value: {
-        viewingDistanceCm: 43.9,
-        nearPointCm: { x: null, y: null },
-        latencyMs: 144,
-      },
-      timestamp: 29491.39999985695,
-      method: 'FaceMesh',
-    })
+    log(true)
 
     log(this)
   }

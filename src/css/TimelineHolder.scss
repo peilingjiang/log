@@ -1,0 +1,122 @@
+.hyper-log-timeline {
+  position: fixed;
+
+  display: flex;
+  flex-direction: column;
+
+  width: max-content;
+  height: 100vh;
+
+  margin: 0;
+  padding: 0;
+
+  .timeline-name {
+    gap: $padding-xs;
+    background: $light !important;
+
+    .timeline-name-text {
+      font-weight: 700;
+    }
+
+    .timeline-icon {
+      cursor: pointer;
+      padding: $padding-xs;
+      // background: $white;
+
+      &.timeline-back-icon {
+        transform: rotate(180deg);
+      }
+
+      &.timeline-restart-icon {
+        path {
+          fill: $elegant-green;
+        }
+
+        &:hover {
+          background: $elegant-green;
+
+          path {
+            fill: $white;
+          }
+        }
+      }
+
+      &:hover {
+        &.timeline-back-icon,
+        &.timeline-fold-icon,
+        &.timeline-expand-icon {
+          background: $dark-grey;
+
+          path {
+            fill: $white;
+          }
+        }
+
+        &.timeline-pause-icon {
+          background: $elegant-yellow;
+
+          path {
+            fill: $white;
+          }
+        }
+      }
+    }
+  }
+
+  .timeline-scroll-wrapper {
+    height: 100%;
+    overflow-y: scroll;
+    padding: $padding-small $padding-small $padding-x-large 0;
+
+    background: rgba($white, $opacity-mid);
+    backdrop-filter: blur(5px);
+
+    @include scrollbar($scrollbar-width-large, $white, $grey, $dark-grey);
+    &::-webkit-scrollbar {
+      height: $scrollbar-width-large;
+    }
+
+    .timeline-background-alignment {
+      z-index: 0;
+      position: absolute;
+      height: 100%;
+      // width: 100%;
+      // background: rgba($grey, $opacity-xh);
+      border-left: 2px solid $light;
+
+      &:hover {
+        border-left: 2px solid $grey;
+      }
+    }
+  }
+
+  .timeline-wrapper {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    // gap: $padding-xs;
+    flex-shrink: 0;
+    flex-wrap: nowrap;
+
+    overflow-y: scroll;
+  }
+
+  .timeline-log-item-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: $padding-mid;
+
+    // z-index: 1;
+
+    .hyper-log-stream-in-time {
+      padding: $padding-xxs 0 $padding-xxs $padding-xs;
+    }
+
+    .timeline-timestamp {
+      @include font-fixed;
+      font-size: $font-size-small;
+    }
+  }
+}

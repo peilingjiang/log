@@ -8,7 +8,7 @@
 
   width: 100%;
   height: min-content;
-  height: 100vh;
+  // height: 100vh;
   // overflow-y: scroll;
   // overflow-x: visible;
 
@@ -36,6 +36,8 @@
     padding: 1px; // !important
     // transition: width $transition-normal, height $transition-normal;
 
+    // pointer-events: none;
+
     scrollbar-width: none;
     &::-webkit-scrollbar {
       width: 0;
@@ -47,31 +49,13 @@
   &.stream-expand .logs-wrapper {
     padding: $padding-xs calc($padding-xs + 1px - $scrollbar-width) $padding-xs
       calc($padding-xs + 1px);
-    z-index: -1;
+    // z-index: -1;
 
     border-top: 2px solid $grey;
     border-bottom: 2px solid $grey;
     background: $light;
 
-    /* width */
-    &::-webkit-scrollbar {
-      width: $scrollbar-width;
-    }
-
-    /* Track */
-    &::-webkit-scrollbar-track {
-      background: $light;
-    }
-
-    /* Handle */
-    &::-webkit-scrollbar-thumb {
-      background: $grey;
-    }
-
-    /* Handle on hover */
-    &::-webkit-scrollbar-thumb:hover {
-      background: $dark-grey;
-    }
+    @include scrollbar($scrollbar-width, $light, $grey, $dark-grey);
   }
 
   &.stream-expand:not(.shape-stream) .logs-wrapper {

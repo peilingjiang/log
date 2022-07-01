@@ -32,6 +32,19 @@ export const arrayFirst = (arr, n = 1) => {
   return n >= arr.length ? arr : arr.slice(0, n)
 }
 
+export const preventEventWrapper = (e, callback) => {
+  e.preventDefault()
+  e.stopPropagation()
+  callback()
+}
+
+/* -------------------------------------------------------------------------- */
+// math
+
+export const constrain = (x, min, max) => {
+  return Math.max(min, Math.min(x, max))
+}
+
 /* -------------------------------------------------------------------------- */
 // element
 
@@ -235,6 +248,18 @@ export const tinyColorToRGBStyleString = tinyColor => {
 
 export const hexAndOpacityToRGBA = (hex, opacity) => {
   return `rgba(${tinyColorToRGBStyleString(tinycolor(hex))}, ${opacity})`
+}
+
+export const randomColor = () => {
+  let c
+
+  do {
+    c = tinycolor(
+      '#' + Math.floor(Math.random() * 16777215).toString(16) + 'ff'
+    )
+  } while (!c.isValid())
+
+  return c.toHex8String()
 }
 
 /* -------------------------------------------------------------------------- */

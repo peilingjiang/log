@@ -1,18 +1,22 @@
 import React from 'react'
 
 import Log, { logBaseStyles } from './Log.js'
-import { _config, _DEF, _H, _rootStyles, _V } from '../constants.js'
+import { _Aug, _config, _DEF, _H, _rootStyles, _V } from '../constants.js'
 import { assertNumber, hexAndOpacityToRGBA } from '../methods/utils.js'
 // import { Formatter } from '../formatter/Main.js'
+
+import Arrow from '../icons/arrow.svg'
 
 export default class ShapeLog extends Log {
   render() {
     const {
-      log: { args, unit, history, color },
+      log: { args, unit, history, color, timestamps },
       orderReversed,
       expandedLog,
       snap,
       orientation,
+      organization,
+      hostFunctions,
     } = this.props
 
     /* -------------------------------------------------------------------------- */
@@ -25,6 +29,8 @@ export default class ShapeLog extends Log {
     /* -------------------------------------------------------------------------- */
 
     const isHorizontal = orientation === _H
+    const isAugmented = organization === _Aug
+
     const noteStyle =
       snap && !isHorizontal
         ? {
@@ -53,7 +59,23 @@ export default class ShapeLog extends Log {
           }}
         >
           <p className="shape-log-note" style={noteStyle}>
-            {value}
+            <span>{value}</span>{' '}
+            {isAugmented ? (
+              <span
+                className="log-body-timestamp shape-timestamp cursor-pointer"
+                onClick={() => {
+                  hostFunctions.changeOrganization('timeline')
+                }}
+              >
+                <span>{Math.round(timestamps.at(-1).now)}</span>
+                <Arrow />
+              </span>
+            ) : // ) : (
+            //   <p className="log-body-timestamp">
+            //     <span>{Math.round(timestamp)}</span>
+            //   </p>
+            // )}
+            null}
           </p>
           {/* <div className="hyper-log-body-content">
             <Formatter args={args} />

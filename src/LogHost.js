@@ -3,16 +3,21 @@ import isEqual from 'react-fast-compare'
 
 import { addLog } from './methods/addLog.js'
 import LogStreamsHolder from './organizations/LogStreamsHolder.js'
+import TimelineHolder from './organizations/TimelineHolder.js'
 import { HyperLog } from './globalLogObject.js'
 import { deepCopyArrayOfLogs } from './methods/utils.js'
+import { _Aug, _Time } from './constants.js'
+import { g } from './global.js'
+import { clearAllOutlines } from './methods/attachElements.js'
 
 export default class LogHost extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
+      logPaused: false,
       logGroups: {},
-      organization: 'augmented', // list, grid, timeline
+      organization: g.defaultOrganization, // timeline, augmented, list?, grid?
     }
 
     this.ref = createRef()
@@ -24,6 +29,14 @@ export default class LogHost extends Component {
     this.updateLog = this.updateLog.bind(this)
 
     this._resizeHandler = this._resizeHandler.bind(this)
+
+    this.hostFunctions = {
+      togglePauseTheWholeLogSystem:
+        this.togglePauseTheWholeLogSystem.bind(this),
+      changeOrganization: this.changeOrganization.bind(this),
+    }
+
+    this.loggedCounter = 0
   }
 
   componentDidMount() {
@@ -50,13 +63,14 @@ export default class LogHost extends Component {
     clearTimeout(this.windowResizeTimer)
     this.windowResizeTimer = setTimeout(() => {
       // window resized
-      for (let refId in this.streamsHoldersRefs) {
-        const ref = this.streamsHoldersRefs[refId]
-        if (ref.current) {
-          if (ref.current.props.snap) ref.current.snapToPosition()
-          else ref.current.optimizePosition()
+      if (this.state.organization === _Aug)
+        for (let refId in this.streamsHoldersRefs) {
+          const ref = this.streamsHoldersRefs[refId]
+          if (ref.current) {
+            if (ref.current.props.snap) ref.current.snapToPosition()
+            else ref.current.optimizePosition()
+          }
         }
-      }
     }, 50)
   }
 
@@ -89,6 +103,10 @@ export default class LogHost extends Component {
     }
 
     // Number.prototype.log = function (...args) {}
+  }
+
+  incLoggedCounter() {
+    this.loggedCounter++
   }
 
   /* -------------------------------------------------------------------------- */
@@ -163,6 +181,23 @@ export default class LogHost extends Component {
     return null
   }
 
+  /* -------------------------------------------------------------------------- */
+
+  togglePauseTheWholeLogSystem() {
+    this.setState({
+      logPaused: !this.state.logPaused,
+    })
+  }
+
+  changeOrganization(newOrganization) {
+    // clear all element highlighting
+    clearAllOutlines()
+
+    this.setState({
+      organization: newOrganization,
+    })
+  }
+
   renderAugmentedLogs(logGroups) {
     // we remove old streamsHoldersRefs if corresponding holder has gone
     const currentlyExistingLogGroupHolderIds = []
@@ -174,6 +209,8 @@ export default class LogHost extends Component {
     for (const logGroupId in logGroups) {
       const thisGroup = logGroups[logGroupId]
 
+      // if this is a snapped group, then append to a snap holder
+      // if not, then append to a normal holder
       if (thisGroup.snap) {
         if (!streamsHolderSnapByElement[thisGroup.snapElementId])
           streamsHolderSnapByElement[thisGroup.snapElementId] = []
@@ -209,6 +246,7 @@ export default class LogHost extends Component {
             logGroups,
             snapElementId
           )}
+          hostFunctions={this.hostFunctions}
         />
       )
     }
@@ -229,6 +267,7 @@ export default class LogHost extends Component {
           updateLog={this.updateLog}
           hostRef={this.ref}
           snap={false}
+          hostFunctions={this.hostFunctions}
         />
       )
     }
@@ -243,17 +282,42 @@ export default class LogHost extends Component {
     return streamsHolders
   }
 
+  renderTimelineLogs(logGroups, logPaused) {
+    // calculate the total number of logs
+    let totalLogs = 0
+    for (const logGroupId in logGroups) {
+      const logGroup = logGroups[logGroupId]
+      totalLogs += logGroup.logs.length
+    }
+
+    return (
+      Object.keys(logGroups).length > 0 && (
+        <TimelineHolder
+          logPaused={logPaused}
+          logGroups={logGroups}
+          totalLogCount={totalLogs}
+          updateLogGroup={this.updateLogGroup}
+          updateLog={this.updateLog}
+          hostRef={this.ref}
+          hostFunctions={this.hostFunctions}
+        />
+      )
+    )
+  }
+
   /* -------------------------------------------------------------------------- */
 
   render() {
-    const { logGroups, organization } = this.state
+    const { logPaused, logGroups, organization } = this.state
 
     let renderedLogElements
     switch (organization) {
-      case 'augmented':
+      case _Aug:
         renderedLogElements = this.renderAugmentedLogs(logGroups)
         break
-
+      case _Time:
+        renderedLogElements = this.renderTimelineLogs(logGroups, logPaused)
+        break
       default:
         break
     }
