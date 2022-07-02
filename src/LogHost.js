@@ -18,10 +18,12 @@ export default class LogHost extends Component {
       logPaused: false,
       logGroups: {},
       organization: g.defaultOrganization, // timeline, augmented, list?, grid?
+      ////
+      timelineHighlightedLogId: null,
     }
 
     this.ref = createRef()
-    this.streamsHoldersRefs = {}
+    this.streamsHoldersRefs = {} // for _Aug organization
 
     this.windowResizeTimer = null
 
@@ -49,7 +51,26 @@ export default class LogHost extends Component {
     window.addEventListener('resize', this._resizeHandler)
   }
 
-  // componentDidUpdate() {}
+  componentDidUpdate(prevProps, prevState) {
+    // if switched to timeline organization from an item, highlight the item and scroll to it
+    if (
+      prevState.organization !== this.state.organization &&
+      this.state.organization === _Time &&
+      this.state.logId !== null
+    ) {
+      // highlight the item
+      this.ref.current
+        ?.querySelectorAll('.hyper-log-stream-in-time')
+        .forEach(el => {
+          if (el.dataset?.id === this.state.timelineHighlightedLogId) {
+            el.classList.add('hyper-item-highlight-outline-animate')
+            el.classList.add('up-front')
+            // scroll to the item
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+          }
+        })
+    }
+  }
 
   componentWillUnmount() {
     window.removeEventListener('resize', this._resizeHandler)
@@ -189,12 +210,13 @@ export default class LogHost extends Component {
     })
   }
 
-  changeOrganization(newOrganization) {
+  changeOrganization(newOrganization, logId = null) {
     // clear all element highlighting
     clearAllOutlines()
 
     this.setState({
       organization: newOrganization,
+      timelineHighlightedLogId: logId,
     })
   }
 

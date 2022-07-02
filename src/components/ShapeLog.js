@@ -10,7 +10,7 @@ import Arrow from '../icons/arrow.svg'
 export default class ShapeLog extends Log {
   render() {
     const {
-      log: { args, unit, history, color, timestamps },
+      log: { id, args, unit, history, color, timestamps },
       orderReversed,
       expandedLog,
       snap,
@@ -64,7 +64,7 @@ export default class ShapeLog extends Log {
               <span
                 className="log-body-timestamp shape-timestamp cursor-pointer"
                 onClick={() => {
-                  hostFunctions.changeOrganization('timeline')
+                  hostFunctions.changeOrganization('timeline', id)
                 }}
               >
                 <span>{Math.round(timestamps.at(-1).now)}</span>

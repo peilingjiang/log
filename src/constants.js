@@ -166,6 +166,11 @@ export const _rootStyles = Object.seal({
   elementOutlineBound: '#fba300',
 
   opacityDefault: 0.95,
+
+  transitionFastMs: 100,
+  transitionNormalMs: 300,
+  transitionSlowMs: 700,
+  transitionHighlightMs: 1500,
 })
 
 export const _tinyColors = Object.seal({

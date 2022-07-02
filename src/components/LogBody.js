@@ -69,7 +69,7 @@ export default class LogBody extends Component {
               <p
                 className="log-body-timestamp cursor-pointer"
                 onClick={() => {
-                  hostFunctions.changeOrganization('timeline')
+                  hostFunctions.changeOrganization('timeline', id)
                 }}
               >
                 <span>{Math.round(timestamp)}</span>

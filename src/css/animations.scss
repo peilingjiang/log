@@ -1,0 +1,14 @@
+@keyframes highlight-outline {
+  0% {
+    outline: 6px solid $bright-green;
+  }
+
+  100% {
+    outline: 6px solid transparent;
+    // outline: 6px solid $bright-green;
+  }
+}
+
+.hyper-item-highlight-outline-animate {
+  animation: highlight-outline $transition-highlight ease $transition-slow;
+}

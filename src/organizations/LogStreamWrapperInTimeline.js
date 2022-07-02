@@ -47,6 +47,8 @@ export default class LogStreamWrapperInTimeline extends LogStream {
         // }}
         onMouseEnter={this.handleMouseEnter}
         onMouseLeave={this.handleMouseOut}
+        ////
+        data-id={log.id}
       >
         <div
           className="logs-wrapper"
