@@ -144,8 +144,15 @@ export const defaultBoundingAlignmentFromSnapSide = snapSide => {
   }
 }
 
-export const _getAlignment = (orientation, horizontalAlign, verticalAlign) => {
+export const _getAlignment = (
+  orientation,
+  expand,
+  horizontalAlign,
+  verticalAlign
+) => {
   // Get alignItems value
+  if (expand) return 'flex-start'
+
   if (orientation === _H)
     return horizontalAlign === _L ? 'flex-start' : 'flex-end'
   else return verticalAlign === _T ? 'flex-start' : 'flex-end'

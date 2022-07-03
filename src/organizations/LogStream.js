@@ -647,6 +647,7 @@ export default class LogStream extends Component {
 
     const alignItemsValue = _getAlignment(
       orientation,
+      expand,
       bounding.horizontalAlign,
       bounding.verticalAlign
     )
