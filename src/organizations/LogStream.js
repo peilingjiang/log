@@ -20,7 +20,7 @@ import {
   assertArray,
   assertObject,
   bindableElement,
-  checkForUnit,
+  canUseShape,
   cloneLogGroup,
   idFromString,
   removeLogId,
@@ -395,13 +395,18 @@ export default class LogStream extends Component {
       choosingCenterStaged: false,
     })
 
-    updateLogGroup(groupId, {
+    const newLogGroup = {
       ...cloneLogGroup(logGroup),
       view: {
         ...logGroup.view,
         centerStagedId: removeLogId(newCenterStagedId),
       },
-    })
+    }
+
+    // reset logGroup format to text
+    if (newCenterStagedId.length === 0) newLogGroup.format = 'text'
+
+    updateLogGroup(groupId, newLogGroup)
   }
 
   setUnfoldedIds(groupId, idToToggle, toUnfold = true) {
@@ -618,7 +623,7 @@ export default class LogStream extends Component {
       logElements.push(
         // to add a valid shape log, the stream must be a shape (format)
         // and this log must have a valid unit
-        !isShape || !checkForUnit(log) ? (
+        !isShape || !canUseShape(log, view.centerStagedId) ? (
           <Log
             key={`${log.id} ${log.timestamps.at(-1).now}`}
             groupId={groupId}
@@ -659,7 +664,6 @@ export default class LogStream extends Component {
 
     const alignItemsValue = _getAlignment(
       orientation,
-      expand,
       bounding.horizontalAlign,
       bounding.verticalAlign
     )
@@ -669,7 +673,7 @@ export default class LogStream extends Component {
     // const wrapperBorderStyle = expand ? `2px solid ${groupColor}` : null
     // logWrapperStyles.borderTop = wrapperBorderStyle
     // logWrapperStyles.borderBottom = wrapperBorderStyle
-    logWrapperStyles.alignItems = alignItemsValue
+    logWrapperStyles.alignItems = expand ? 'flex-start' : alignItemsValue
     if (orientation === _H) {
       logWrapperStyles.flexDirection = 'column'
     } else {
@@ -681,7 +685,7 @@ export default class LogStream extends Component {
       <div
         className={`hyper-log-stream${expand ? ' stream-expand' : ''}${
           isShape ? ' shape-stream' : ''
-        }${orientation === _H ? ' stream-horizontal' : 'stream-vertical'}${
+        }${orientation === _H ? ' stream-horizontal' : ' stream-vertical'}${
           hovered ? ' stream-hovered up-front' : ''
         }${current ? ' stream-current' : ''}`}
         style={{
@@ -724,7 +728,7 @@ export default class LogStream extends Component {
           streamState={this.state}
           menuFunctions={this.menuFunctions}
           snap={snap}
-          useShape={checkForUnit(logs[logs.length - 1])}
+          useShape={canUseShape(logs[logs.length - 1], view.centerStagedId)}
           organization={organization}
           ////
           allowingCenterStaged={this._allowingCenterStaged()}

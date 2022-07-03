@@ -167,7 +167,7 @@ export default class LogStreamsHolder extends Component {
       <div
         className={`hyper-log-streams-holder${
           hovered || grabbing ? ' up-front' : ''
-        }${snap ? ' snap-holder' : ''}`}
+        }${snap ? ' snap-holder' : ''}`} // TODO different arrangement for vertical snap
         ref={this.ref}
         style={{
           left: bounding.left,

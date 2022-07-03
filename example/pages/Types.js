@@ -31,11 +31,8 @@ export default class Types extends Component {
       setTimeout(() => {
         log({
           value: {
-            viewingDistanceCm: 40 * Math.random(),
+            viewingDistanceCm: 500 * Math.random(),
             nearPointCm: { x: Math.random(), y: Math.random() },
-            nearPointCm2: { x: Math.random(), y: Math.random() },
-            nearPointCm3: { x: Math.random(), y: Math.random() },
-            nearPointCm4: { x: Math.random(), y: Math.random() },
             latencyMs: 100,
           },
           timestamp: performance.now(),

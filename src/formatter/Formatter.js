@@ -7,6 +7,7 @@ import FormatterObject from './FormatterObject.js'
 import {
   assertNumber,
   assertTypeOfArg,
+  parseCenterStagedValueFromId,
   removeArgsDescriptions,
 } from '../methods/utils.js'
 import { wrapString } from './utils.js'
@@ -48,24 +49,6 @@ export class Formatter extends Component {
     )
   }
 
-  parseCenterStagedValueFromId(args, id) {
-    const sequentialGetters = removeArgsDescriptions(id).split('-')
-
-    let progressId = ''
-    for (const getterInd in sequentialGetters) {
-      const getter = sequentialGetters[getterInd]
-      const parsedGetter = assertNumber(getter) ? parseInt(getter) : getter
-      // keep going only when args[parsedGetter] has a value,
-      // or, if it's the last getter (the inner-most value could just be undefined)
-      if (args[parsedGetter] || getterInd === sequentialGetters.length - 1) {
-        args = args[parsedGetter]
-        progressId += getter
-      } else return [args, progressId]
-    }
-
-    return [args, id]
-  }
-
   render() {
     const {
       args,
@@ -78,8 +61,10 @@ export class Formatter extends Component {
 
     let formattedArgs
     if (view.centerStagedId.length) {
-      const [argsForFormatter, idForFormatter] =
-        this.parseCenterStagedValueFromId(args, view.centerStagedId)
+      const [argsForFormatter, idForFormatter] = parseCenterStagedValueFromId(
+        args,
+        view.centerStagedId
+      )
 
       formattedArgs = formatArg(
         argsForFormatter,

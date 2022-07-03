@@ -90,5 +90,5 @@ export default class LogStreamName extends Component {
 }
 
 const parseCenterStagedId = centerStagedId => {
-  return `[${removeArgsDescriptions(centerStagedId).replace(/-/g, ':')}]`
+  return `.${removeArgsDescriptions(centerStagedId).replace(/-/g, '.')}`
 }

@@ -1,8 +1,20 @@
 import React from 'react'
 
 import Log, { logBaseStyles } from './Log.js'
-import { _Aug, _config, _DEF, _H, _rootStyles, _V } from '../constants.js'
-import { assertNumber, hexAndOpacityToRGBA } from '../methods/utils.js'
+import {
+  _Aug,
+  _config,
+  _DEF,
+  _H,
+  _rootStyles,
+  _Time,
+  _V,
+} from '../constants.js'
+import {
+  assertNumber,
+  hexAndOpacityToRGBA,
+  parseCenterStagedValueFromId,
+} from '../methods/utils.js'
 // import { Formatter } from '../formatter/Main.js'
 
 import Arrow from '../icons/arrow.svg'
@@ -17,12 +29,16 @@ export default class ShapeLog extends Log {
       orientation,
       organization,
       hostFunctions,
+      view: { centerStagedId },
     } = this.props
 
     /* -------------------------------------------------------------------------- */
     // get value
 
-    let value = args[0]
+    // TODO robust on args that cannot be parsed
+    let value = centerStagedId
+      ? parseCenterStagedValueFromId(args, centerStagedId)[0]
+      : args[0]
     // TODO should the default unit be px?
     if (assertNumber(value)) value = `${value}${unit || 'px'}`
 
@@ -63,12 +79,14 @@ export default class ShapeLog extends Log {
             <span>{value}</span>{' '}
             {isAugmented ? (
               <span
-                className="log-body-timestamp shape-timestamp cursor-pointer"
+                className="log-body-timestamp shape-timestamp cursor-pointer font-fixed-width"
                 onClick={() => {
-                  hostFunctions.changeOrganization('timeline', id)
+                  hostFunctions.changeOrganization(_Time, id)
                 }}
               >
-                <span>{Math.round(timestamps.at(-1).now)}</span>
+                {/* <span className="font-fixed-width"> */}
+                {Math.round(timestamps.at(-1).now)}
+                {/* </span> */}
                 <Arrow />
               </span>
             ) : // ) : (

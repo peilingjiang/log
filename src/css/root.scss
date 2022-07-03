@@ -126,7 +126,11 @@ $rem-to-px: 16;
 /* -------------------------------------------------------------------------- */
 
 @mixin font-fixed {
-  font-family: 'Inconsolata', 'Courier New', Courier, monospace;
+  font-family: 'Inconsolata', 'Courier New', Courier, monospace !important;
+}
+
+.font-fixed-width {
+  @include font-fixed;
 }
 
 .font-bold {

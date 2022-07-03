@@ -56,6 +56,24 @@ export const removeArgsDescriptions = args => {
   return args.replace(/\[(.*?)\]/g, '')
 }
 
+export const parseCenterStagedValueFromId = (args, id) => {
+  const sequentialGetters = removeArgsDescriptions(id).split('-')
+
+  let progressId = ''
+  for (const getterInd in sequentialGetters) {
+    const getter = sequentialGetters[getterInd]
+    const parsedGetter = assertNumber(getter) ? parseInt(getter) : getter
+    // keep going only when args[parsedGetter] has a value,
+    // or, if it's the last getter (the inner-most value could just be undefined)
+    if (args[parsedGetter] || getterInd === sequentialGetters.length - 1) {
+      args = args[parsedGetter]
+      progressId += getter
+    } else return [args, progressId]
+  }
+
+  return [args, id]
+}
+
 /* -------------------------------------------------------------------------- */
 // math
 
@@ -296,10 +314,21 @@ export const _checkIfContainsValidUnit = arg => {
   return false
 }
 
-export const checkForUnit = log => {
-  if (log.args.length !== 1) return false
+export const canUseShape = (log, centerStagedId = '') => {
+  const rawArgs = log.args
+
+  let args
+  if (centerStagedId.length)
+    args = [parseCenterStagedValueFromId(rawArgs, centerStagedId)[0]]
+  else args = rawArgs
+
+  if (args.length !== 1) return false
+  // return (
+  //   (!!log.unit && _unitIsValid(log.unit) && assertNumber(log.args[0])) ||
+  //   (assertString(log.args[0]) && _checkIfContainsValidUnit(log.args[0]))
+  // )
   return (
-    (!!log.unit && _unitIsValid(log.unit) && assertNumber(log.args[0])) ||
-    (assertString(log.args[0]) && _checkIfContainsValidUnit(log.args[0]))
+    assertNumber(args[0]) ||
+    (assertString(args[0]) && _checkIfContainsValidUnit(args[0]))
   )
 }

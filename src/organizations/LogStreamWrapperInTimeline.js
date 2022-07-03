@@ -4,7 +4,7 @@ import isEqual from 'react-fast-compare'
 import LogStream from './LogStream.js'
 import Log from '../components/Log.js'
 import ShapeLog from '../components/ShapeLog.js'
-import { checkForUnit } from '../methods/utils.js'
+import { canUseShape } from '../methods/utils.js'
 import { _H } from '../constants.js'
 import { pxWrap } from '../methods/findPosition.js'
 import LogStreamMenu from './LogStreamMenu.js'
@@ -70,7 +70,7 @@ export default class LogStreamWrapperInTimeline extends LogStream {
             handlePositionReset={this.handlePositionReset}
           /> */}
 
-          {!isShape || !checkForUnit(log) ? (
+          {!isShape || !canUseShape(log, view.centerStagedId) ? (
             <Log
               key={`${log.id} ${log.timestamps.at(-1).now}`}
               groupId={groupId}
