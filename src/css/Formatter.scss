@@ -172,3 +172,15 @@
     }
   }
 }
+
+/* -------------------------------------------------------------------------- */
+
+.hyper-choosing {
+  cursor: pointer;
+  user-select: none;
+
+  &:hover:not(:has(.hyper-choosing:hover)) {
+    outline: $padding-xxs solid $purple;
+    outline-offset: $padding-xxs;
+  }
+}

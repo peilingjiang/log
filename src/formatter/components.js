@@ -5,11 +5,14 @@ import isEqual from 'react-fast-compare'
 import Expand from '../icons/folded-s.svg'
 import Fold from '../icons/unfolded-s.svg'
 
-const ObjectKeyMemo = ({ value, inheritId, bold }) => {
+const ObjectKeyMemo = ({ value, inheritId, bold, choosing }) => {
   return (
     <span
       // key={`${inheritId}-obj-key`}
-      className={`f-object-key${bold ? ' info-bold' : ''}`}
+      data-key={`${inheritId}-${value}[obj*key]`}
+      className={`f-object-key${bold ? ' info-bold' : ''}${
+        choosing ? ' hyper-choosing' : ''
+      }`}
     >
       {value}
     </span>
@@ -20,6 +23,7 @@ ObjectKeyMemo.propTypes = {
   value: PropTypes.string.isRequired,
   inheritId: PropTypes.string.isRequired,
   bold: PropTypes.bool.isRequired,
+  choosing: PropTypes.bool.isRequired,
 }
 
 export const ObjectKey = memo(ObjectKeyMemo, isEqual)

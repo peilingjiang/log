@@ -80,6 +80,11 @@ $rem-to-px: 16;
 
 /* -------------------------------------------------------------------------- */
 
+.disabled {
+  pointer-events: none !important;
+  opacity: $opacity-high !important;
+}
+
 .up-front {
   z-index: 999999999 !important;
 }

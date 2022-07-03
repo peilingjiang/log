@@ -7,6 +7,7 @@ import { Formatter } from '../formatter/Formatter.js'
 import { hexAndOpacityToRGBA } from '../methods/utils.js'
 
 import Arrow from '../icons/arrow.svg'
+import CenterStage from '../icons/center-stage.svg'
 
 export default class LogBody extends Component {
   static get propTypes() {
@@ -28,6 +29,7 @@ export default class LogBody extends Component {
       streamFunctions: PropTypes.object.isRequired,
       organization: PropTypes.string.isRequired,
       view: logViewInterface.isRequired,
+      choosingCenterStaged: PropTypes.bool.isRequired,
     }
   }
 
@@ -51,6 +53,7 @@ export default class LogBody extends Component {
       streamFunctions,
       organization,
       view,
+      choosingCenterStaged,
     } = this.props
 
     const isAugmented = organization === _Aug
@@ -93,6 +96,9 @@ export default class LogBody extends Component {
           </div>
         )}
         <div className="hyper-log-body-content">
+          {view.centerStagedId.length > 0 && (
+            <CenterStage className="hyper-log-center-stage" />
+          )}
           {count > 1 && <span className="hyper-log-count">{count}</span>}
           <Formatter
             args={args}
@@ -100,8 +106,9 @@ export default class LogBody extends Component {
             logId={id}
             view={view}
             streamFunctions={streamFunctions}
+            choosingCenterStaged={choosingCenterStaged}
           />
-          {unit ? `${unit}` : ''}
+          {unit ? <span className="hyper-log-unit">{unit}</span> : null}
         </div>
       </div>
     )

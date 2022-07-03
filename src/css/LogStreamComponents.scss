@@ -105,10 +105,12 @@ $menu-height-text: calc(
       fill: $dark-grey;
     }
 
-    &.menu-expand-item {
-      background: $dark-grey;
+    &.menu-expand-item,
+    &.menu-choosing-item {
+      background: $dark-grey !important;
+
       svg path {
-        fill: $white;
+        fill: $white !important;
       }
     }
 

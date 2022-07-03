@@ -30,6 +30,7 @@ export default class Log extends Component {
       organization: PropTypes.string.isRequired,
       ////
       view: logViewInterface.isRequired,
+      choosingCenterStaged: PropTypes.bool.isRequired,
     }
   }
 
@@ -61,6 +62,7 @@ export default class Log extends Component {
       streamFunctions,
       organization,
       view,
+      choosingCenterStaged,
     } = this.props
     const {
       log: { args, id, count, timestamps, stack, color, unit },
@@ -92,6 +94,7 @@ export default class Log extends Component {
           streamFunctions={streamFunctions}
           organization={organization}
           view={view}
+          choosingCenterStaged={choosingCenterStaged}
         />
       </div>
     )

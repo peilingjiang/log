@@ -15,9 +15,12 @@ import Shape from '../icons/shape.svg'
 import Text from '../icons/text.svg'
 import Snap from '../icons/snap.svg'
 import Unsnap from '../icons/unsnap.svg'
+import CenterStage from '../icons/center-stage.svg'
+import UnCenterStage from '../icons/un-center-stage.svg'
 
 export default class LogStreamMenu extends Component {
   static propTypes = {
+    groupId: PropTypes.string.isRequired,
     paused: PropTypes.bool.isRequired,
     format: PropTypes.string.isRequired,
     orientation: PropTypes.string.isRequired,
@@ -29,6 +32,9 @@ export default class LogStreamMenu extends Component {
     useShape: PropTypes.bool.isRequired,
     ////
     organization: PropTypes.string.isRequired,
+    allowingCenterStaged: PropTypes.bool.isRequired,
+    choosingCenterStaged: PropTypes.bool.isRequired,
+    centerStagedId: PropTypes.string.isRequired,
   }
 
   componentDidMount() {}
@@ -39,11 +45,15 @@ export default class LogStreamMenu extends Component {
 
   render() {
     const {
+      groupId,
       paused,
       format,
       orientation,
       useShape,
       organization,
+      allowingCenterStaged,
+      choosingCenterStaged,
+      centerStagedId,
       streamState: { expand },
       menuFunctions: {
         expandStream,
@@ -53,12 +63,15 @@ export default class LogStreamMenu extends Component {
         shapeIt,
         startSnap,
         undoSnap,
+        toggleChoosingCenterStaged,
+        setCenterStagedId,
       },
       snap,
     } = this.props
 
     const isShape = format === 'shape'
     const isAugmented = organization === _Aug
+    const shouldDisable = choosingCenterStaged
 
     const specialItems = []
 
@@ -66,7 +79,9 @@ export default class LogStreamMenu extends Component {
       specialItems.push(
         <p
           key={'shape'}
-          className="stream-menu-item special-menu-item"
+          className={`stream-menu-item special-menu-item${
+            shouldDisable ? ' disabled' : ''
+          }`}
           onClick={() => {
             shapeIt(!isShape ? 'shape' : 'text')
           }}
@@ -83,7 +98,9 @@ export default class LogStreamMenu extends Component {
         !snap ? (
           <p
             key={'menu-snap'}
-            className={`stream-menu-item special-menu-item cursor-crosshair`}
+            className={`stream-menu-item special-menu-item cursor-crosshair${
+              shouldDisable ? ' disabled' : ''
+            }`}
             onMouseDown={startSnap}
             title="snap to element point"
           >
@@ -93,7 +110,9 @@ export default class LogStreamMenu extends Component {
         ) : (
           <p
             key={'menu-snap'}
-            className="stream-menu-item special-menu-item"
+            className={`stream-menu-item special-menu-item${
+              shouldDisable ? ' disabled' : ''
+            }`}
             onMouseDown={undoSnap}
             title="unsnap"
           >
@@ -104,10 +123,41 @@ export default class LogStreamMenu extends Component {
       )
     }
 
+    if (allowingCenterStaged) {
+      if (centerStagedId.length) {
+        // already has a center staged id
+        specialItems.push(
+          <p
+            key={'menu-un-center-staged'}
+            className={`stream-menu-item special-menu-item`}
+            onClick={() => {
+              setCenterStagedId(groupId, '')
+            }}
+          >
+            <UnCenterStage />
+          </p>
+        )
+      } else {
+        specialItems.push(
+          <p
+            key={'menu-center-staged'}
+            className={`stream-menu-item special-menu-item${
+              choosingCenterStaged ? ' menu-choosing-item' : ''
+            }`}
+            onClick={() => {
+              toggleChoosingCenterStaged()
+            }}
+          >
+            <CenterStage />
+          </p>
+        )
+      }
+    }
+
     return (
       <div className={`hyper-log-stream-menu stream-menu-${orientation}`}>
         <p
-          className="stream-menu-item menu-expand-item"
+          className={`stream-menu-item menu-expand-item`}
           onClick={expandStream}
           title="expand"
         >
@@ -118,7 +168,9 @@ export default class LogStreamMenu extends Component {
 
         {isAugmented && (
           <p
-            className="stream-menu-item cursor-crosshair"
+            className={`stream-menu-item cursor-crosshair${
+              shouldDisable ? ' disabled' : ''
+            }`}
             onMouseDown={startRelink}
             title="attach to element"
           >

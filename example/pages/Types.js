@@ -10,7 +10,7 @@ export default class Types extends Component {
 
     log(undefined, null)
 
-    log([[[[[]]]]])
+    log(['a', ['b', ['c', ['d', ['e']]]]])
 
     log(
       1,
@@ -27,7 +27,7 @@ export default class Types extends Component {
       ]
     )
 
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < 10; i++) {
       setTimeout(() => {
         log({
           value: {

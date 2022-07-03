@@ -19,6 +19,7 @@ const FormatterArray = ({
   streamFunctions,
   formatArg,
   minimal,
+  choosing,
 }) => {
   const folded = !matchLocInObjectByRemovingLogId(
     idViews.unfoldedIds,
@@ -36,10 +37,11 @@ const FormatterArray = ({
             formatArg(
               arr[0],
               groupId,
-              `${inheritId}-arr-min`,
+              `${inheritId}[arr*min]`,
               idViews,
               streamFunctions,
-              true
+              true,
+              choosing
             )
           ) : (
             <FoldedDisplay />
@@ -48,7 +50,16 @@ const FormatterArray = ({
         </>
       )
     else content = '[]'
-    return <div className="f-array f-array-minimal minimal">{content}</div>
+    return (
+      <div
+        className={`f-array f-array-minimal minimal${
+          choosing ? ' hyper-choosing' : ''
+        }`}
+        data-key={`${inheritId}[arr]`}
+      >
+        {content}
+      </div>
+    )
   }
 
   if (folded) {
@@ -62,7 +73,8 @@ const FormatterArray = ({
           `${inheritId}-${i}`,
           idViews,
           streamFunctions,
-          true
+          true,
+          choosing
         )
       )
       if (i < arr.length - 1)
@@ -116,7 +128,8 @@ const FormatterArray = ({
                   `${inheritId}-${i}`,
                   idViews,
                   streamFunctions,
-                  false
+                  false,
+                  choosing
                 )}
               </div>
             )
@@ -130,7 +143,10 @@ const FormatterArray = ({
 
   return (
     <div
-      className={`f-array ${folded ? 'f-array-folded' : 'f-array-unfolded'}`}
+      className={`f-array ${folded ? 'f-array-folded' : 'f-array-unfolded'}${
+        choosing ? ' hyper-choosing' : ''
+      }`}
+      data-key={`${inheritId}[arr]`}
     >
       {content}
     </div>
@@ -145,6 +161,7 @@ FormatterArray.propTypes = {
   streamFunctions: PropTypes.object.isRequired,
   formatArg: PropTypes.func.isRequired,
   minimal: PropTypes.bool.isRequired,
+  choosing: PropTypes.bool.isRequired,
 }
 
 export default memo(FormatterArray, isEqual)

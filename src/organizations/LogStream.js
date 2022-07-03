@@ -17,6 +17,8 @@ import {
   _T,
 } from '../constants.js'
 import {
+  assertArray,
+  assertObject,
   bindableElement,
   checkForUnit,
   cloneLogGroup,
@@ -68,6 +70,8 @@ export default class LogStream extends Component {
       hovered: false,
       grabbing: false,
       current: false,
+      ////
+      choosingCenterStaged: false,
     }
     this.inExternalOperation = false
 
@@ -87,10 +91,12 @@ export default class LogStream extends Component {
       shapeIt: this.shapeIt.bind(this),
       startSnap: this.startSnap.bind(this),
       undoSnap: this.undoSnap.bind(this),
+      toggleChoosingCenterStaged: this.toggleChoosingCenterStaged.bind(this),
+      setCenterStagedId: this.setCenterStagedId.bind(this), // !
     }
 
     this.streamFunctions = {
-      setCenterStagedId: this.setCenterStagedId.bind(this),
+      setCenterStagedId: this.setCenterStagedId.bind(this), // !
       setUnfoldedIds: this.setUnfoldedIds.bind(this),
       setHighlightedIds: this.setHighlightedIds.bind(this),
     }
@@ -374,11 +380,29 @@ export default class LogStream extends Component {
     }
   }
 
+  toggleChoosingCenterStaged() {
+    this.setState({ choosingCenterStaged: !this.state.choosingCenterStaged })
+  }
+
   /* -------------------------------------------------------------------------- */
 
   // ! stream functions
 
-  setCenterStagedId() {}
+  setCenterStagedId(groupId, newCenterStagedId) {
+    const { logGroup, updateLogGroup } = this.props
+
+    this.setState({
+      choosingCenterStaged: false,
+    })
+
+    updateLogGroup(groupId, {
+      ...cloneLogGroup(logGroup),
+      view: {
+        ...logGroup.view,
+        centerStagedId: removeLogId(newCenterStagedId),
+      },
+    })
+  }
 
   setUnfoldedIds(groupId, idToToggle, toUnfold = true) {
     // if toFold, add idToToggle to unfoldedIds
@@ -535,8 +559,20 @@ export default class LogStream extends Component {
     return pxTrim(bounding.left) || pxTrim(bounding.top)
   }
 
+  _allowingCenterStaged() {
+    const {
+      logGroup: { logs },
+    } = this.props
+    const lastLogArgs = logs.at(-1).args
+
+    if (lastLogArgs.length > 1) return true
+    if (assertArray(lastLogArgs[0]) || assertObject(lastLogArgs[0])) return true
+    return false
+  }
+
   render() {
-    const { expand, hovered, grabbing, current } = this.state
+    const { expand, hovered, grabbing, current, choosingCenterStaged } =
+      this.state
     const {
       logGroup: {
         name,
@@ -585,6 +621,7 @@ export default class LogStream extends Component {
             organization={organization}
             ////
             view={view}
+            choosingCenterStaged={choosingCenterStaged}
           />
         ) : (
           <ShapeLog
@@ -602,6 +639,7 @@ export default class LogStream extends Component {
             organization={organization}
             ////
             view={view}
+            choosingCenterStaged={false}
           />
         )
       )
@@ -665,6 +703,7 @@ export default class LogStream extends Component {
         </div>
 
         <LogStreamMenu
+          groupId={groupId}
           paused={paused}
           format={format}
           orientation={orientation}
@@ -673,6 +712,10 @@ export default class LogStream extends Component {
           snap={snap}
           useShape={checkForUnit(logs[logs.length - 1])}
           organization={organization}
+          ////
+          allowingCenterStaged={this._allowingCenterStaged()}
+          choosingCenterStaged={choosingCenterStaged}
+          centerStagedId={view.centerStagedId}
         />
       </div>
     )

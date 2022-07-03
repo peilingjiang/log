@@ -19,6 +19,7 @@ const FormatterObject = ({
   streamFunctions,
   formatArg,
   minimal,
+  choosing,
 }) => {
   // check if unfolded
   const folded = !matchLocInObjectByRemovingLogId(
@@ -36,8 +37,9 @@ const FormatterObject = ({
           {Object.keys(obj).length === 1 ? (
             <ObjectKey
               value={Object.keys(obj)[0]}
-              inheritId={`${inheritId}-0`}
+              inheritId={`${inheritId}[0]`}
               bold={true}
+              choosing={choosing}
             />
           ) : (
             <FoldedDisplay />
@@ -46,7 +48,16 @@ const FormatterObject = ({
         </>
       )
     } else content = '{}'
-    return <div className="f-object f-object-minimal minimal">{content}</div>
+    return (
+      <div
+        className={`f-object f-object-minimal minimal${
+          choosing ? ' hyper-choosing' : ''
+        }`}
+        data-key={`${inheritId}[obj]`}
+      >
+        {content}
+      </div>
+    )
   }
 
   const objKeys = Object.keys(obj)
@@ -58,15 +69,16 @@ const FormatterObject = ({
       const keyValue = objKeys[keyInd]
       innerItems.push(
         <ObjectKey
-          key={`${inheritId}-${keyInd}-obj-key`}
+          key={`${inheritId}-${keyInd}[obj*key]`}
           value={keyValue}
-          inheritId={`${inheritId}-${keyInd}`}
+          inheritId={`${inheritId}[${keyInd}]`}
           bold={false}
+          choosing={choosing}
         />
       )
       innerItems.push(
         <span
-          key={`${inheritId}-${keyInd}-col`}
+          key={`${inheritId}-${keyInd}[col]`}
           className="simple-inline-element"
         >
           :
@@ -76,17 +88,18 @@ const FormatterObject = ({
         formatArg(
           obj[objKeys[keyInd]],
           groupId,
-          `${inheritId}-${keyInd}-val`,
+          `${inheritId}-${keyValue}[val]`,
           idViews,
           streamFunctions,
-          true
+          true,
+          choosing
         )
       )
 
       if (keyInd < objKeys.length - 1)
         innerItems.push(
           <span
-            key={`${inheritId}-${keyInd}-com`}
+            key={`${inheritId}-${keyInd}[com]`}
             className="simple-inline-element"
           >
             ,
@@ -126,15 +139,16 @@ const FormatterObject = ({
         <div className="unfolded-inner">
           {objKeys.map((objKey, i) => {
             return (
-              <div key={`${inheritId}-${i}-in`} className="inner-item">
+              <div key={`${inheritId}-${i}[in]`} className="inner-item">
                 <ObjectKey
-                  key={`${inheritId}-${i}-obj-key`}
+                  key={`${inheritId}-${i}[obj*key]`}
                   value={objKey}
-                  inheritId={`${inheritId}-${i}`}
+                  inheritId={`${inheritId}[${i}]`}
                   bold={true}
+                  choosing={choosing}
                 />
                 <span
-                  key={`${inheritId}-${i}-col`}
+                  key={`${inheritId}-${i}[col]`}
                   className="simple-inline-element"
                 >
                   :
@@ -142,10 +156,11 @@ const FormatterObject = ({
                 {formatArg(
                   obj[objKey],
                   groupId,
-                  `${inheritId}-${i}-val`,
+                  `${inheritId}-${objKey}[val]`,
                   idViews,
                   streamFunctions,
-                  false
+                  false,
+                  choosing
                 )}
               </div>
             )
@@ -159,7 +174,10 @@ const FormatterObject = ({
 
   return (
     <div
-      className={`f-object ${folded ? 'f-object-folded' : 'f-object-unfolded'}`}
+      className={`f-object ${folded ? 'f-object-folded' : 'f-object-unfolded'}${
+        choosing ? ' hyper-choosing' : ''
+      }`}
+      data-key={`${inheritId}[obj]`}
     >
       {content}
     </div>
@@ -174,6 +192,7 @@ FormatterObject.propTypes = {
   streamFunctions: PropTypes.object.isRequired,
   formatArg: PropTypes.func.isRequired,
   minimal: PropTypes.bool.isRequired,
+  choosing: PropTypes.bool.isRequired,
 }
 
 export default memo(FormatterObject, isEqual)

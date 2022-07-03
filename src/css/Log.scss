@@ -140,6 +140,13 @@
   flex-direction: row;
   gap: $padding-small;
 
+  .hyper-log-center-stage {
+    flex-grow: 0;
+    flex-shrink: 0;
+    font-size: calc($font-size-xs + $padding-xxs);
+    padding: 0;
+  }
+
   .hyper-log-count {
     @include font-fixed;
     color: $white;
@@ -151,8 +158,15 @@
     padding: $padding-xxs $padding-xs;
     // border-radius: 50%;
 
+    flex-shrink: 0;
+
     display: flex;
     justify-content: center;
+  }
+
+  .hyper-log-unit {
+    @include font-fixed;
+    // font-size: inherit;
   }
 }
 

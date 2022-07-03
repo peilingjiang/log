@@ -52,6 +52,10 @@ export const removeLogId = id => {
   return id.replace(/\((.*?)\)/g, '')
 }
 
+export const removeArgsDescriptions = args => {
+  return args.replace(/\[(.*?)\]/g, '')
+}
+
 /* -------------------------------------------------------------------------- */
 // math
 
