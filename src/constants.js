@@ -38,7 +38,7 @@ export const idViewsInterface = PropTypes.exact({
 
 export const logViewInterface = PropTypes.exact({
   left: PropTypes.string.isRequired,
-  right: PropTypes.string.isRequired,
+  top: PropTypes.string.isRequired,
   centerStagedId: PropTypes.string.isRequired,
   unfoldedIds: PropTypes.arrayOf(PropTypes.string).isRequired,
   highlightedIds: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -47,7 +47,7 @@ export const logViewInterface = PropTypes.exact({
 
 export const logViewDefault = Object.seal({
   left: '0px',
-  right: '0px',
+  top: '0px',
   centerStagedId: '',
   unfoldedIds: [],
   highlightedIds: [],

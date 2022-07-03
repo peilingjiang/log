@@ -6,13 +6,17 @@
   display: flex;
   flex-direction: column;
 
-  width: min-content;
+  width: 100%;
   height: min-content;
   // height: 100vh;
   // overflow-y: scroll;
   // overflow-x: visible;
 
   pointer-events: none;
+
+  &.snap-holder {
+    width: min-content !important;
+  }
 }
 
 /* -------------------------------------------------------------------------- */

@@ -5,17 +5,19 @@ import { _V } from '../constants.js'
 
 import Move from '../icons/move.svg'
 import isEqual from 'react-fast-compare'
+import { removeArgsDescriptions } from '../methods/utils.js'
 
 export default class LogStreamName extends Component {
   static get propTypes() {
     return {
-      name: PropTypes.string,
-      paused: PropTypes.bool,
-      orientation: PropTypes.string,
-      snap: PropTypes.bool,
-      streamGrabbing: PropTypes.bool,
-      handleDragAround: PropTypes.func,
-      handlePositionReset: PropTypes.func,
+      name: PropTypes.string.isRequired,
+      paused: PropTypes.bool.isRequired,
+      orientation: PropTypes.string.isRequired,
+      snap: PropTypes.bool.isRequired,
+      streamGrabbing: PropTypes.bool.isRequired,
+      handleDragAround: PropTypes.func.isRequired,
+      handlePositionReset: PropTypes.func.isRequired,
+      centerStagedId: PropTypes.string.isRequired,
     }
   }
 
@@ -51,7 +53,8 @@ export default class LogStreamName extends Component {
   }
 
   render() {
-    const { name, snap, streamGrabbing, orientation, paused } = this.props
+    const { name, snap, streamGrabbing, orientation, paused, centerStagedId } =
+      this.props
     return (
       <p
         className={`hyper-log-stream-name${
@@ -70,8 +73,22 @@ export default class LogStreamName extends Component {
           }}
         >
           {name || 'logs'}
+          {centerStagedId ? (
+            <>
+              <br />
+              <span className="font-bold">
+                {parseCenterStagedId(centerStagedId)}
+              </span>
+            </>
+          ) : (
+            ''
+          )}
         </span>
       </p>
     )
   }
+}
+
+const parseCenterStagedId = centerStagedId => {
+  return `[${removeArgsDescriptions(centerStagedId).replace(/-/g, ':')}]`
 }

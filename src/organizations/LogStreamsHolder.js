@@ -159,6 +159,7 @@ export default class LogStreamsHolder extends Component {
       updateLog,
       hostRef,
       hostFunctions,
+      snap,
     } = this.props
     const { hovered, grabbing, bounding } = this.state
 
@@ -166,7 +167,7 @@ export default class LogStreamsHolder extends Component {
       <div
         className={`hyper-log-streams-holder${
           hovered || grabbing ? ' up-front' : ''
-        }`}
+        }${snap ? ' snap-holder' : ''}`}
         ref={this.ref}
         style={{
           left: bounding.left,

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, createRef } from 'react'
 import PropTypes from 'prop-types'
 import isEqual from 'react-fast-compare'
 
@@ -8,6 +8,7 @@ import { hexAndOpacityToRGBA } from '../methods/utils.js'
 
 import Arrow from '../icons/arrow.svg'
 import CenterStage from '../icons/center-stage.svg'
+import { pxTrim } from '../methods/findPosition.js'
 
 export default class LogBody extends Component {
   static get propTypes() {
@@ -33,8 +34,43 @@ export default class LogBody extends Component {
     }
   }
 
+  constructor(props) {
+    super(props)
+
+    this.bodyRef = createRef()
+  }
+
+  componentDidMount() {
+    this.syncScroll()
+  }
+
   shouldComponentUpdate(nextProps) {
     return !isEqual(this.props, nextProps)
+  }
+
+  componentDidUpdate() {
+    this.syncScroll()
+  }
+
+  handleScroll = e => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    const {
+      groupId,
+      streamFunctions: { setScrollView },
+    } = this.props
+
+    setScrollView(
+      groupId,
+      this.bodyRef.current.scrollLeft,
+      this.bodyRef.current.scrollTop
+    )
+  }
+
+  syncScroll = () => {
+    this.bodyRef.current.scrollLeft = pxTrim(this.props.view.left)
+    this.bodyRef.current.scrollTop = pxTrim(this.props.view.top)
   }
 
   render() {
@@ -60,6 +96,7 @@ export default class LogBody extends Component {
 
     return (
       <div
+        ref={this.bodyRef}
         className="hyper-log-body"
         style={{
           background:
@@ -67,6 +104,7 @@ export default class LogBody extends Component {
               ? undefined
               : `${hexAndOpacityToRGBA(color, _rootStyles.opacityDefault)}`,
         }}
+        onScroll={this.handleScroll}
       >
         {expandedLog && (
           <div

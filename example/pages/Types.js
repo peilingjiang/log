@@ -33,6 +33,9 @@ export default class Types extends Component {
           value: {
             viewingDistanceCm: 40 * Math.random(),
             nearPointCm: { x: Math.random(), y: Math.random() },
+            nearPointCm2: { x: Math.random(), y: Math.random() },
+            nearPointCm3: { x: Math.random(), y: Math.random() },
+            nearPointCm4: { x: Math.random(), y: Math.random() },
             latencyMs: 100,
           },
           timestamp: performance.now(),
@@ -43,7 +46,7 @@ export default class Types extends Component {
 
     log(true)
 
-    log(this)
+    for (let i = 0; i < 2; i++) log(this)
   }
 
   render() {

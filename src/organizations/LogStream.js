@@ -22,7 +22,6 @@ import {
   bindableElement,
   checkForUnit,
   cloneLogGroup,
-  getElementBounding,
   idFromString,
   removeLogId,
   stringifyDOMElement,
@@ -99,6 +98,7 @@ export default class LogStream extends Component {
       setCenterStagedId: this.setCenterStagedId.bind(this), // !
       setUnfoldedIds: this.setUnfoldedIds.bind(this),
       setHighlightedIds: this.setHighlightedIds.bind(this),
+      setScrollView: this.setScrollView.bind(this),
     }
   }
 
@@ -454,6 +454,18 @@ export default class LogStream extends Component {
     })
   }
 
+  setScrollView(groupId, left, top) {
+    const { logGroup, updateLogGroup } = this.props
+    updateLogGroup(groupId, {
+      ...cloneLogGroup(logGroup),
+      view: {
+        ...logGroup.view,
+        left: pxWrap(left),
+        top: pxWrap(top),
+      },
+    })
+  }
+
   /* -------------------------------------------------------------------------- */
 
   handleMouseEnter() {
@@ -693,6 +705,7 @@ export default class LogStream extends Component {
           streamGrabbing={grabbing}
           handleDragAround={this.handleDragAround}
           handlePositionReset={this.handlePositionReset}
+          centerStagedId={view.centerStagedId}
         />
 
         <div

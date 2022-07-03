@@ -10,7 +10,9 @@ $elegant-red: #e23e57;
 $elegant-yellow: #f07b3f;
 $elegant-green: #00b8a9;
 
-$bright-green: #00d33c;
+$bright-green: #3ec70b;
+$bright-yellow: #fac213;
+$bright-orange: #f77e21;
 
 $undefined: #ff06b7;
 $number: #008be8;
@@ -29,7 +31,7 @@ $opacity-xh: 0.15;
 /* -------------------------------------------------------------------------- */
 
 $max-log-width: 20rem;
-$max-log-unexpanded-stream-height: 22rem;
+$max-log-unexpanded-stream-height: 12rem;
 $max-log-wrapper-height-text: 32rem;
 $max-log-wrapper-height-shape: 32rem;
 
@@ -125,6 +127,10 @@ $rem-to-px: 16;
 
 @mixin font-fixed {
   font-family: 'Inconsolata', 'Courier New', Courier, monospace;
+}
+
+.font-bold {
+  font-weight: 700;
 }
 
 /* -------------------------------------------------------------------------- */
