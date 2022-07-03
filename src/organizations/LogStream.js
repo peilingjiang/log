@@ -200,7 +200,7 @@ export default class LogStream extends Component {
 
         // update stream element to e.target
         updateLogGroup(logGroup.groupId, {
-          ...logGroup,
+          ...cloneLogGroup(logGroup),
           element: newElement,
           groupElementId: idFromString(stringifyDOMElement(newElement)),
           bounding: boundingDefault,
@@ -219,7 +219,7 @@ export default class LogStream extends Component {
   pauseStream() {
     const { logGroup, updateLogGroup } = this.props
     updateLogGroup(logGroup.groupId, {
-      ...logGroup,
+      ...cloneLogGroup(logGroup),
       paused: !logGroup.paused,
     })
   }
@@ -230,7 +230,7 @@ export default class LogStream extends Component {
     if (logGroup.element) outlineToHighlightElement(logGroup.element, false)
 
     updateLogGroup(logGroup.groupId, {
-      ...logGroup,
+      ...cloneLogGroup(logGroup),
       deleted: true,
     })
   }
@@ -244,7 +244,7 @@ export default class LogStream extends Component {
       newFormat === 'text' ? this._unsnapState(logGroup) : {}
 
     const newGroup = {
-      ...logGroup,
+      ...cloneLogGroup(logGroup),
       format: newFormat,
       ...unsnapExtraState,
     }
@@ -333,7 +333,7 @@ export default class LogStream extends Component {
             snapAnchorPoint.side
           ) // TODO allow change
           updateLogGroup(logGroup.groupId, {
-            ...logGroup,
+            ...cloneLogGroup(logGroup),
             snap: true,
             snapElement: snapElement,
             snapElementId: idFromString(
@@ -359,7 +359,7 @@ export default class LogStream extends Component {
   undoSnap() {
     const { logGroup, updateLogGroup } = this.props
     updateLogGroup(logGroup.groupId, {
-      ...logGroup,
+      ...cloneLogGroup(logGroup),
       ...this._unsnapState(logGroup),
     })
   }
@@ -520,7 +520,7 @@ export default class LogStream extends Component {
       const { clientX, clientY } = e
 
       updateLogGroup(logGroup.groupId, {
-        ...logGroup,
+        ...cloneLogGroup(logGroup),
         bounding: {
           ...logGroup.bounding,
           // left: pxWrap(startPos.left + clientX - startPos.x),
@@ -552,7 +552,7 @@ export default class LogStream extends Component {
     // if (snap) return
 
     updateLogGroup(logGroup.groupId, {
-      ...logGroup,
+      ...cloneLogGroup(logGroup),
       bounding: {
         ...logGroup.bounding,
         left: pxWrap(0),

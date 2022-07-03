@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import isEqual from 'react-fast-compare'
 
 import LogStream from './LogStream.js'
-import { assertExistence } from '../methods/utils.js'
+import { assertExistence, cloneLogGroup } from '../methods/utils.js'
 import { findPosition, pxWrap } from '../methods/findPosition.js'
 import { logStreamGapToAnchorPx, _Aug, _L, _R, _T } from '../constants.js'
 import { getSnapPosition } from '../methods/snap.js'
@@ -92,7 +92,7 @@ export default class LogStreamsHolder extends Component {
       // update groups
       this.props.logGroups.forEach(logGroup => {
         updateLogGroup(logGroup.groupId, {
-          ...logGroup,
+          ...cloneLogGroup(logGroup),
           bounding: {
             ...logGroup.bounding,
             verticalAlign: _T,
@@ -108,7 +108,7 @@ export default class LogStreamsHolder extends Component {
       // update groups
       this.props.logGroups.forEach(logGroup => {
         updateLogGroup(logGroup.groupId, {
-          ...logGroup,
+          ...cloneLogGroup(logGroup),
           bounding: {
             ...logGroup.bounding,
             verticalAlign: optimizedPosition.verticalAlign,

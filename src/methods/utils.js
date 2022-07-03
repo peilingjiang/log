@@ -116,14 +116,9 @@ export const copyObject = obj => {
 }
 
 export const deepCopyArrayOfLogs = arr => {
-  const newArr = []
-  for (let i = 0; i < arr.length; i++) {
-    newArr.push({
-      ...arr[i],
-    })
-  }
-
-  return newArr
+  return arr.map(log => {
+    return { ...log }
+  })
 }
 
 export const cloneLogGroups = logGroups => {
