@@ -1,14 +1,31 @@
 @keyframes highlight-outline {
   0% {
-    outline: 6px solid $bright-green;
+    outline: $padding-xs solid $bright-green;
   }
 
   100% {
-    outline: 6px solid transparent;
+    outline: $padding-xs solid transparent;
     // outline: 6px solid $bright-green;
   }
 }
 
 .hyper-item-highlight-outline-animate {
-  animation: highlight-outline $transition-highlight ease $transition-slow;
+  animation: highlight-outline $transition-highlight ease $transition-normal;
+}
+
+/* -------------------------------------------------------------------------- */
+
+@keyframes highlight-border {
+  0% {
+    border-width: 20px;
+  }
+
+  100% {
+    border-width: 5px;
+    // outline: 6px solid $bright-green;
+  }
+}
+
+.hyper-item-highlight-border-animate {
+  animation: highlight-border $transition-highlight ease $transition-normal;
 }

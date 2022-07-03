@@ -9,6 +9,7 @@ import { deepCopyArrayOfLogs } from './methods/utils.js'
 import { _Aug, _Time } from './constants.js'
 import { g } from './global.js'
 import { clearAllOutlines } from './methods/attachElements.js'
+import { highlightElement } from './methods/highlight.js'
 
 export default class LogHost extends Component {
   constructor(props) {
@@ -59,16 +60,14 @@ export default class LogHost extends Component {
       this.state.logId !== null
     ) {
       // highlight the item
-      this.ref.current
-        ?.querySelectorAll('.hyper-log-stream-in-time')
-        .forEach(el => {
-          if (el.dataset?.id === this.state.timelineHighlightedLogId) {
-            el.classList.add('hyper-item-highlight-outline-animate')
-            el.classList.add('up-front')
-            // scroll to the item
-            el.scrollIntoView({ behavior: 'smooth', block: 'center' })
-          }
-        })
+      this.ref.current?.querySelectorAll('.logs-wrapper').forEach(el => {
+        if (el.dataset?.id === this.state.timelineHighlightedLogId)
+          highlightElement(el, {
+            style: 'outline',
+            animate: true,
+            scrollIntoView: true,
+          })
+      })
     }
   }
 
@@ -126,6 +125,7 @@ export default class LogHost extends Component {
     // Number.prototype.log = function (...args) {}
   }
 
+  // TODO use it?
   incLoggedCounter() {
     this.loggedCounter++
   }

@@ -28,22 +28,35 @@ export const boundingDefault = Object.seal({
   verticalAlign: 'top',
 })
 
+/* -------------------------------------------------------------------------- */
+
+export const idViewsInterface = PropTypes.exact({
+  centerStagedId: PropTypes.string.isRequired,
+  unfoldedIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+  highlightedIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+})
+
 export const logViewInterface = PropTypes.exact({
-  left: PropTypes.number.isRequired,
-  right: PropTypes.number.isRequired,
-  unfolded: PropTypes.array.isRequired,
-  highlighted: PropTypes.array.isRequired,
-  changed: PropTypes.array.isRequired,
+  left: PropTypes.string.isRequired,
+  right: PropTypes.string.isRequired,
+  centerStagedId: PropTypes.string.isRequired,
+  unfoldedIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+  highlightedIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+  // changed: PropTypes.array.isRequired,
 })
 
 export const logViewDefault = Object.seal({
   left: '0px',
   right: '0px',
-  unfolded: [],
-  highlighted: [],
-  changed: [],
+  centerStagedId: '',
+  unfoldedIds: [],
+  highlightedIds: [],
+  // changed: [],
 })
 
+/* -------------------------------------------------------------------------- */
+
+// ! log
 export const logInterface = PropTypes.exact({
   id: PropTypes.string,
   groupId: PropTypes.string,
@@ -65,6 +78,7 @@ export const logInterface = PropTypes.exact({
   history: PropTypes.number,
 })
 
+// ! logGroup
 export const logGroupInterface = PropTypes.exact({
   name: PropTypes.string,
   ////

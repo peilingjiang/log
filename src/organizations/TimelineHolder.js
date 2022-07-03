@@ -35,6 +35,7 @@ export default class TimelineHolder extends Component {
       hovered: false,
       grabbing: false,
       right: '0px',
+      pinnedGroupId: null, // TODO
     }
 
     this.ref = createRef()
@@ -251,6 +252,7 @@ const TimelineLogItemsMemo = ({
           style={{
             borderLeft: `5px solid ${logGroup.groupColor}`,
           }}
+          data-id={logObj.id}
         >
           <LogStreamWrapperInTimeline
             key={`${logObj.id}-${rawInd}-time-stream`}

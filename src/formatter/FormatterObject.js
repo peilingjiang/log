@@ -1,19 +1,30 @@
-import React, { memo, useState } from 'react'
+import React, { memo } from 'react'
 import PropTypes from 'prop-types'
 import isEqual from 'react-fast-compare'
 // import { v4 as uuid } from 'uuid'
 
-import { foldedObjectShowItemCount } from '../constants.js'
-import { arrayFirst } from '../methods/utils.js'
+import { foldedObjectShowItemCount, idViewsInterface } from '../constants.js'
+import {
+  arrayFirst,
+  matchLocInObjectByRemovingLogId,
+} from '../methods/utils.js'
 import { isEmptyObject } from './utils.js'
 import { ObjectKey, FoldedDisplay, FolderIcon } from './components.js'
 
-const FormatterObject = ({ obj, inheritId, formatArg, minimal }) => {
-  const [folded, setFolded] = useState(true)
-
-  const toggleFold = () => {
-    setFolded(!folded)
-  }
+const FormatterObject = ({
+  obj,
+  groupId,
+  inheritId,
+  idViews,
+  streamFunctions,
+  formatArg,
+  minimal,
+}) => {
+  // check if unfolded
+  const folded = !matchLocInObjectByRemovingLogId(
+    idViews.unfoldedIds,
+    inheritId
+  )
 
   let content
 
@@ -62,7 +73,14 @@ const FormatterObject = ({ obj, inheritId, formatArg, minimal }) => {
         </span>
       )
       innerItems.push(
-        formatArg(obj[objKeys[keyInd]], `${inheritId}-${keyInd}-val`, true)
+        formatArg(
+          obj[objKeys[keyInd]],
+          groupId,
+          `${inheritId}-${keyInd}-val`,
+          idViews,
+          streamFunctions,
+          true
+        )
       )
 
       if (keyInd < objKeys.length - 1)
@@ -78,7 +96,12 @@ const FormatterObject = ({ obj, inheritId, formatArg, minimal }) => {
     content = (
       <>
         {!isEmptyObject(obj) && (
-          <FolderIcon folded={folded} toggleFold={toggleFold} />
+          <FolderIcon
+            folded={folded}
+            groupId={groupId}
+            id={inheritId}
+            setUnfoldedIds={streamFunctions.setUnfoldedIds}
+          />
         )}
         <span className="obj-length info-dimmed">{`(${objKeys.length})`}</span>
         {'{'}
@@ -91,7 +114,12 @@ const FormatterObject = ({ obj, inheritId, formatArg, minimal }) => {
     content = (
       <>
         <div className="simple-inline-element info-bold">
-          <FolderIcon folded={folded} toggleFold={toggleFold} />
+          <FolderIcon
+            folded={folded}
+            groupId={groupId}
+            id={inheritId}
+            setUnfoldedIds={streamFunctions.setUnfoldedIds}
+          />
           {'{'}
         </div>
 
@@ -111,7 +139,14 @@ const FormatterObject = ({ obj, inheritId, formatArg, minimal }) => {
                 >
                   :
                 </span>
-                {formatArg(obj[objKey], `${inheritId}-${i}-val`, false)}
+                {formatArg(
+                  obj[objKey],
+                  groupId,
+                  `${inheritId}-${i}-val`,
+                  idViews,
+                  streamFunctions,
+                  false
+                )}
               </div>
             )
           })}
@@ -133,7 +168,10 @@ const FormatterObject = ({ obj, inheritId, formatArg, minimal }) => {
 
 FormatterObject.propTypes = {
   obj: PropTypes.object.isRequired,
+  groupId: PropTypes.string.isRequired,
   inheritId: PropTypes.string.isRequired,
+  idViews: idViewsInterface.isRequired,
+  streamFunctions: PropTypes.object.isRequired,
   formatArg: PropTypes.func.isRequired,
   minimal: PropTypes.bool.isRequired,
 }

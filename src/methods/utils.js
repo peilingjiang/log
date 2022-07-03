@@ -39,6 +39,20 @@ export const preventEventWrapper = (e, callback) => {
 }
 
 /* -------------------------------------------------------------------------- */
+// id
+
+export const matchLocInObjectByRemovingLogId = (ids, targetId) => {
+  for (const id of ids) {
+    if (id === removeLogId(targetId)) return true
+  }
+  return false
+}
+
+export const removeLogId = id => {
+  return id.replace(/\((.*?)\)/g, '')
+}
+
+/* -------------------------------------------------------------------------- */
 // math
 
 export const constrain = (x, min, max) => {
@@ -114,11 +128,18 @@ export const cloneLogGroups = logGroups => {
     const prevLogGroup = logGroups[logGroupId]
     newLogGroups[logGroupId] = {
       ...prevLogGroup,
-      logs: [...prevLogGroup.logs],
+      logs: deepCopyArrayOfLogs(prevLogGroup.logs),
     }
   }
 
   return newLogGroups
+}
+
+export const cloneLogGroup = logGroup => {
+  return {
+    ...logGroup,
+    logs: deepCopyArrayOfLogs(logGroup.logs),
+  }
 }
 
 export const keyWithSmallestValue = obj => {

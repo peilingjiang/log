@@ -1,7 +1,13 @@
 import isEqual from 'react-fast-compare'
 import { v4 as uuid } from 'uuid'
 
-import { boundingDefault, _config, _DEF, _H } from '../constants.js'
+import {
+  boundingDefault,
+  logViewDefault,
+  _config,
+  _DEF,
+  _H,
+} from '../constants.js'
 
 import { g } from '../global.js'
 import {
@@ -120,13 +126,7 @@ export const addLog = (logHost, args, element = null, requests = {}) => {
           paused: false,
           deleted: false,
           ////
-          view: {
-            left: 0,
-            right: 0,
-            unfolded: [],
-            highlighted: [],
-            changed: [],
-          },
+          view: logViewDefault,
           ////
           // customization
         }

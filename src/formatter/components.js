@@ -33,15 +33,23 @@ export const FoldedDisplay = () => {
 
 /* -------------------------------------------------------------------------- */
 
-export const FolderIcon = ({ folded, toggleFold }) => {
+export const FolderIcon = ({ folded, groupId, id, setUnfoldedIds }) => {
   return folded ? (
-    <Expand className="cursor-pointer" onClick={toggleFold} />
+    <Expand
+      className="cursor-pointer"
+      onClick={() => setUnfoldedIds(groupId, id, true)}
+    />
   ) : (
-    <Fold className="cursor-pointer" onClick={toggleFold} />
+    <Fold
+      className="cursor-pointer"
+      onClick={() => setUnfoldedIds(groupId, id, false)}
+    />
   )
 }
 
 FolderIcon.propTypes = {
-  folded: PropTypes.bool,
-  toggleFold: PropTypes.func,
+  folded: PropTypes.bool.isRequired,
+  groupId: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
+  setUnfoldedIds: PropTypes.func.isRequired,
 }

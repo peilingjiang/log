@@ -19,8 +19,10 @@ import {
 import {
   bindableElement,
   checkForUnit,
+  cloneLogGroup,
   getElementBounding,
   idFromString,
+  removeLogId,
   stringifyDOMElement,
   // mergeBoundingRects,
 } from '../methods/utils.js'
@@ -33,7 +35,7 @@ import {
   findNearestSnapPoint,
   _getAlignment,
 } from '../methods/snap.js'
-import { setupLeaderLine } from '../other/leaderLine.js'
+import { setupLeaderLine } from '../others/leaderLine.js'
 import { outlineToHighlightElement } from '../methods/attachElements.js'
 
 // for augmented logs
@@ -86,6 +88,12 @@ export default class LogStream extends Component {
       startSnap: this.startSnap.bind(this),
       undoSnap: this.undoSnap.bind(this),
     }
+
+    this.streamFunctions = {
+      setCenterStagedId: this.setCenterStagedId.bind(this),
+      setUnfoldedIds: this.setUnfoldedIds.bind(this),
+      setHighlightedIds: this.setHighlightedIds.bind(this),
+    }
   }
 
   componentDidMount() {}
@@ -120,6 +128,8 @@ export default class LogStream extends Component {
 
   /* -------------------------------------------------------------------------- */
 
+  // ! menu functions
+
   expandStream() {
     this.setState({ expand: !this.state.expand })
   }
@@ -148,15 +158,16 @@ export default class LogStream extends Component {
         sudoPointerElement.style.left = pxWrap(event.clientX)
         leaderLine.position()
 
-        // highlight the element
-        outlineToHighlightElement(document.body, true, 'inside')
+        // ! highlight the element
+        // remove the old ones first
+        outlineToHighlightElement(document.body, false, 'inside')
         const highlightedElements = document.querySelectorAll(
           '.forced-outline-bound'
         )
         for (let i = 0; i < highlightedElements.length; i++)
           if (!event.target.isSameNode(highlightedElements[i]))
             outlineToHighlightElement(highlightedElements[i], false)
-
+        // add new ones
         if (bindableElement(event.target))
           outlineToHighlightElement(event.target, true)
         else outlineToHighlightElement(document.body, true, 'inside')
@@ -365,6 +376,62 @@ export default class LogStream extends Component {
 
   /* -------------------------------------------------------------------------- */
 
+  // ! stream functions
+
+  setCenterStagedId() {}
+
+  setUnfoldedIds(groupId, idToToggle, toUnfold = true) {
+    // if toFold, add idToToggle to unfoldedIds
+    const {
+      logGroup,
+      logGroup: {
+        view: { unfoldedIds },
+      },
+      updateLogGroup,
+    } = this.props
+
+    const newUnfoldedIds = [...unfoldedIds]
+    if (toUnfold) newUnfoldedIds.push(removeLogId(idToToggle))
+    else
+      newUnfoldedIds.splice(newUnfoldedIds.indexOf(removeLogId(idToToggle)), 1)
+
+    updateLogGroup(groupId, {
+      ...cloneLogGroup(logGroup),
+      view: {
+        ...logGroup.view,
+        unfoldedIds: newUnfoldedIds,
+      },
+    })
+  }
+
+  setHighlightedIds(groupId, idToToggle, toHighlight = true) {
+    const {
+      logGroup,
+      logGroup: {
+        view: { highlightedIds },
+      },
+      updateLogGroup,
+    } = this.props
+
+    const newHighlightedIds = [...highlightedIds]
+    if (toHighlight) newHighlightedIds.push(removeLogId(idToToggle))
+    else
+      newHighlightedIds.splice(
+        newHighlightedIds.indexOf(removeLogId(idToToggle)),
+        1
+      )
+
+    updateLogGroup(groupId, {
+      ...cloneLogGroup(logGroup),
+      view: {
+        ...logGroup.view,
+        highlightedIds: newHighlightedIds,
+      },
+    })
+  }
+
+  /* -------------------------------------------------------------------------- */
+
   handleMouseEnter() {
     // this.ref.current.classList.add('stream-hovered')
     // this.ref.current.classList.add('up-front')
@@ -487,6 +554,7 @@ export default class LogStream extends Component {
         // snapAnchorPercent,
         ////
         orientation,
+        view,
       },
       hostFunctions,
       organization,
@@ -505,6 +573,7 @@ export default class LogStream extends Component {
         !isShape || !checkForUnit(log) ? (
           <Log
             key={`${log.id} ${log.timestamps.at(-1).now}`}
+            groupId={groupId}
             log={log}
             orderReversed={--orderReversed}
             expandedLog={expand}
@@ -512,11 +581,15 @@ export default class LogStream extends Component {
             // logsCount={logs.length}
             snap={snap}
             hostFunctions={hostFunctions}
+            streamFunctions={this.streamFunctions}
             organization={organization}
+            ////
+            view={view}
           />
         ) : (
           <ShapeLog
             key={`${log.id} ${log.timestamps.at(-1).now}-shape`}
+            groupId={groupId}
             log={log}
             orderReversed={--orderReversed}
             expandedLog={expand}
@@ -525,7 +598,10 @@ export default class LogStream extends Component {
             snap={snap}
             orientation={orientation}
             hostFunctions={hostFunctions}
+            streamFunctions={this.streamFunctions}
             organization={organization}
+            ////
+            view={view}
           />
         )
       )

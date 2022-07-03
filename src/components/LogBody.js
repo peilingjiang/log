@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import isEqual from 'react-fast-compare'
 
-import { _Aug, _DEF, _rootStyles } from '../constants.js'
+import { logViewInterface, _Aug, _DEF, _rootStyles } from '../constants.js'
 import { Formatter } from '../formatter/Formatter.js'
 import { hexAndOpacityToRGBA } from '../methods/utils.js'
 
@@ -13,6 +13,7 @@ export default class LogBody extends Component {
     return {
       // log: logInterface,
       args: PropTypes.array.isRequired,
+      groupId: PropTypes.string.isRequired,
       id: PropTypes.string.isRequired,
       count: PropTypes.number.isRequired,
       timestamp: PropTypes.number.isRequired,
@@ -24,7 +25,9 @@ export default class LogBody extends Component {
       expandedLog: PropTypes.bool.isRequired,
       ////
       hostFunctions: PropTypes.object.isRequired,
+      streamFunctions: PropTypes.object.isRequired,
       organization: PropTypes.string.isRequired,
+      view: logViewInterface.isRequired,
     }
   }
 
@@ -35,6 +38,7 @@ export default class LogBody extends Component {
   render() {
     const {
       args,
+      groupId,
       id,
       count,
       timestamp,
@@ -44,7 +48,9 @@ export default class LogBody extends Component {
       // orderReversed,
       expandedLog,
       hostFunctions,
+      streamFunctions,
       organization,
+      view,
     } = this.props
 
     const isAugmented = organization === _Aug
@@ -88,7 +94,13 @@ export default class LogBody extends Component {
         )}
         <div className="hyper-log-body-content">
           {count > 1 && <span className="hyper-log-count">{count}</span>}
-          <Formatter args={args} logId={id} />
+          <Formatter
+            args={args}
+            groupId={groupId}
+            logId={id}
+            view={view}
+            streamFunctions={streamFunctions}
+          />
           {unit ? `${unit}` : ''}
         </div>
       </div>

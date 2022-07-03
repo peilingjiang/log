@@ -57,6 +57,7 @@ export default class ShapeLog extends Log {
             width: isHorizontal ? value : _config.shapeRectWidth,
             height: isHorizontal ? _config.shapeRectWidth : value,
           }}
+          data-id={id}
         >
           <p className="shape-log-note" style={noteStyle}>
             <span>{value}</span>{' '}

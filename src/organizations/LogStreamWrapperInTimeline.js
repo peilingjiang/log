@@ -17,14 +17,16 @@ export default class LogStreamWrapperInTimeline extends LogStream {
 
   shouldComponentUpdate(nextProps, nextState) {
     return (
-      !isEqual(nextProps.log, this.props.log) || !isEqual(nextState, this.state)
+      !isEqual(nextProps.logGroup.view, this.props.logGroup.view) ||
+      !isEqual(nextProps.log, this.props.log) ||
+      !isEqual(nextState, this.state)
     )
   }
 
   render() {
     const { expand, hovered, grabbing, current } = this.state
     const {
-      logGroup: { groupColor, format },
+      logGroup: { groupId, groupColor, format, view },
       log,
       organization,
       hostFunctions,
@@ -47,8 +49,6 @@ export default class LogStreamWrapperInTimeline extends LogStream {
         // }}
         onMouseEnter={this.handleMouseEnter}
         onMouseLeave={this.handleMouseOut}
-        ////
-        data-id={log.id}
       >
         <div
           className="logs-wrapper"
@@ -58,6 +58,7 @@ export default class LogStreamWrapperInTimeline extends LogStream {
             alignItems: 'flex-start',
             justifyContent: 'flex-start',
           }}
+          data-id={log.id}
         >
           {/* <LogStreamName
             name={name}
@@ -72,16 +73,20 @@ export default class LogStreamWrapperInTimeline extends LogStream {
           {!isShape || !checkForUnit(log) ? (
             <Log
               key={`${log.id} ${log.timestamps.at(-1).now}`}
+              groupId={groupId}
               log={log}
               orderReversed={0}
               expandedLog={expand}
               snap={false}
               hostFunctions={hostFunctions}
+              streamFunctions={this.streamFunctions}
               organization={organization}
+              view={view}
             />
           ) : (
             <ShapeLog
               key={`S ${log.id} ${log.timestamps.at(-1).now}`}
+              groupId={groupId}
               log={log}
               orderReversed={0}
               expandedLog={expand}
@@ -90,7 +95,9 @@ export default class LogStreamWrapperInTimeline extends LogStream {
               snap={false}
               orientation={_H}
               hostFunctions={hostFunctions}
+              streamFunctions={this.streamFunctions}
               organization={organization}
+              view={view}
             />
           )}
         </div>

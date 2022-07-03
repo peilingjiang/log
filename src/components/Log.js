@@ -8,6 +8,7 @@ import LogBody from './LogBody.js'
 import {
   // boundingInterface,
   logInterface,
+  logViewInterface,
   _config,
   _rootStyles,
 } from '../constants.js'
@@ -15,6 +16,7 @@ import {
 export default class Log extends Component {
   static get propTypes() {
     return {
+      groupId: PropTypes.string.isRequired,
       log: logInterface.isRequired,
       orderReversed: PropTypes.number.isRequired,
       expandedLog: PropTypes.bool.isRequired,
@@ -24,7 +26,10 @@ export default class Log extends Component {
       orientation: PropTypes.string,
       ////
       hostFunctions: PropTypes.object.isRequired,
+      streamFunctions: PropTypes.object.isRequired,
       organization: PropTypes.string.isRequired,
+      ////
+      view: logViewInterface.isRequired,
     }
   }
 
@@ -47,8 +52,16 @@ export default class Log extends Component {
   }
 
   render() {
-    const { log, orderReversed, expandedLog, hostFunctions, organization } =
-      this.props
+    const {
+      groupId,
+      log,
+      orderReversed,
+      expandedLog,
+      hostFunctions,
+      streamFunctions,
+      organization,
+      view,
+    } = this.props
     const {
       log: { args, id, count, timestamps, stack, color, unit },
     } = this.props
@@ -60,10 +73,12 @@ export default class Log extends Component {
           orderReversed === 0 ? ' log-current' : ' log-in-history'
         }${expandedLog ? ' log-expand' : ' log-not-expand'}`}
         style={logBaseStyles(orderReversed, expandedLog)}
+        data-id={id}
       >
         {/* <LogHeader log={log} /> */}
         <LogBody
           args={args}
+          groupId={groupId}
           id={id}
           count={count}
           timestamp={timestamps.at(-1).now}
@@ -74,7 +89,9 @@ export default class Log extends Component {
           orderReversed={orderReversed}
           expandedLog={expandedLog}
           hostFunctions={hostFunctions}
+          streamFunctions={streamFunctions}
           organization={organization}
+          view={view}
         />
       </div>
     )

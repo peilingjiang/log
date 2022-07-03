@@ -6,16 +6,38 @@ import FormatterArray from './FormatterArray.js'
 import FormatterObject from './FormatterObject.js'
 import { assertTypeOfArg } from '../methods/utils.js'
 import { wrapString } from './utils.js'
+import { logViewInterface } from '../constants.js'
 
 export class Formatter extends Component {
+  static get propTypes() {
+    return {
+      args: PropTypes.array.isRequired,
+      groupId: PropTypes.string.isRequired,
+      logId: PropTypes.string.isRequired,
+      view: logViewInterface.isRequired,
+      streamFunctions: PropTypes.object.isRequired,
+    }
+  }
+
   shouldComponentUpdate(nextProps) {
     return !isEqual(nextProps, this.props)
   }
 
   render() {
-    const { logId } = this.props
+    const { groupId, logId, view, streamFunctions } = this.props
     const formattedArgs = this.props.args.map((arg, i) => {
-      return formatArg(arg, `${logId}-${i}`, false)
+      return formatArg(
+        arg,
+        groupId,
+        `(${logId}-)${i}`,
+        {
+          centerStagedId: view.centerStagedId,
+          unfoldedIds: view.unfoldedIds,
+          highlightedIds: view.highlightedIds,
+        },
+        streamFunctions,
+        false
+      )
       // return (
       //   <>
       //     {formatArg(arg, `${logId}-${i}`, false)}
@@ -27,7 +49,14 @@ export class Formatter extends Component {
   }
 }
 
-const formatArg = (arg, inheritId, minimal = false) => {
+const formatArg = (
+  arg,
+  groupId,
+  inheritId,
+  idViews,
+  streamFunctions,
+  minimal = false
+) => {
   const type = assertTypeOfArg(arg)
   switch (type) {
     case 'undefined':
@@ -85,7 +114,10 @@ const formatArg = (arg, inheritId, minimal = false) => {
         <FormatterArray
           key={`${inheritId}-arr`}
           arr={arg}
+          groupId={groupId}
           inheritId={inheritId}
+          idViews={idViews}
+          streamFunctions={streamFunctions}
           formatArg={formatArg}
           minimal={minimal}
         />
@@ -96,7 +128,10 @@ const formatArg = (arg, inheritId, minimal = false) => {
         <FormatterObject
           key={`${inheritId}-obj`}
           obj={arg}
+          groupId={groupId}
           inheritId={inheritId}
+          idViews={idViews}
+          streamFunctions={streamFunctions}
           formatArg={formatArg}
           minimal={minimal}
         />
@@ -109,9 +144,4 @@ const formatArg = (arg, inheritId, minimal = false) => {
         </span>
       )
   }
-}
-
-Formatter.propTypes = {
-  args: PropTypes.array.isRequired,
-  logId: PropTypes.string.isRequired,
 }

@@ -1,19 +1,29 @@
-import React, { memo, useState } from 'react'
+import React, { memo } from 'react'
 import PropTypes from 'prop-types'
 import isEqual from 'react-fast-compare'
 // import { v4 as uuid } from 'uuid'
 
 import { FoldedDisplay, FolderIcon } from './components.js'
-import { foldedArrayShowItemCount } from '../constants.js'
-import { arrayFirst } from '../methods/utils.js'
+import { foldedArrayShowItemCount, idViewsInterface } from '../constants.js'
+import {
+  arrayFirst,
+  matchLocInObjectByRemovingLogId,
+} from '../methods/utils.js'
 import { isEmptyArray } from './utils.js'
 
-const FormatterArray = ({ arr, inheritId, formatArg, minimal }) => {
-  const [folded, setFolded] = useState(true)
-
-  const toggleFold = () => {
-    setFolded(!folded)
-  }
+const FormatterArray = ({
+  arr,
+  groupId,
+  inheritId,
+  idViews,
+  streamFunctions,
+  formatArg,
+  minimal,
+}) => {
+  const folded = !matchLocInObjectByRemovingLogId(
+    idViews.unfoldedIds,
+    inheritId
+  )
 
   let content
 
@@ -23,7 +33,14 @@ const FormatterArray = ({ arr, inheritId, formatArg, minimal }) => {
         <>
           {'['}
           {arr.length === 1 ? (
-            formatArg(arr[0], `${inheritId}-arr-min`, true)
+            formatArg(
+              arr[0],
+              groupId,
+              `${inheritId}-arr-min`,
+              idViews,
+              streamFunctions,
+              true
+            )
           ) : (
             <FoldedDisplay />
           )}
@@ -38,7 +55,16 @@ const FormatterArray = ({ arr, inheritId, formatArg, minimal }) => {
     // folded
     const innerItems = []
     for (let i in arrayFirst(arr, foldedArrayShowItemCount)) {
-      innerItems.push(formatArg(arr[i], `${inheritId}-${i}`, true))
+      innerItems.push(
+        formatArg(
+          arr[i],
+          groupId,
+          `${inheritId}-${i}`,
+          idViews,
+          streamFunctions,
+          true
+        )
+      )
       if (i < arr.length - 1)
         innerItems.push(
           <span key={`${inheritId}-${i}-com`} className="simple-inline-element">
@@ -49,7 +75,12 @@ const FormatterArray = ({ arr, inheritId, formatArg, minimal }) => {
     content = (
       <>
         {!isEmptyArray(arr) && (
-          <FolderIcon folded={folded} toggleFold={toggleFold} />
+          <FolderIcon
+            folded={folded}
+            groupId={groupId}
+            id={inheritId}
+            setUnfoldedIds={streamFunctions.setUnfoldedIds}
+          />
         )}
         <span className="arr-length info-dimmed">{`(${arr.length})`}</span>
         {'['}
@@ -63,7 +94,12 @@ const FormatterArray = ({ arr, inheritId, formatArg, minimal }) => {
     content = (
       <>
         <div className="simple-inline-element info-bold">
-          <FolderIcon folded={folded} toggleFold={toggleFold} />
+          <FolderIcon
+            folded={folded}
+            groupId={groupId}
+            id={inheritId}
+            setUnfoldedIds={streamFunctions.setUnfoldedIds}
+          />
           {'['}
         </div>
 
@@ -74,7 +110,14 @@ const FormatterArray = ({ arr, inheritId, formatArg, minimal }) => {
                 <div className="simple-inline-element inner-item-ind info-dimmed">
                   {i}
                 </div>
-                {formatArg(arg, `${inheritId}-${i}`, false)}
+                {formatArg(
+                  arg,
+                  groupId,
+                  `${inheritId}-${i}`,
+                  idViews,
+                  streamFunctions,
+                  false
+                )}
               </div>
             )
           })}
@@ -96,7 +139,10 @@ const FormatterArray = ({ arr, inheritId, formatArg, minimal }) => {
 
 FormatterArray.propTypes = {
   arr: PropTypes.array.isRequired,
+  groupId: PropTypes.string.isRequired,
   inheritId: PropTypes.string.isRequired,
+  idViews: idViewsInterface.isRequired,
+  streamFunctions: PropTypes.object.isRequired,
   formatArg: PropTypes.func.isRequired,
   minimal: PropTypes.bool.isRequired,
 }
