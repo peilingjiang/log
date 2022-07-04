@@ -4,14 +4,23 @@ import PropTypes from 'prop-types'
 import { TimelineName } from '../components/TimelineName.js'
 import LogStreamWrapperInTimeline from './LogStreamWrapperInTimeline.js'
 
-import { constrain } from '../methods/utils.js'
 import {
+  bindableElement,
+  constrain,
+  getElementBounding,
+  idFromString,
+  stringifyDOMElement,
+} from '../methods/utils.js'
+import {
+  logGroupInterface,
+  pageElementsQuery,
   timelineDisableAutoScrollThresholdPx,
   timelineGroupWiseOffsetPx,
   _Time,
 } from '../constants.js'
-import { pxTrim, pxWrap } from '../methods/findPosition.js'
+import { isOverlapped, pxTrim, pxWrap } from '../methods/findPosition.js'
 import isEqual from 'react-fast-compare'
+import { SelectionRect } from '../components/SelectionRect.js'
 
 export default class TimelineHolder extends Component {
   static get propTypes() {
@@ -35,6 +44,13 @@ export default class TimelineHolder extends Component {
       hovered: false,
       grabbing: false,
       right: '0px',
+      filterArea: {
+        left: pxWrap(window.innerWidth * 0.2),
+        top: pxWrap(window.innerHeight * 0.2),
+        right: pxWrap(window.innerWidth * (1 - 0.2)),
+        bottom: pxWrap(window.innerHeight * (1 - 0.2)),
+      }, // { left, top, right, bottom }
+      enableFilterArea: false,
       pinnedGroupId: null, // TODO
     }
 
@@ -47,6 +63,9 @@ export default class TimelineHolder extends Component {
     this.handleTimelineDragAround = this.handleTimelineDragAround.bind(this)
     this.handleTimelinePositionReset =
       this.handleTimelinePositionReset.bind(this)
+
+    this.handleTimelineArea = this.handleTimelineArea.bind(this)
+    this.handleTimelineSetArea = this.handleTimelineSetArea.bind(this)
 
     this.handleTimelineFold = this.handleTimelineFold.bind(this)
   }
@@ -124,6 +143,20 @@ export default class TimelineHolder extends Component {
     this.setState({ right: '0px' })
   }
 
+  handleTimelineArea() {
+    this.setState({ enableFilterArea: !this.state.enableFilterArea })
+  }
+
+  // drag selection area dots around
+  handleTimelineSetArea(newAreaData) {
+    this.setState({
+      filterArea: {
+        ...this.state.filterArea,
+        ...newAreaData,
+      },
+    })
+  }
+
   handleTimelineFold() {
     this.setState({ folded: !this.state.folded })
   }
@@ -140,7 +173,8 @@ export default class TimelineHolder extends Component {
       hostFunctions,
     } = this.props
 
-    const { folded, hovered, grabbing, right } = this.state
+    const { folded, hovered, grabbing, right, filterArea, enableFilterArea } =
+      this.state
 
     // const numberOfThreads = Object.keys(logGroups).length
 
@@ -152,43 +186,79 @@ export default class TimelineHolder extends Component {
     //   timelineGroupWiseOffsetPx.max
     // )
 
+    const filteredOutElements = []
+
+    if (enableFilterArea) {
+      // check which element is selected
+      const existingPageElements = document.querySelectorAll(pageElementsQuery)
+      for (let el of existingPageElements) {
+        if (bindableElement(el)) {
+          if (
+            !isOverlapped(getElementBounding(el), {
+              left: pxTrim(filterArea.left),
+              top: pxTrim(filterArea.top),
+              right: pxTrim(filterArea.right),
+              bottom: pxTrim(filterArea.bottom),
+            })
+          ) {
+            filteredOutElements.push(el)
+          }
+        }
+      }
+    }
+
     return (
-      <div
-        key="unified-timeline"
-        ref={this.ref}
-        className={`hyper-log-timeline${
-          hovered || grabbing ? ' up-front' : ''
-        }`}
-        style={{
-          right: right,
-        }}
-      >
-        <TimelineName
-          logPaused={logPaused}
-          timelineFolded={folded}
-          timelineGrabbing={grabbing}
-          handleTimelineDragAround={this.handleTimelineDragAround}
-          handleTimelinePositionReset={this.handleTimelinePositionReset}
-          handleTimelineFold={this.handleTimelineFold}
-          hostFunctions={hostFunctions}
-        />
-        {!folded && (
-          <div ref={this.scrollWrapperRef} className="timeline-scroll-wrapper">
-            <div className="timeline-wrapper">
-              {/* {backgroundAlignmentElements} */}
-              <TimelineLogItems
-                logGroups={logGroups}
-                updateLogGroup={updateLogGroup}
-                updateLog={updateLog}
-                hostRef={hostRef}
-                hostFunctions={hostFunctions}
-                handleStreamHover={this.handleStreamHover}
-                handleStreamDragAround={this.handleStreamDragAround}
-              />
-            </div>
-          </div>
+      <>
+        {enableFilterArea && (
+          <SelectionRect
+            filterArea={filterArea}
+            handleTimelineSetArea={this.handleTimelineSetArea}
+          />
         )}
-      </div>
+        <div
+          key="unified-timeline"
+          ref={this.ref}
+          className={`hyper-log-timeline${
+            hovered || grabbing ? ' up-front' : ''
+          }`}
+          style={{
+            right: right,
+          }}
+        >
+          <TimelineName
+            logPaused={logPaused}
+            timelineFolded={folded}
+            timelineGrabbing={grabbing}
+            timelineEnableArea={enableFilterArea}
+            handleTimelineDragAround={this.handleTimelineDragAround}
+            handleTimelinePositionReset={this.handleTimelinePositionReset}
+            handleTimelineArea={this.handleTimelineArea}
+            handleTimelineFold={this.handleTimelineFold}
+            hostFunctions={hostFunctions}
+          />
+          {!folded && (
+            <div
+              ref={this.scrollWrapperRef}
+              className="timeline-scroll-wrapper"
+            >
+              <div className="timeline-wrapper">
+                {/* {backgroundAlignmentElements} */}
+                <TimelineLogItems
+                  logGroups={logGroups}
+                  updateLogGroup={updateLogGroup}
+                  updateLog={updateLog}
+                  hostRef={hostRef}
+                  hostFunctions={hostFunctions}
+                  handleStreamHover={this.handleStreamHover}
+                  handleStreamDragAround={this.handleStreamDragAround}
+                  ////
+                  filteredOutElements={filteredOutElements}
+                />
+              </div>
+            </div>
+          )}
+        </div>
+      </>
     )
   }
 }
@@ -201,11 +271,23 @@ const TimelineLogItemsMemo = ({
   hostFunctions,
   handleStreamHover,
   handleStreamDragAround,
+  filteredOutElements,
 }) => {
   return Object.keys(logGroups)
     .map(key => {
       const logGroup = logGroups[key]
       const logs = logGroup.logs
+
+      if (filteredOutElements.length) {
+        for (let el of filteredOutElements) {
+          if (
+            // idFromString(stringifyDOMElement(el)) === logGroup.groupElementId
+            el.isSameNode(logGroup.element)
+          ) {
+            return []
+          }
+        }
+      }
 
       // const offset = standardOffset * threadInd // !
 
@@ -275,6 +357,18 @@ const TimelineLogItemsMemo = ({
         </div>
       )
     })
+}
+
+TimelineLogItemsMemo.propTypes = {
+  logGroups: PropTypes.object.isRequired,
+  updateLogGroup: PropTypes.func.isRequired,
+  updateLog: PropTypes.func.isRequired,
+  hostRef: PropTypes.object.isRequired,
+  hostFunctions: PropTypes.object.isRequired,
+  handleStreamHover: PropTypes.func.isRequired,
+  handleStreamDragAround: PropTypes.func.isRequired,
+  filteredOutElements: PropTypes.arrayOf(PropTypes.instanceOf(Element))
+    .isRequired,
 }
 
 const TimelineLogItems = memo(TimelineLogItemsMemo, isEqual)

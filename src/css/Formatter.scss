@@ -149,6 +149,16 @@
     align-items: center;
     gap: $padding-xxs;
 
+    .element-label {
+      @include font-fixed;
+      color: $white;
+      background: $element-outline-bound;
+      font-size: $font-size-xs;
+      padding: $padding-xxs $padding-xs;
+      margin: 0;
+      line-height: 100%;
+    }
+
     // min-width: fit-content;
 
     // &.f-object-folded {

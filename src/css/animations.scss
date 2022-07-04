@@ -10,6 +10,10 @@
 }
 
 .hyper-item-highlight-outline-animate {
+  animation: highlight-outline $transition-highlight ease 0;
+}
+
+.hyper-item-highlight-outline-animate-wait {
   animation: highlight-outline $transition-highlight ease $transition-normal;
 }
 

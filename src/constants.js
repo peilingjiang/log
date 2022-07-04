@@ -130,6 +130,7 @@ export const foldedObjectShowItemCount = 3
 
 export const expandedStreamDisableAutoScrollThresholdPx = 700
 export const timelineDisableAutoScrollThresholdPx = 200
+export const timelineSelectionAreaOffsetButterPx = 20
 
 export const timelineGroupWiseOffsetPx = {
   shared: 100,
@@ -153,6 +154,9 @@ export const validUnits = ['px', '%', 'em', 'rem', 'vh', 'vw', 'vmin', 'vmax']
 // organization
 export const _Aug = 'augmented'
 export const _Time = 'timeline'
+
+export const pageElementsQuery =
+  'body * :not(.hyper-log-host, .hyper-log-streams-holder, .hyper-log-streams-holder *, #sudo-pointer-element, .leader-line, .leader-line *, .hyper-log-timeline, .hyper-log-timeline *)'
 
 /* -------------------------------------------------------------------------- */
 

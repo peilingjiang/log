@@ -1,6 +1,6 @@
 // customizable
 
-import { _Aug } from './constants.js'
+import { _Aug, _Time } from './constants.js'
 
 export const g = Object.seal({
   preserveConsole: false,

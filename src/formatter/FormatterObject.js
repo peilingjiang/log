@@ -6,6 +6,7 @@ import isEqual from 'react-fast-compare'
 import { foldedObjectShowItemCount, idViewsInterface } from '../constants.js'
 import {
   arrayFirst,
+  assertElement,
   matchLocInObjectByRemovingLogId,
 } from '../methods/utils.js'
 import { isEmptyObject } from './utils.js'
@@ -26,6 +27,11 @@ const FormatterObject = ({
     idViews.unfoldedIds,
     inheritId
   )
+
+  const isElement = assertElement(obj)
+  const elementLabel = isElement ? (
+    <span className="element-label">E</span>
+  ) : null
 
   let content
 
@@ -55,6 +61,7 @@ const FormatterObject = ({
         }`}
         data-key={`${inheritId}[obj]`}
       >
+        {elementLabel}
         {content}
       </div>
     )
@@ -117,6 +124,7 @@ const FormatterObject = ({
           />
         )}
         <span className="obj-length info-dimmed">{`(${objKeys.length})`}</span>
+        {elementLabel}
         {'{'}
         {innerItems}
         {objKeys.length > foldedObjectShowItemCount ? <FoldedDisplay /> : null}
@@ -124,6 +132,7 @@ const FormatterObject = ({
       </>
     )
   } else {
+    // unfolded
     content = (
       <>
         <div className="simple-inline-element info-bold">
@@ -133,6 +142,7 @@ const FormatterObject = ({
             id={inheritId}
             setUnfoldedIds={streamFunctions.setUnfoldedIds}
           />
+          {elementLabel}
           {'{'}
         </div>
 

@@ -183,11 +183,6 @@ export const getActualFrame = (frames, rawError) => {
 export const parseStack = (pastStacks, callback) => {
   const sudoError = new Error()
 
-  // StackTrace.fromError(sudoError, {
-  //   offline: true,
-  // }).then(rawFrames => {
-  //   console.log('rawFrames', rawFrames);
-  // })
   const rawFrames = ErrorStackParser.parse(sudoError)
   const preprocessStack = getActualFrame(rawFrames, sudoError)
 
@@ -257,6 +252,10 @@ export const assertObject = (a, shape = null) => {
   return true
 }
 
+export const assertElement = a => {
+  return assertExistence(a) && a instanceof Element
+}
+
 export const assertArguments = argsAndAssertions => {
   for (const argAndAssertion of argsAndAssertions) {
     const { value, assertion, shape } = argAndAssertion
@@ -272,6 +271,7 @@ export const assertTypeOfArg = arg => {
   if (assertBoolean(arg)) return 'boolean'
   if (assertFunction(arg)) return 'function'
   if (assertArray(arg)) return 'array'
+  // if (assertElement(arg)) return 'element'
   if (assertObject(arg)) return 'object'
   return 'unknown'
 }

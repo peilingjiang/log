@@ -5,7 +5,7 @@
   flex-direction: column;
 
   width: max-content;
-  height: 100vh;
+  max-height: 100vh;
 
   margin: 0;
   padding: 0;
@@ -37,6 +37,26 @@
 
           path {
             fill: $white;
+          }
+        }
+      }
+
+      &.timeline-area-icon {
+        // path {
+        //   fill: $elegant-blue;
+        // }
+
+        &.timeline-area-enabled-icon {
+          path {
+            fill: $elegant-blue;
+          }
+        }
+
+        &:hover {
+          background: $elegant-blue !important;
+
+          path {
+            fill: $white !important;
           }
         }
       }

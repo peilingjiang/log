@@ -15,6 +15,9 @@ export class HyperLog {
     this.requests.element = element
     return this
   }
+  e(e = null) {
+    return this.el(e)
+  }
   ele(e = null) {
     return this.el(e)
   }

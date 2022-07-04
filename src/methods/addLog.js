@@ -13,6 +13,7 @@ import { g } from '../global.js'
 import {
   assertArguments,
   assertArray,
+  assertElement,
   assertExistence,
   assertNumber,
   assertObject,
@@ -81,12 +82,6 @@ export const addLog = (logHost, args, element = null, requests = {}) => {
 
   // HyperLog
   parseStack(_getStacks(logHost.state.logGroups), parsedStack => {
-    const groupId = idFromString(
-      `${parsedStack.file}:${parsedStack.line}:${parsedStack.char}`
-    )
-    // console.log(groupId, parsedStack);
-    const groupElementId = idFromString(stringifyDOMElement(element))
-
     // add log to logHost
     logHost.setState(prevState => {
       const newState = {
@@ -95,6 +90,18 @@ export const addLog = (logHost, args, element = null, requests = {}) => {
       }
 
       const prevIds = getObjectIds(prevState.logGroups)
+
+      // ! element
+      if (!element) {
+        if (requests.element && assertElement(requests.element))
+          element = requests.element
+      }
+
+      // ! groupId
+      const groupId = idFromString(
+        `${parsedStack.file}:${parsedStack.line}:${parsedStack.char}`
+      )
+      const groupElementId = idFromString(stringifyDOMElement(element))
 
       // ! first log of its group
       // can't find id among current groups

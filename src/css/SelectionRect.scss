@@ -1,0 +1,48 @@
+$selection-dot-size: $padding-mid;
+$all-way-dot-size: $padding-large;
+
+.hyper-selection-rect {
+  z-index: 999;
+
+  .hyper-selection-rect-area {
+    position: fixed;
+    background: rgba($elegant-blue, $opacity-xh);
+    pointer-events: none;
+  }
+
+  .hyper-selection-dot {
+    position: fixed;
+    border-radius: 50%;
+    width: $selection-dot-size;
+    height: $selection-dot-size;
+    background-color: $elegant-blue;
+    outline: 3px solid $white;
+    outline-offset: -2px;
+  }
+
+  .all-way-move-dot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: $all-way-dot-size !important;
+    height: $all-way-dot-size !important;
+
+    outline: none !important;
+    transform: translate(-50%, -50%);
+    cursor: all-scroll;
+
+    svg {
+      opacity: $opacity-mid;
+      font-size: $font-size-default;
+
+      path {
+        fill: $white;
+      }
+    }
+  }
+
+  .s-dot {
+    transform: translate(-50%, -50%);
+  }
+}

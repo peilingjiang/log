@@ -8,6 +8,7 @@ import Move from '../icons/move.svg'
 import Arrow from '../icons/arrow.svg'
 import Pause from '../icons/pause.svg'
 import Restart from '../icons/restart.svg'
+import Area from '../icons/area.svg'
 import Expand from '../icons/expand.svg'
 import Fold from '../icons/fold.svg'
 
@@ -15,8 +16,10 @@ export const TimelineName = ({
   logPaused,
   timelineFolded,
   timelineGrabbing,
+  timelineEnableArea,
   handleTimelineDragAround,
   handleTimelinePositionReset,
+  handleTimelineArea,
   handleTimelineFold,
   hostFunctions,
 }) => {
@@ -62,6 +65,13 @@ export const TimelineName = ({
           }
         />
       )}
+      <Area
+        className={`timeline-icon timeline-area-icon${
+          timelineEnableArea ? ' timeline-area-enabled-icon' : ''
+        }`}
+        title="select the area of interest to filter logs"
+        onClick={e => preventEventWrapper(e, handleTimelineArea)}
+      />
       {timelineFolded ? (
         <Expand
           className="timeline-icon timeline-expand-icon"
@@ -83,8 +93,10 @@ TimelineName.propTypes = {
   logPaused: PropTypes.bool.isRequired,
   timelineFolded: PropTypes.bool.isRequired,
   timelineGrabbing: PropTypes.bool.isRequired,
+  timelineEnableArea: PropTypes.bool.isRequired,
   handleTimelineDragAround: PropTypes.func.isRequired,
   handleTimelinePositionReset: PropTypes.func.isRequired,
+  handleTimelineArea: PropTypes.func.isRequired,
   handleTimelineFold: PropTypes.func.isRequired,
   hostFunctions: PropTypes.object.isRequired,
 }

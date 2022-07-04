@@ -1,11 +1,19 @@
-import { _B, _C, _config, _H, _L, _R, _T, _V } from '../constants.js'
+import {
+  pageElementsQuery,
+  _B,
+  _C,
+  _config,
+  _H,
+  _L,
+  _R,
+  _T,
+  _V,
+} from '../constants.js'
 import { _getPos } from './findPosition.js'
 import { bindableElement, getElementBounding } from './utils.js'
 
 export const findNearestSnapPoint = (mX, mY) => {
-  const existingPageElements = document.querySelectorAll(
-    'body * :not(.hyper-log-host, .hyper-log-streams-holder, .hyper-log-streams-holder *, #sudo-pointer-element, .leader-line, .leader-line *)'
-  )
+  const existingPageElements = document.querySelectorAll(pageElementsQuery)
 
   let minDistance = Infinity
   let nearestPointElement = null

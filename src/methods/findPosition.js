@@ -1,5 +1,6 @@
 import {
   logStreamGapToAnchorPx,
+  pageElementsQuery,
   positionFindingWorstAllowed,
   _B,
   _L,
@@ -17,9 +18,7 @@ export const findPosition = (anchorElement, logElement) => {
 
   // get all rects of page elements
   const existingPageRects = []
-  const existingPageElements = document.querySelectorAll(
-    'body * :not(.hyper-log-host, .hyper-log-streams-holder, .hyper-log-streams-holder *, #sudo-pointer-element, .leader-line, .leader-line *)'
-  )
+  const existingPageElements = document.querySelectorAll(pageElementsQuery)
 
   for (let e of existingPageElements) {
     if (
@@ -174,7 +173,7 @@ export const pxWrap = value => {
 }
 
 export const pxTrim = value => {
-  return Number(value.replace('px', ''))
+  return Number(value.replace(/px/, ''))
 }
 
 export const getTestValue = (accessor, testPosition) => {
