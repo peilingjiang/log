@@ -1,8 +1,7 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
-import isEqual from 'react-fast-compare'
 
-import { highlightElement, removeHighlight } from '../methods/highlight.js'
+import { highlightElement } from '../methods/highlight.js'
 import { assertExistence } from '../methods/utils.js'
 import { wrapString } from './utils.js'
 
@@ -93,36 +92,3 @@ export class FormatterBoolean extends BaseObject {
     )
   }
 }
-
-// const FormatterNumberMemo = ({
-//   arg,
-//   inheritId,
-//   choosing,
-//   highlightChanged,
-// }) => {
-//   const ref = useRef(null)
-//   const prevArg = usePrevious(arg)
-
-//   useEffect(() => {
-//     if (highlightChanged && assertExistence(prevArg) && prevArg !== arg) {
-//       highlightElement(ref.current, {
-//         style: 'background',
-//         animate: true,
-//         scrollIntoView: false,
-//         upFront: false,
-//       })
-//     }
-//   }, [arg])
-
-//   return (
-//     <span
-//       ref={ref}
-//       className={`f-number${choosing ? ' hyper-choosing' : ''}${highlightChanged }`}
-//       // key={`${inheritId}[num]`}
-//       data-key={`${inheritId}[num]`}
-//     >
-//       {arg}
-//     </span>
-//   )
-// }
-// export const FormatterNumber = memo(FormatterNumberMemo, isEqual)

@@ -126,6 +126,15 @@ $menu-height-text: calc(
       @include menu-item-special-config($elegant-green);
     }
 
+    &.menu-un-center-staged-item,
+    &.menu-un-center-staged-item:hover {
+      background: $bright-yellow;
+
+      path {
+        fill: $white;
+      }
+    }
+
     // &.special-menu-item {
     //   margin-top: $padding-small;
     // }

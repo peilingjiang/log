@@ -167,13 +167,13 @@ export default class LogStreamMenu extends Component {
         specialItems.push(
           <p
             key={'menu-un-center-staged'}
-            className={`stream-menu-item special-menu-item`}
+            className={`stream-menu-item special-menu-item menu-un-center-staged-item`}
             onClick={() => {
               setCenterStagedId(groupId, '')
             }}
-            title="show the whole log / remove center stage"
+            title="dismantle the center stage"
           >
-            <UnCenterStage />
+            <CenterStage />
           </p>
         )
       } else {
