@@ -22,19 +22,31 @@ export default class Tracking extends Component {
             showVideo: false,
           },
           callbackStatic: () => {
-            log('trackDistance done')
+            log('trackDistance done').id('sys-msg')
           },
           callbackTrack: data => {
             log(data)
           },
         },
+        // {
+        //   name: 'trackGaze',
+        //   options: {
+        //     showVideo: false,
+        //   },
+        //   callbackOnCalibrationEnd: () => {
+        //     log('gaze calibration done').id('done-msg')
+        //   },
+        //   callbackTrack: data => {
+        //     log(data)
+        //   },
+        // },
       ],
       '#tracking-example',
       {
         i18n: false,
       },
       () => {
-        log('all panel tasks done')
+        log('all panel tasks done').id('sys-msg')
         RemoteCalibrator.removePanel()
 
         this.setState({
@@ -60,7 +72,7 @@ export default class Tracking extends Component {
               id="pause-button"
               onClick={() => {
                 RemoteCalibrator.pauseDistance()
-                log('paused')
+                log('paused').id('sys-msg')
               }}
             >
               Pause Tracking
@@ -70,7 +82,7 @@ export default class Tracking extends Component {
               id="resume-button"
               onClick={() => {
                 RemoteCalibrator.resumeDistance()
-                log('resumed')
+                log('resumed').id('sys-msg')
               }}
             >
               Resume Tracking

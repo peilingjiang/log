@@ -21,7 +21,10 @@ export default class PagesList extends Component {
           <Link to={'/px'}>Display Numbers with Units</Link>
         </li>
         <li>
-          <Link to={'/tracking'}>Track Viewing Distances</Link>
+          <Link to={'/distance'}>Measuring Viewing Distances</Link>
+        </li>
+        <li>
+          <Link to={'/tracking'}>Track Viewing Distances and Gaze</Link>
         </li>
       </ul>
     )

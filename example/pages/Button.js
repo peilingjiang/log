@@ -42,8 +42,6 @@ export default class Button extends Component {
                   .el(e.target)
                   .name('submit')
                   .color('#c999ff')
-
-                log(e.target)
               }
             )
           }}

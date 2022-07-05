@@ -25,6 +25,11 @@ export class HyperLog {
     return this.el(e)
   }
 
+  id(id) {
+    this.requests.id = id
+    return this
+  }
+
   name(name = '') {
     this.requests.name = name
     return this

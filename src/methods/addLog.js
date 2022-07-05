@@ -84,6 +84,7 @@ export const addLog = (logHost, args, element = null, requests = {}) => {
   parseStack(_getStacks(logHost.state.logGroups), parsedStack => {
     // add log to logHost
     logHost.setState(prevState => {
+      // ! Access requests in setState only
       const newState = {
         ...prevState,
         logGroups: cloneLogGroups(prevState.logGroups),
@@ -98,9 +99,11 @@ export const addLog = (logHost, args, element = null, requests = {}) => {
       }
 
       // ! groupId
-      const groupId = idFromString(
-        `${parsedStack.file}:${parsedStack.line}:${parsedStack.char}`
-      )
+      const groupId =
+        requests.id ||
+        idFromString(
+          `${parsedStack.file}:${parsedStack.line}:${parsedStack.char}`
+        )
       const groupElementId = idFromString(stringifyDOMElement(element))
 
       // ! first log of its group
