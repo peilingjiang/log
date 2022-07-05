@@ -38,6 +38,7 @@ import {
 } from '../methods/snap.js'
 import { setupLeaderLine } from '../others/leaderLine.js'
 import { outlineToHighlightElement } from '../methods/attachElements.js'
+import { StreamTimelineSlider } from '../components/StreamTimelineSlider.js'
 
 // for augmented logs
 
@@ -71,6 +72,9 @@ export default class LogStream extends Component {
       current: false,
       ////
       choosingCenterStaged: false,
+      ////
+      useTimeline: false,
+      timelineLogOrderReversed: 0,
     }
     this.inExternalOperation = false
 
@@ -82,7 +86,9 @@ export default class LogStream extends Component {
     this.handleDragAround = this.handleDragAround.bind(this)
     this.handlePositionReset = this.handlePositionReset.bind(this)
 
+    // ! menu
     this.menuFunctions = {
+      toggleUseTimeline: this.toggleUseTimeline.bind(this),
       expandStream: this.expandStream.bind(this),
       startRelink: this.startRelink.bind(this),
       pauseStream: this.pauseStream.bind(this),
@@ -93,6 +99,10 @@ export default class LogStream extends Component {
       toggleChoosingCenterStaged: this.toggleChoosingCenterStaged.bind(this),
       setCenterStagedId: this.setCenterStagedId.bind(this), // !
     }
+
+    // ! slider
+    this.setTimelineLogOrderReversed =
+      this.setTimelineLogOrderReversed.bind(this)
 
     this.streamFunctions = {
       setCenterStagedId: this.setCenterStagedId.bind(this), // !
@@ -135,6 +145,12 @@ export default class LogStream extends Component {
   /* -------------------------------------------------------------------------- */
 
   // ! menu functions
+
+  toggleUseTimeline() {
+    const newUseTimeline = !this.state.useTimeline
+    const newExpand = newUseTimeline ? false : this.state.expand
+    this.setState({ useTimeline: newUseTimeline, expand: newExpand })
+  }
 
   expandStream() {
     this.setState({ expand: !this.state.expand })
@@ -240,8 +256,9 @@ export default class LogStream extends Component {
   shapeIt(newFormat) {
     const { logGroup, updateLogGroup } = this.props
 
+    // reset the position when switching back to text, and when the stream was snapped
     const unsnapExtraState =
-      newFormat === 'text' ? this._unsnapState(logGroup) : {}
+      newFormat === 'text' && logGroup.snap ? this._unsnapState(logGroup) : {}
 
     const newGroup = {
       ...cloneLogGroup(logGroup),
@@ -382,6 +399,12 @@ export default class LogStream extends Component {
 
   toggleChoosingCenterStaged() {
     this.setState({ choosingCenterStaged: !this.state.choosingCenterStaged })
+  }
+
+  /* -------------------------------------------------------------------------- */
+
+  setTimelineLogOrderReversed(orderReversed) {
+    this.setState({ timelineLogOrderReversed: orderReversed })
   }
 
   /* -------------------------------------------------------------------------- */
@@ -588,8 +611,15 @@ export default class LogStream extends Component {
   }
 
   render() {
-    const { expand, hovered, grabbing, current, choosingCenterStaged } =
-      this.state
+    const {
+      expand,
+      hovered,
+      grabbing,
+      current,
+      useTimeline,
+      timelineLogOrderReversed,
+      choosingCenterStaged,
+    } = this.state
     const {
       logGroup: {
         name,
@@ -616,19 +646,63 @@ export default class LogStream extends Component {
     // the format definition of the thread
     const isShape = format === 'shape'
 
-    const logElements = []
-
+    let logElements = []
     let orderReversed = logs.length
-    for (let log of logs) {
-      logElements.push(
-        // to add a valid shape log, the stream must be a shape (format)
-        // and this log must have a valid unit
+
+    if (!useTimeline) {
+      for (let log of logs) {
+        logElements.push(
+          // to add a valid shape log, the stream must be a shape (format)
+          // and this log must have a valid unit
+          !isShape || !canUseShape(log, view.centerStagedId) ? (
+            <Log
+              key={`${log.id} ${log.timestamps.at(-1).now}`}
+              groupId={groupId}
+              log={log}
+              orderReversed={--orderReversed}
+              expandedLog={expand}
+              // groupBounding={bounding}
+              // logsCount={logs.length}
+              snap={snap}
+              hostFunctions={hostFunctions}
+              streamFunctions={this.streamFunctions}
+              organization={organization}
+              ////
+              view={view}
+              choosingCenterStaged={choosingCenterStaged}
+            />
+          ) : (
+            <ShapeLog
+              key={`${log.id} ${log.timestamps.at(-1).now}-shape`}
+              groupId={groupId}
+              log={log}
+              orderReversed={--orderReversed}
+              expandedLog={expand}
+              // groupBounding={bounding}
+              // logsCount={logs.length}
+              snap={snap}
+              orientation={orientation}
+              hostFunctions={hostFunctions}
+              streamFunctions={this.streamFunctions}
+              organization={organization}
+              ////
+              view={view}
+              choosingCenterStaged={false}
+            />
+          )
+        )
+      }
+    } else {
+      // ! timeline!
+      const log = logs[logs.length - timelineLogOrderReversed - 1]
+
+      logElements =
         !isShape || !canUseShape(log, view.centerStagedId) ? (
           <Log
             key={`${log.id} ${log.timestamps.at(-1).now}`}
             groupId={groupId}
             log={log}
-            orderReversed={--orderReversed}
+            orderReversed={0}
             expandedLog={expand}
             // groupBounding={bounding}
             // logsCount={logs.length}
@@ -645,7 +719,7 @@ export default class LogStream extends Component {
             key={`${log.id} ${log.timestamps.at(-1).now}-shape`}
             groupId={groupId}
             log={log}
-            orderReversed={--orderReversed}
+            orderReversed={0}
             expandedLog={expand}
             // groupBounding={bounding}
             // logsCount={logs.length}
@@ -659,7 +733,6 @@ export default class LogStream extends Component {
             choosingCenterStaged={false}
           />
         )
-      )
     }
 
     const alignItemsValue = _getAlignment(
@@ -712,16 +785,33 @@ export default class LogStream extends Component {
           centerStagedId={view.centerStagedId}
         />
 
+        {/* actual logs */}
         <div
-          className="logs-wrapper"
+          className={`logs-wrapper${
+            useTimeline ? ' timeline-logs-wrapper' : ''
+          }`}
           ref={this.logsWrapperRef}
           style={logWrapperStyles}
         >
           {logElements}
         </div>
 
+        {useTimeline && (
+          <StreamTimelineSlider
+            logsCount={logs.length}
+            timelineLogOrderReversed={timelineLogOrderReversed}
+            setTimelineLogOrderReversed={this.setTimelineLogOrderReversed}
+            currentLogTimestamp={
+              logs[logs.length - timelineLogOrderReversed - 1].timestamps.at(-1)
+                .now
+            }
+            isForShape={isShape}
+          />
+        )}
+
         <LogStreamMenu
           groupId={groupId}
+          logsCount={logs.length}
           paused={paused}
           format={format}
           orientation={orientation}
@@ -734,6 +824,8 @@ export default class LogStream extends Component {
           allowingCenterStaged={this._allowingCenterStaged()}
           choosingCenterStaged={choosingCenterStaged}
           centerStagedId={view.centerStagedId}
+          ////
+          useTimeline={useTimeline}
         />
       </div>
     )

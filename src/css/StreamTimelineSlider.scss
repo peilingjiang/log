@@ -1,0 +1,94 @@
+// https://css-tricks.com/styling-cross-browser-compatible-range-inputs-css/
+
+@use 'sass:math';
+
+.hyper-log-stream-slider {
+  margin: $padding-mid 0 calc($padding-mid - $padding-xs) 0;
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $padding-small;
+
+  &.stream-slider-for-shape {
+    width: $max-log-width !important;
+  }
+
+  .slider-timestamp {
+    @include font-fixed;
+    font-size: $font-size-small;
+    text-align: right;
+    min-width: $padding-xx-large;
+  }
+
+  /* -------------------------------------------------------------------------- */
+
+  // REMOVE
+
+  .slider-input {
+    width: 100%;
+    -webkit-appearance: none;
+    background: transparent;
+  }
+
+  input[type='range']::-webkit-slider-thumb {
+    -webkit-appearance: none;
+  }
+
+  input[type='range']:focus {
+    outline: none;
+  }
+
+  // CUSTOM
+
+  $thumb-height: $padding-x-large;
+  $thumb-width: 0.75rem;
+  $track-height: $padding-xs;
+
+  input[type='range']::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    transition: background-color $transition-normal ease;
+    ////
+    height: $thumb-height;
+    width: $thumb-width;
+    border-radius: math.div($thumb-width, 2);
+    background: $dark-mid-grey;
+    cursor: pointer;
+    ////
+    margin-top: -math.div($thumb-height, 2) + math.div($track-height, 2);
+  }
+
+  input[type='range']:hover::-webkit-slider-thumb {
+    background: $dark-grey;
+  }
+
+  /* All the same stuff for Firefox */
+  input[type='range']::-moz-range-thumb {
+    height: $thumb-height;
+    width: $thumb-width;
+    border-radius: math.div($thumb-width, 2);
+    background: $dark-grey;
+    cursor: pointer;
+  }
+
+  input[type='range']::-webkit-slider-runnable-track {
+    width: 100%;
+    height: $track-height;
+    cursor: pointer;
+    background: $light-grey;
+    // border-radius: math.div($padding-small, 2);
+  }
+
+  // input[type='range']:focus::-webkit-slider-runnable-track {
+  //   background: #367ebd;
+  // }
+
+  input[type='range']::-moz-range-track {
+    width: 100%;
+    height: $track-height;
+    cursor: pointer;
+    background: $light-grey;
+    // border-radius: math.div($padding-small, 2);
+  }
+}

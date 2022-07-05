@@ -42,6 +42,12 @@
 
     // pointer-events: none;
 
+    &.timeline-logs-wrapper:not(:has(.hyper-shape-log)),
+    &.timeline-logs-wrapper .hyper-log:not(.hyper-shape-log) {
+      max-width: $max-log-width !important;
+      width: $max-log-width !important;
+    }
+
     scrollbar-width: none;
     &::-webkit-scrollbar {
       width: 0;

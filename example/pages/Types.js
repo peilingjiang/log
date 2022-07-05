@@ -37,7 +37,7 @@ export default class Types extends Component {
           },
           timestamp: performance.now(),
           method: 'Random',
-        })
+        }).e(document.getElementById('home-link'))
       }, Math.random() * 1000)
     }
 

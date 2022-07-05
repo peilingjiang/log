@@ -152,7 +152,7 @@ const AllWayMoveDot = ({ filterArea, handleTimelineSetArea }) => {
           constrain(
             pxTrim(original.top) + e.clientY - original.mouseY,
             offset,
-            pxTrim(original.bottom) - 2 * offset
+            window.innerHeight - 2 * offset
           )
         ),
         bottom: pxWrap(

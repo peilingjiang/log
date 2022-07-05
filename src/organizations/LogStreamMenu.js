@@ -17,10 +17,13 @@ import Snap from '../icons/snap.svg'
 import Unsnap from '../icons/unsnap.svg'
 import CenterStage from '../icons/center-stage.svg'
 import UnCenterStage from '../icons/un-center-stage.svg'
+import TimelineSlider from '../icons/slider.svg'
+import Stack from '../icons/stack.svg'
 
 export default class LogStreamMenu extends Component {
   static propTypes = {
     groupId: PropTypes.string.isRequired,
+    logsCount: PropTypes.number.isRequired,
     paused: PropTypes.bool.isRequired,
     format: PropTypes.string.isRequired,
     orientation: PropTypes.string.isRequired,
@@ -35,6 +38,8 @@ export default class LogStreamMenu extends Component {
     allowingCenterStaged: PropTypes.bool.isRequired,
     choosingCenterStaged: PropTypes.bool.isRequired,
     centerStagedId: PropTypes.string.isRequired,
+    ////
+    useTimeline: PropTypes.bool.isRequired,
   }
 
   componentDidMount() {}
@@ -46,6 +51,7 @@ export default class LogStreamMenu extends Component {
   render() {
     const {
       groupId,
+      logsCount,
       paused,
       format,
       orientation,
@@ -56,6 +62,7 @@ export default class LogStreamMenu extends Component {
       centerStagedId,
       streamState: { expand },
       menuFunctions: {
+        toggleUseTimeline,
         expandStream,
         startRelink,
         pauseStream,
@@ -67,6 +74,7 @@ export default class LogStreamMenu extends Component {
         setCenterStagedId,
       },
       snap,
+      useTimeline,
     } = this.props
 
     const isShape = format === 'shape'
@@ -123,6 +131,36 @@ export default class LogStreamMenu extends Component {
       )
     }
 
+    if (logsCount > 2) {
+      specialItems.push(
+        useTimeline ? (
+          <p
+            key={'menu-use-timeline'}
+            className={`stream-menu-item special-menu-item${
+              shouldDisable ? ' disabled' : ''
+            }`}
+            onMouseDown={toggleUseTimeline}
+            title="view the stream in stack view"
+          >
+            <Stack />
+            <span>stack</span>
+          </p>
+        ) : (
+          <p
+            key={'menu-use-timeline'}
+            className={`stream-menu-item special-menu-item${
+              shouldDisable ? ' disabled' : ''
+            }`}
+            onMouseDown={toggleUseTimeline}
+            title="view the stream with a timeline slider"
+          >
+            <TimelineSlider />
+            <span>timeline</span>
+          </p>
+        )
+      )
+    }
+
     if (allowingCenterStaged) {
       if (centerStagedId.length) {
         // already has a center staged id
@@ -133,6 +171,7 @@ export default class LogStreamMenu extends Component {
             onClick={() => {
               setCenterStagedId(groupId, '')
             }}
+            title="show the whole log / remove center stage"
           >
             <UnCenterStage />
           </p>
@@ -147,6 +186,7 @@ export default class LogStreamMenu extends Component {
             onClick={() => {
               toggleChoosingCenterStaged()
             }}
+            title="center stage a component"
           >
             <CenterStage />
           </p>
@@ -157,7 +197,9 @@ export default class LogStreamMenu extends Component {
     return (
       <div className={`hyper-log-stream-menu stream-menu-${orientation}`}>
         <p
-          className={`stream-menu-item menu-expand-item`}
+          className={`stream-menu-item menu-expand-item${
+            useTimeline ? ' disabled' : ''
+          }`}
           onClick={expandStream}
           title="expand"
         >
