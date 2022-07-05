@@ -143,7 +143,7 @@
   .hyper-log-center-stage {
     flex-grow: 0;
     flex-shrink: 0;
-    font-size: calc($font-size-xs + $padding-xxs);
+    font-size: calc($font-size-xs + 2 * $padding-xxs);
     padding: 0;
   }
 

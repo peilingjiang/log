@@ -31,6 +31,7 @@ export default class Log extends Component {
       ////
       view: logViewInterface.isRequired,
       choosingCenterStaged: PropTypes.bool.isRequired,
+      highlightChanged: PropTypes.bool.isRequired,
     }
   }
 
@@ -63,6 +64,7 @@ export default class Log extends Component {
       organization,
       view,
       choosingCenterStaged,
+      highlightChanged,
     } = this.props
     const {
       log: { args, id, count, timestamps, stack, color, unit },
@@ -79,6 +81,7 @@ export default class Log extends Component {
       >
         {/* <LogHeader log={log} /> */}
         <LogBody
+          // key={highlightChanged ? `${groupId}-stream-timeline-log-body` : undefined}
           args={args}
           groupId={groupId}
           id={id}
@@ -95,6 +98,7 @@ export default class Log extends Component {
           organization={organization}
           view={view}
           choosingCenterStaged={choosingCenterStaged}
+          highlightChanged={highlightChanged}
         />
       </div>
     )

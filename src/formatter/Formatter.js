@@ -5,13 +5,17 @@ import isEqual from 'react-fast-compare'
 import FormatterArray from './FormatterArray.js'
 import FormatterObject from './FormatterObject.js'
 import {
-  assertNumber,
   assertTypeOfArg,
   parseCenterStagedValueFromId,
-  removeArgsDescriptions,
+  removeLogId,
 } from '../methods/utils.js'
 import { wrapString } from './utils.js'
 import { logViewInterface } from '../constants.js'
+import {
+  FormatterBoolean,
+  FormatterNumber,
+  FormatterString,
+} from './baseObjectTypes.js'
 
 export class Formatter extends Component {
   static get propTypes() {
@@ -22,6 +26,7 @@ export class Formatter extends Component {
       view: logViewInterface.isRequired,
       streamFunctions: PropTypes.object.isRequired,
       choosingCenterStaged: PropTypes.bool.isRequired,
+      highlightChanged: PropTypes.bool.isRequired,
     }
   }
 
@@ -57,6 +62,7 @@ export class Formatter extends Component {
       view,
       streamFunctions,
       choosingCenterStaged,
+      highlightChanged,
     } = this.props
 
     let formattedArgs
@@ -77,7 +83,8 @@ export class Formatter extends Component {
         },
         streamFunctions,
         false,
-        choosingCenterStaged
+        choosingCenterStaged,
+        highlightChanged
       )
     } else {
       formattedArgs = args.map((arg, i) => {
@@ -92,7 +99,8 @@ export class Formatter extends Component {
           },
           streamFunctions,
           false,
-          choosingCenterStaged
+          choosingCenterStaged,
+          highlightChanged
         )
         // return (
         //   <>
@@ -118,9 +126,15 @@ const formatArg = (
   idViews,
   streamFunctions,
   minimal = false,
-  choosing = false
+  choosing = false,
+  highlightChanged = false
 ) => {
   const type = assertTypeOfArg(arg)
+  // for highlightChanged
+  const standardInheritId = highlightChanged
+    ? removeLogId(inheritId)
+    : inheritId
+
   switch (type) {
     case 'undefined':
       return (
@@ -144,45 +158,38 @@ const formatArg = (
       )
     case 'number':
       return (
-        <span
-          className={`f-number${choosing ? ' hyper-choosing' : ''}`}
-          key={`${inheritId}[num]`}
-          data-key={`${inheritId}[num]`}
-        >
-          {arg}
-        </span>
+        <FormatterNumber
+          key={`${standardInheritId}[num]`}
+          // key={`${inheritId}[num]`}
+          arg={arg}
+          inheritId={inheritId}
+          choosing={choosing}
+          highlightChanged={highlightChanged}
+          minimal={minimal}
+        />
       )
     case 'string':
-      if (minimal) {
-        return (
-          <span
-            className={`f-string f-string-minimal minimal${
-              choosing ? ' hyper-choosing' : ''
-            }`}
-            key={`${inheritId}[str]`}
-            data-key={`${inheritId}[str]`}
-          >
-            {wrapString(arg)}
-          </span>
-        )
-      }
       return (
-        <span
-          className={`f-string${choosing ? ' hyper-choosing' : ''}`}
-          key={`${inheritId}[str]`}
-          data-key={`${inheritId}[str]`}
-        >{`${arg}`}</span>
+        <FormatterString
+          key={`${standardInheritId}[str]`}
+          arg={arg}
+          inheritId={inheritId}
+          choosing={choosing}
+          highlightChanged={highlightChanged}
+          minimal={minimal}
+        />
       )
 
     case 'boolean':
       return (
-        <span
-          className={`f-boolean${choosing ? ' hyper-choosing' : ''}`}
-          key={`${inheritId}[bool]`}
-          data-key={`${inheritId}[bool]`}
-        >
-          {arg ? 'true' : 'false'}
-        </span>
+        <FormatterBoolean
+          key={`${standardInheritId}[bool]`}
+          arg={arg}
+          inheritId={inheritId}
+          choosing={choosing}
+          highlightChanged={highlightChanged}
+          minimal={minimal}
+        />
       )
 
     case 'function':
@@ -202,7 +209,7 @@ const formatArg = (
     case 'array':
       return (
         <FormatterArray
-          key={`${inheritId}[arr]`}
+          key={`${standardInheritId}[arr]`}
           arr={arg}
           groupId={groupId}
           inheritId={inheritId}
@@ -211,13 +218,14 @@ const formatArg = (
           formatArg={formatArg}
           minimal={minimal}
           choosing={choosing}
+          highlightChanged={highlightChanged}
         />
       )
 
     case 'object':
       return (
         <FormatterObject
-          key={`${inheritId}[obj]`}
+          key={`${standardInheritId}[obj]`}
           obj={arg}
           groupId={groupId}
           inheritId={inheritId}
@@ -226,6 +234,7 @@ const formatArg = (
           formatArg={formatArg}
           minimal={minimal}
           choosing={choosing}
+          highlightChanged={highlightChanged}
         />
       )
 

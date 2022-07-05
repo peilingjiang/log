@@ -88,6 +88,8 @@
     overflow-y: scroll;
     padding: $padding-small $padding-small $padding-xx-large 0;
 
+    // scroll-behavior: smooth;
+
     background: rgba($white, $opacity-mid);
     backdrop-filter: blur(5px);
 

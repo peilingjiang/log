@@ -66,6 +66,7 @@ export default class LogHost extends Component {
             style: 'outline',
             animate: true,
             scrollIntoView: true,
+            upFront: true,
           })
       })
     }

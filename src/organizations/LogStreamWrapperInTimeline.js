@@ -83,6 +83,7 @@ export default class LogStreamWrapperInTimeline extends LogStream {
               organization={organization}
               view={view}
               choosingCenterStaged={false} // TODO
+              highlightChanged={false}
             />
           ) : (
             <ShapeLog
@@ -100,6 +101,7 @@ export default class LogStreamWrapperInTimeline extends LogStream {
               organization={organization}
               view={view}
               choosingCenterStaged={false} // TODO
+              highlightChanged={false}
             />
           )}
         </div>

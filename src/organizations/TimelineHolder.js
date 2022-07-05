@@ -16,6 +16,7 @@ import {
   pageElementsQuery,
   timelineDisableAutoScrollThresholdPx,
   timelineGroupWiseOffsetPx,
+  timelineSelectionAreaOffsetButterPx,
   _Time,
 } from '../constants.js'
 import { isOverlapped, pxTrim, pxWrap } from '../methods/findPosition.js'
@@ -123,8 +124,9 @@ export default class TimelineHolder extends Component {
           right: pxWrap(
             constrain(
               start.right - moveEvent.clientX + start.x,
-              0,
-              window.innerWidth - this.ref.current.offsetWidth
+              -this.ref.current.offsetWidth +
+                timelineSelectionAreaOffsetButterPx,
+              window.innerWidth - timelineSelectionAreaOffsetButterPx
             )
           ),
         })

@@ -44,6 +44,9 @@ export default class Types extends Component {
     log(true)
 
     for (let i = 0; i < 2; i++) log(this)
+
+    for (let i = 0; i < 20; i++)
+      log(String(Math.random())).e(document.getElementById('home-link'))
   }
 
   render() {

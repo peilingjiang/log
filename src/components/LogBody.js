@@ -31,6 +31,7 @@ export default class LogBody extends Component {
       organization: PropTypes.string.isRequired,
       view: logViewInterface.isRequired,
       choosingCenterStaged: PropTypes.bool.isRequired,
+      highlightChanged: PropTypes.bool.isRequired,
     }
   }
 
@@ -90,6 +91,7 @@ export default class LogBody extends Component {
       organization,
       view,
       choosingCenterStaged,
+      highlightChanged,
     } = this.props
 
     const isAugmented = organization === _Aug
@@ -139,12 +141,18 @@ export default class LogBody extends Component {
           )}
           {count > 1 && <span className="hyper-log-count">{count}</span>}
           <Formatter
+            // key={
+            //   highlightChanged
+            //     ? `${groupId}-stream-timeline-formatter`
+            //     : undefined
+            // }
             args={args}
             groupId={groupId}
             logId={id}
             view={view}
             streamFunctions={streamFunctions}
             choosingCenterStaged={choosingCenterStaged}
+            highlightChanged={highlightChanged}
           />
           {unit ? <span className="hyper-log-unit">{unit}</span> : null}
         </div>

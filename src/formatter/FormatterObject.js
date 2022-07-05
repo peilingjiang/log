@@ -8,6 +8,7 @@ import {
   arrayFirst,
   assertElement,
   matchLocInObjectByRemovingLogId,
+  removeLogId,
 } from '../methods/utils.js'
 import { isEmptyObject } from './utils.js'
 import { ObjectKey, FoldedDisplay, FolderIcon } from './components.js'
@@ -21,12 +22,18 @@ const FormatterObject = ({
   formatArg,
   minimal,
   choosing,
+  highlightChanged,
 }) => {
   // check if unfolded
   const folded = !matchLocInObjectByRemovingLogId(
     idViews.unfoldedIds,
     inheritId
   )
+
+  // for highlightChanged
+  const standardInheritId = highlightChanged
+    ? removeLogId(inheritId)
+    : inheritId
 
   const isElement = assertElement(obj)
   const elementLabel = isElement ? (
@@ -76,7 +83,7 @@ const FormatterObject = ({
       const keyValue = objKeys[keyInd]
       innerItems.push(
         <ObjectKey
-          key={`${inheritId}-${keyInd}[obj*key]`}
+          key={`${standardInheritId}-${keyInd}[obj*key]`}
           value={keyValue}
           inheritId={`${inheritId}[${keyInd}]`}
           bold={false}
@@ -99,7 +106,8 @@ const FormatterObject = ({
           idViews,
           streamFunctions,
           true,
-          choosing
+          choosing,
+          highlightChanged
         )
       )
 
@@ -149,9 +157,9 @@ const FormatterObject = ({
         <div className="unfolded-inner">
           {objKeys.map((objKey, i) => {
             return (
-              <div key={`${inheritId}-${i}[in]`} className="inner-item">
+              <div key={`${standardInheritId}-${i}[in]`} className="inner-item">
                 <ObjectKey
-                  key={`${inheritId}-${i}[obj*key]`}
+                  key={`${standardInheritId}-${i}[obj*key]`}
                   value={objKey}
                   inheritId={`${inheritId}[${i}]`}
                   bold={true}
@@ -170,7 +178,8 @@ const FormatterObject = ({
                   idViews,
                   streamFunctions,
                   false,
-                  choosing
+                  choosing,
+                  highlightChanged
                 )}
               </div>
             )
@@ -203,6 +212,7 @@ FormatterObject.propTypes = {
   formatArg: PropTypes.func.isRequired,
   minimal: PropTypes.bool.isRequired,
   choosing: PropTypes.bool.isRequired,
+  highlightChanged: PropTypes.bool.isRequired,
 }
 
 export default memo(FormatterObject, isEqual)

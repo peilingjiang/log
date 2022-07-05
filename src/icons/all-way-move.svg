@@ -1,13 +1,14 @@
 <svg width="70" height="70" viewBox="0 0 70 70" fill="none"
   xmlns="http://www.w3.org/2000/svg">
-  <g clip-path="url(#clip0_282_127)">
-    <path d="M0 35L27 27V43L0 35Z" fill="white"/>
-    <path d="M70 35L43 43L43 27L70 35Z" fill="white"/>
-    <path d="M35 70L27 43L43 43L35 70Z" fill="white"/>
-    <path d="M35 -3.49691e-07L43 27L27 27L35 -3.49691e-07Z" fill="white"/>
+  <g clip-path="url(#clip0_286_160)">
+    <path d="M0 35L18 25V45L0 35Z" fill="white"/>
+    <path d="M70 35L52 45L52 25L70 35Z" fill="white"/>
+    <path d="M35 70L25 52L45 52L35 70Z" fill="white"/>
+    <path d="M35 -4.37114e-07L45 18L25 18L35 -4.37114e-07Z" fill="white"/>
+    <circle cx="35" cy="35" r="9" fill="white"/>
   </g>
   <defs>
-    <clipPath id="clip0_282_127">
+    <clipPath id="clip0_286_160">
       <rect width="70" height="70" fill="white"/>
     </clipPath>
   </defs>

@@ -650,48 +650,48 @@ export default class LogStream extends Component {
     let orderReversed = logs.length
 
     if (!useTimeline) {
-      for (let log of logs) {
-        logElements.push(
-          // to add a valid shape log, the stream must be a shape (format)
-          // and this log must have a valid unit
-          !isShape || !canUseShape(log, view.centerStagedId) ? (
-            <Log
-              key={`${log.id} ${log.timestamps.at(-1).now}`}
-              groupId={groupId}
-              log={log}
-              orderReversed={--orderReversed}
-              expandedLog={expand}
-              // groupBounding={bounding}
-              // logsCount={logs.length}
-              snap={snap}
-              hostFunctions={hostFunctions}
-              streamFunctions={this.streamFunctions}
-              organization={organization}
-              ////
-              view={view}
-              choosingCenterStaged={choosingCenterStaged}
-            />
-          ) : (
-            <ShapeLog
-              key={`${log.id} ${log.timestamps.at(-1).now}-shape`}
-              groupId={groupId}
-              log={log}
-              orderReversed={--orderReversed}
-              expandedLog={expand}
-              // groupBounding={bounding}
-              // logsCount={logs.length}
-              snap={snap}
-              orientation={orientation}
-              hostFunctions={hostFunctions}
-              streamFunctions={this.streamFunctions}
-              organization={organization}
-              ////
-              view={view}
-              choosingCenterStaged={false}
-            />
-          )
+      logElements = logs.map(log => {
+        // to add a valid shape log, the stream must be a shape (format)
+        // and this log must have a valid unit
+        return !isShape || !canUseShape(log, view.centerStagedId) ? (
+          <Log
+            key={`${log.id} ${log.timestamps.at(-1).now}`}
+            groupId={groupId}
+            log={log}
+            orderReversed={--orderReversed}
+            expandedLog={expand}
+            // groupBounding={bounding}
+            // logsCount={logs.length}
+            snap={snap}
+            hostFunctions={hostFunctions}
+            streamFunctions={this.streamFunctions}
+            organization={organization}
+            ////
+            view={view}
+            choosingCenterStaged={choosingCenterStaged}
+            highlightChanged={useTimeline}
+          />
+        ) : (
+          <ShapeLog
+            key={`${log.id} ${log.timestamps.at(-1).now}-shape`}
+            groupId={groupId}
+            log={log}
+            orderReversed={--orderReversed}
+            expandedLog={expand}
+            // groupBounding={bounding}
+            // logsCount={logs.length}
+            snap={snap}
+            orientation={orientation}
+            hostFunctions={hostFunctions}
+            streamFunctions={this.streamFunctions}
+            organization={organization}
+            ////
+            view={view}
+            choosingCenterStaged={false}
+            highlightChanged={useTimeline}
+          />
         )
-      }
+      })
     } else {
       // ! timeline!
       const log = logs[logs.length - timelineLogOrderReversed - 1]
@@ -699,7 +699,8 @@ export default class LogStream extends Component {
       logElements =
         !isShape || !canUseShape(log, view.centerStagedId) ? (
           <Log
-            key={`${log.id} ${log.timestamps.at(-1).now}`}
+            key={`${groupId}-stream-timeline-log`}
+            // key={`${log.id} ${log.timestamps.at(-1).now}`}
             groupId={groupId}
             log={log}
             orderReversed={0}
@@ -713,6 +714,7 @@ export default class LogStream extends Component {
             ////
             view={view}
             choosingCenterStaged={choosingCenterStaged}
+            highlightChanged={useTimeline}
           />
         ) : (
           <ShapeLog
@@ -731,6 +733,7 @@ export default class LogStream extends Component {
             ////
             view={view}
             choosingCenterStaged={false}
+            highlightChanged={false} // TODO highlight changed?
           />
         )
     }

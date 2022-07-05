@@ -14,7 +14,8 @@
 }
 
 .hyper-item-highlight-outline-animate-wait {
-  animation: highlight-outline $transition-highlight ease $transition-normal;
+  // animation: highlight-outline $transition-highlight ease $transition-normal; // for smooth scroll
+  animation: highlight-outline $transition-highlight ease $transition-fast;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -32,4 +33,20 @@
 
 .hyper-item-highlight-border-animate {
   animation: highlight-border $transition-highlight ease $transition-normal;
+}
+
+/* -------------------------------------------------------------------------- */
+
+@keyframes highlight-background {
+  0% {
+    background: rgba($bright-orange, $opacity-high);
+  }
+
+  100% {
+    background: transparent;
+  }
+}
+
+.hyper-item-highlight-background-animate {
+  animation: highlight-background $transition-slow ease;
 }

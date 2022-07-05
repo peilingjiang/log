@@ -8,6 +8,7 @@ import { foldedArrayShowItemCount, idViewsInterface } from '../constants.js'
 import {
   arrayFirst,
   matchLocInObjectByRemovingLogId,
+  removeLogId,
 } from '../methods/utils.js'
 import { isEmptyArray } from './utils.js'
 
@@ -20,6 +21,7 @@ const FormatterArray = ({
   formatArg,
   minimal,
   choosing,
+  highlightChanged,
 }) => {
   const folded = !matchLocInObjectByRemovingLogId(
     idViews.unfoldedIds,
@@ -41,7 +43,8 @@ const FormatterArray = ({
               idViews,
               streamFunctions,
               true,
-              choosing
+              choosing,
+              highlightChanged
             )
           ) : (
             <FoldedDisplay />
@@ -74,7 +77,8 @@ const FormatterArray = ({
           idViews,
           streamFunctions,
           true,
-          choosing
+          choosing,
+          highlightChanged
         )
       )
       if (i < arr.length - 1)
@@ -118,7 +122,12 @@ const FormatterArray = ({
         <div className="unfolded-inner">
           {arr.map((arg, i) => {
             return (
-              <div key={`${inheritId}-${i}-in`} className="inner-item">
+              <div
+                key={`${
+                  highlightChanged ? removeLogId(inheritId) : inheritId
+                }-${i}-in`}
+                className="inner-item"
+              >
                 <div className="simple-inline-element inner-item-ind info-dimmed">
                   {i}
                 </div>
@@ -129,7 +138,8 @@ const FormatterArray = ({
                   idViews,
                   streamFunctions,
                   false,
-                  choosing
+                  choosing,
+                  highlightChanged
                 )}
               </div>
             )
@@ -162,6 +172,7 @@ FormatterArray.propTypes = {
   formatArg: PropTypes.func.isRequired,
   minimal: PropTypes.bool.isRequired,
   choosing: PropTypes.bool.isRequired,
+  highlightChanged: PropTypes.bool.isRequired,
 }
 
 export default memo(FormatterArray, isEqual)
