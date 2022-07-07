@@ -29,11 +29,11 @@ ObjectKeyMemo.propTypes = {
 export const ObjectKey = memo(ObjectKeyMemo, isEqual)
 
 /* -------------------------------------------------------------------------- */
-// ...
+// ! ...
 
-export const FoldedDisplay = () => {
-  return <span className="f-folded-display">...</span>
-}
+// export const FoldedDisplay = () => {
+//   return <span className="f-folded-display">...</span>
+// }
 
 /* -------------------------------------------------------------------------- */
 

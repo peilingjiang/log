@@ -3,7 +3,8 @@ import PropTypes from 'prop-types'
 import isEqual from 'react-fast-compare'
 // import { v4 as uuid } from 'uuid'
 
-import { FoldedDisplay, FolderIcon } from './components.js'
+import { FolderIcon } from './components.js'
+import { FormatterFoldedDisplay } from './baseObjectTypes.js'
 import { foldedArrayShowItemCount, idViewsInterface } from '../constants.js'
 import {
   arrayFirst,
@@ -47,7 +48,12 @@ const FormatterArray = ({
               highlightChanged
             )
           ) : (
-            <FoldedDisplay />
+            <FormatterFoldedDisplay
+              arg={arr}
+              inheritId={inheritId}
+              choosing={choosing}
+              highlightChanged={highlightChanged}
+            />
           )}
           {']'}
         </>
@@ -101,7 +107,14 @@ const FormatterArray = ({
         <span className="arr-length info-dimmed">{`(${arr.length})`}</span>
         {'['}
         {innerItems}
-        {arr.length > foldedArrayShowItemCount ? <FoldedDisplay /> : null}
+        {arr.length > foldedArrayShowItemCount ? (
+          <FormatterFoldedDisplay
+            arg={arr.slice(foldedArrayShowItemCount)}
+            inheritId={inheritId}
+            choosing={choosing}
+            highlightChanged={highlightChanged}
+          />
+        ) : null}
         {']'}
       </>
     )

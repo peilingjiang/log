@@ -10,8 +10,9 @@ import {
   matchLocInObjectByRemovingLogId,
   removeLogId,
 } from '../methods/utils.js'
-import { isEmptyObject } from './utils.js'
+import { isEmptyObject, objectFromKeys } from './utils.js'
 import { ObjectKey, FoldedDisplay, FolderIcon } from './components.js'
+import { FormatterFoldedDisplay } from './baseObjectTypes.js'
 
 const FormatterObject = ({
   obj,
@@ -55,7 +56,12 @@ const FormatterObject = ({
               choosing={choosing}
             />
           ) : (
-            <FoldedDisplay />
+            <FormatterFoldedDisplay
+              arg={obj}
+              inheritId={inheritId}
+              choosing={choosing}
+              highlightChanged={highlightChanged}
+            />
           )}
           {'}'}
         </>
@@ -135,7 +141,14 @@ const FormatterObject = ({
         {elementLabel}
         {'{'}
         {innerItems}
-        {objKeys.length > foldedObjectShowItemCount ? <FoldedDisplay /> : null}
+        {objKeys.length > foldedObjectShowItemCount ? (
+          <FormatterFoldedDisplay
+            arg={objectFromKeys(obj, objKeys.slice(foldedObjectShowItemCount))}
+            inheritId={inheritId}
+            choosing={choosing}
+            highlightChanged={highlightChanged}
+          />
+        ) : null}
         {'}'}
       </>
     )

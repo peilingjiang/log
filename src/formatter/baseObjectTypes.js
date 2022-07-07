@@ -92,3 +92,13 @@ export class FormatterBoolean extends BaseObject {
     )
   }
 }
+
+export class FormatterFoldedDisplay extends BaseObject {
+  render() {
+    return (
+      <span ref={e => (this.ref = e)} className="f-folded-display">
+        ...
+      </span>
+    )
+  }
+}

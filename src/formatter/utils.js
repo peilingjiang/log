@@ -1,7 +1,6 @@
 import React from 'react'
 
 import { minimalStringShowLength } from '../constants.js'
-import { FoldedDisplay } from './components.js'
 
 export const wrapString = s => {
   return s.length <= minimalStringShowLength ? (
@@ -12,7 +11,7 @@ export const wrapString = s => {
         0,
         minimalStringShowLength
       )}`}</span>
-      <FoldedDisplay />
+      <span className="f-folded-display">...</span>
     </>
   )
 }
@@ -23,4 +22,12 @@ export const isEmptyArray = arr => {
 
 export const isEmptyObject = obj => {
   return Object.keys(obj).length === 0
+}
+
+export const objectFromKeys = (originalObj, keys) => {
+  const obj = {}
+  keys.forEach(key => {
+    obj[key] = originalObj[key]
+  })
+  return obj
 }
