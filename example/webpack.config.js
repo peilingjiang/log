@@ -38,5 +38,20 @@ export default env => {
         minimize: false,
       },
     }
+  } else {
+    console.log('[PROD] Producing production build...')
+    return {
+      ...config,
+      entry: './example/index.js',
+      mode: 'production',
+      output: {
+        path: path.resolve(__dirname, 'example/public/dist'),
+        publicPath: '/dist/',
+        filename: 'index.bundle.js',
+      },
+      optimization: {
+        minimize: true,
+      },
+    }
   }
 }

@@ -1,4 +1,4 @@
 [build]
 environment = { NODE_VERSION = "16", NPM_VERSION = "8.13.2" }
-publish = "example/"
+publish = "example/public/"
 command = "npm run netlify"
