@@ -9,6 +9,7 @@ import { hexAndOpacityToRGBA } from '../methods/utils.js'
 import Arrow from '../icons/arrow.svg'
 import CenterStage from '../icons/center-stage.svg'
 import { pxTrim } from '../methods/findPosition.js'
+import { HereThere } from '../formatter/HereThere.js'
 
 export default class LogBody extends Component {
   static get propTypes() {
@@ -81,6 +82,7 @@ export default class LogBody extends Component {
       id,
       count,
       timestamp,
+      stack,
       stack: { file, line },
       color,
       unit,
@@ -95,6 +97,7 @@ export default class LogBody extends Component {
     } = this.props
 
     const isAugmented = organization === _Aug
+    const hasNoArgs = args.length === 0
 
     return (
       <div
@@ -140,20 +143,24 @@ export default class LogBody extends Component {
             <CenterStage className="hyper-log-center-stage" />
           )}
           {count > 1 && <span className="hyper-log-count">{count}</span>}
-          <Formatter
-            // key={
-            //   highlightChanged
-            //     ? `${groupId}-stream-timeline-formatter`
-            //     : undefined
-            // }
-            args={args}
-            groupId={groupId}
-            logId={id}
-            view={view}
-            streamFunctions={streamFunctions}
-            choosingCenterStaged={choosingCenterStaged}
-            highlightChanged={highlightChanged}
-          />
+          {hasNoArgs ? (
+            <HereThere stack={stack} color={color} />
+          ) : (
+            <Formatter
+              // key={
+              //   highlightChanged
+              //     ? `${groupId}-stream-timeline-formatter`
+              //     : undefined
+              // }
+              args={args}
+              groupId={groupId}
+              logId={id}
+              view={view}
+              streamFunctions={streamFunctions}
+              choosingCenterStaged={choosingCenterStaged}
+              highlightChanged={highlightChanged}
+            />
+          )}
           {unit ? <span className="hyper-log-unit">{unit}</span> : null}
         </div>
       </div>

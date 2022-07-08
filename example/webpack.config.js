@@ -30,6 +30,9 @@ export default env => {
         open: true,
         historyApiFallback: true,
         server: 'https',
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+        },
       },
       optimization: {
         minimize: false,

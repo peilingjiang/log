@@ -22,8 +22,25 @@
     pointer-events: none;
   }
 
-  &.log-current {
+  &.log-current:not(.here-there-log) {
     outline: $outline-dark;
+  }
+
+  &.here-there-log {
+    overflow: hidden !important;
+
+    .hyper-log-body {
+      // background: rgba($purple, $opacity-mid);
+      padding: $padding-small !important;
+      overflow: hidden !important;
+      scrollbar-width: none !important;
+      border-radius: $padding-xs;
+
+      &::-webkit-scrollbar {
+        height: 0 !important;
+        width: 0 !important;
+      }
+    }
   }
 
   // &.log-expand {

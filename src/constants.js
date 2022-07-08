@@ -6,7 +6,7 @@ export const stackInterface = PropTypes.exact({
   char: PropTypes.number.isRequired,
   method: PropTypes.string.isRequired,
   file: PropTypes.string.isRequired,
-  // path: PropTypes.string.isRequired,
+  path: PropTypes.string.isRequired,
   raw: PropTypes.object.isRequired,
 })
 

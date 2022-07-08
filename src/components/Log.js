@@ -70,12 +70,16 @@ export default class Log extends Component {
       log: { args, id, count, timestamps, stack, color, unit },
     } = this.props
 
+    const hasNoArgs = args.length === 0
+
     if (!expandedLog && orderReversed > log.history) return undefined
     return (
       <div
         className={`hyper-log${
           orderReversed === 0 ? ' log-current' : ' log-in-history'
-        }${expandedLog ? ' log-expand' : ' log-not-expand'}`}
+        }${expandedLog ? ' log-expand' : ' log-not-expand'}${
+          hasNoArgs ? ' here-there-log' : ''
+        }`}
         style={logBaseStyles(orderReversed, expandedLog)}
         data-id={id}
       >

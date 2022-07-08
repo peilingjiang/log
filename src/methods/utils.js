@@ -175,6 +175,7 @@ export const getActualFrame = (frames, rawError) => {
   result.char = actualStackframe.columnNumber
   result.method = actualStackframe.functionName || 'anonymous'
   result.file = actualStackframe.fileName.replace(/^.*[\\/]/, '')
+  result.path = actualStackframe.fileName
   result.raw = rawError
 
   return result

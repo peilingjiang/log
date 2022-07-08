@@ -184,6 +184,40 @@
   }
 }
 
+.hyper-here-there,
+.hyper-here-there * {
+  @include font-fixed;
+  // font-size: $font-size-small;
+  line-height: 100%;
+  // font-weight: 300;
+  // animation: heart-beat $transition-normal;
+}
+
+.hyper-here-there {
+  display: flex;
+  flex-direction: column;
+  gap: $padding-xs;
+  // align-items: center;
+
+  font-weight: 700;
+  color: $purple;
+
+  p {
+    display: flex;
+    gap: $padding-xxs;
+
+    span {
+      font-size: $font-size-small;
+      font-weight: 300;
+      color: $white;
+      // background: $dark-mid-grey;
+      background: $grey;
+      padding: $padding-xs $padding-xs;
+      border-radius: $padding-xs;
+    }
+  }
+}
+
 /* -------------------------------------------------------------------------- */
 
 .hyper-choosing {

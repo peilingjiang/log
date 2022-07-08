@@ -43,6 +43,8 @@ export default class Types extends Component {
 
     log(true)
 
+    log()
+
     for (let i = 0; i < 2; i++) log(this)
 
     for (let i = 0; i < 20; i++)
