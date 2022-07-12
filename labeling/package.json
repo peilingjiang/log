@@ -12,8 +12,7 @@
   "dependencies": {
     "@octokit/rest": "^19.0.3",
     "dotenv": "^16.0.1",
-    "firebase-admin": "^11.0.0",
-    "node-fetch": "^3.2.6"
+    "firebase-admin": "^11.0.0"
   },
   "type": "module"
 }
