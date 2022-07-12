@@ -1,5 +1,8 @@
 .DS_Store
 
+secret.py
+adminsdk.json
+
 # Logs
 logs
 *.log

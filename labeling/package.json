@@ -1,0 +1,19 @@
+{
+  "name": "labeling",
+  "version": "0.0.1",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "node --experimental-json-modules main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Peiling Jiang",
+  "license": "MIT",
+  "dependencies": {
+    "@octokit/rest": "^19.0.3",
+    "dotenv": "^16.0.1",
+    "firebase-admin": "^11.0.0",
+    "node-fetch": "^3.2.6"
+  },
+  "type": "module"
+}
