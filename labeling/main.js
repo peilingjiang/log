@@ -1,7 +1,19 @@
 import { Octokit } from '@octokit/rest'
 import dotenv from 'dotenv'
 
+import express from 'express'
+// import cors from 'cors'
+
 dotenv.config()
+
+/* -------------------------------------------------------------------------- */
+
+const app = express()
+// app.use(cors())
+app.listen(3000, () => {
+  console.log('app is running at port 3000')
+  main()
+})
 
 /* -------------------------------------------------------------------------- */
 
@@ -52,7 +64,7 @@ const languages = [
 /* -------------------------------------------------------------------------- */
 
 const visitLimitGapMs = 120000
-const singleQueryDateRange = 180 * 24 * 60 * 60 * 1000
+// const singleQueryDateRange = 180 * 24 * 60 * 60 * 1000
 
 /* -------------------------------------------------------------------------- */
 
@@ -125,13 +137,14 @@ const main = async () => {
 
         if (addedItems > 0) console.log(`${addedItems} new logs added`)
 
+        console.log(`* waiting ${visitLimitGapMs} ms for another try`)
         await sleep(visitLimitGapMs)
       }
     }
   }
 }
 
-main()
+// main()
 
 /* -------------------------------------------------------------------------- */
 
