@@ -4,3 +4,7 @@
 */package-lock.json
 
 lib/
+dist/
+
+index.bundle.js
+logs.json

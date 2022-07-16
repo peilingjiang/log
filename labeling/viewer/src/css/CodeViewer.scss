@@ -1,0 +1,23 @@
+#code-viewer {
+  // margin: 1rem 1rem 3rem 1rem;
+  margin: 1rem 0;
+  height: 30rem;
+  width: 100%;
+  border-radius: 0.5rem;
+  background: #eee;
+  outline: 2px solid #ccc;
+  cursor: pointer;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 1;
+
+  color: #999;
+}
+
+@media screen and (max-width: 900px) {
+  #code-viewer {
+    height: 15rem;
+  }
+}

@@ -1,0 +1,33 @@
+pre {
+  font-family: 'Roboto Mono', monospace !important;
+  font-size: 0.8rem;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+
+  margin: 1rem 0;
+
+  select {
+    padding: 0.5rem 0.25rem;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+  }
+
+  input {
+    padding: 0.5rem 0.25rem;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+  }
+
+  .order-button {
+    font-weight: 600;
+    color: #666;
+    padding: 0.5rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+    cursor: pointer;
+  }
+}
