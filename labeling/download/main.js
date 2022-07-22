@@ -99,8 +99,8 @@ const main = async () => {
         for (let page = 1; page <= 10; page++) {
           const q = `${language.statement} extension:${fileExtension} ${sizeQuery}`
 
-          // ! try 3 times
-          for (let i = 0; i < 3; i++) {
+          // ! try 2 times
+          for (let i = 1; i < 3; i++) {
             console.log(`* searching (page ${page}, try ${i}) ${q}`)
             try {
               const result = await octokit.request('GET /search/code', {
