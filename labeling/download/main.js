@@ -108,17 +108,18 @@ const main = async () => {
           for (let i = 1; i < 3; i++) {
             console.log(`* searching (page ${page}, try ${i}) ${q}`)
             try {
-              const result = await octokit.request('GET /search/code', {
-                // q: `${language.statement}+language:${language.language}+created:${startDateStr}..${endDateStr}`,
+              const options = {
                 q: q,
                 per_page: 100,
                 page: page,
-                // sort: 'indexed',
-                // order: 'desc',
+                sort: 'indexed',
+                // order: i === 1 ? 'desc' : 'asc',
                 headers: {
                   accept: 'application/vnd.github.text-match+json',
                 },
-              })
+              }
+
+              const result = await octokit.request('GET /search/code', options)
 
               let addedItems = 0
 

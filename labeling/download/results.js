@@ -27,19 +27,19 @@ const db = admin.firestore()
 
 /* -------------------------------------------------------------------------- */
 
-const sleep = ms => {
-  return new Promise(resolve => {
-    setTimeout(resolve, ms)
-  })
-}
+// const sleep = ms => {
+//   return new Promise(resolve => {
+//     setTimeout(resolve, ms)
+//   })
+// }
 
 const main = async () => {
-  const octokit = new Octokit({
-    // eslint-disable-next-line no-undef
-    auth: process.env.GITHUB_TOKEN,
-    userAgent:
-      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36',
-  })
+  // const octokit = new Octokit({
+  //   // eslint-disable-next-line no-undef
+  //   auth: process.env.GITHUB_TOKEN,
+  //   userAgent:
+  //     'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36',
+  // })
 
   const logs = {}
   const logsGist = {
