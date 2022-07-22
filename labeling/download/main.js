@@ -4,7 +4,7 @@ import dotenv from 'dotenv'
 import express from 'express'
 // import cors from 'cors'
 
-import { languages } from '../utils.js'
+import { languages } from './utils.js'
 
 dotenv.config()
 
