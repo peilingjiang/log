@@ -105,7 +105,7 @@ const main = async () => {
           const q = `${language.statement} extension:${fileExtension} ${sizeQuery}`
 
           // ! try 2 times
-          for (let i = 1; i < 3; i++) {
+          for (let i = 1; i <= 2; i++) {
             console.log(`* searching (page ${page}, try ${i}) ${q}`)
             try {
               const options = {
@@ -113,7 +113,7 @@ const main = async () => {
                 per_page: 100,
                 page: page,
                 sort: 'indexed',
-                // order: i === 1 ? 'desc' : 'asc',
+                order: i === 1 ? 'desc' : 'asc',
                 headers: {
                   accept: 'application/vnd.github.text-match+json',
                 },
