@@ -12,6 +12,11 @@ dotenv.config()
 
 const app = express()
 // app.use(cors())
+
+app.get('/', (req, res) => {
+  res.send('hello world')
+})
+
 // eslint-disable-next-line no-undef
 app.listen(process.env.PORT || 3000, () => {
   console.log('app is running at port 3000')
