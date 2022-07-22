@@ -41,7 +41,8 @@ const db = admin.firestore()
 
 /* -------------------------------------------------------------------------- */
 
-const visitLimitGapMs = 120000
+const visitLimitGapMs = 90000
+const sizeGap = 2000
 // const singleQueryDateRange = 180 * 24 * 60 * 60 * 1000
 
 /* -------------------------------------------------------------------------- */
@@ -87,36 +88,73 @@ const main = async () => {
     // }
 
     for (const fileExtension of language.file_extensions) {
-      // ! page
-      for (let page = 1; page <= 10; page++) {
-        const q = `${language.statement}+extension:${fileExtension}`
-        console.log(`* searching (page ${page}) `, q)
+      // ! size
+      for (let sizeStart = 0; sizeStart <= 10; sizeStart += 1) {
+        const sizeQuery =
+          sizeStart === 10
+            ? `size:>${sizeStart * sizeGap}`
+            : `size:${sizeStart * sizeGap}..${(sizeStart + 1) * sizeGap}`
 
-        const result = await octokit.request('GET /search/code', {
-          // q: `${language.statement}+language:${language.language}+created:${startDateStr}..${endDateStr}`,
-          q: q,
-          per_page: 100,
-          page: page,
-          // sort: 'indexed',
-          // order: 'desc',
-          headers: {
-            accept: 'application/vnd.github.text-match+json',
-          },
-        })
+        // ! page
+        for (let page = 1; page <= 10; page++) {
+          const q = `${language.statement} extension:${fileExtension} ${sizeQuery}`
 
-        let addedItems = 0
+          // ! try 3 times
+          for (let i = 0; i < 3; i++) {
+            console.log(`* searching (page ${page}, try ${i}) ${q}`)
+            try {
+              const result = await octokit.request('GET /search/code', {
+                // q: `${language.statement}+language:${language.language}+created:${startDateStr}..${endDateStr}`,
+                q: q,
+                per_page: 100,
+                page: page,
+                // sort: 'indexed',
+                // order: 'desc',
+                headers: {
+                  accept: 'application/vnd.github.text-match+json',
+                },
+              })
 
-        for (const item of result.data.items) {
-          db.doc(`logs/${language.language}/${fileExtension}/${item.sha}`).set(
-            item
-          )
-          addedItems++
+              let addedItems = 0
+
+              for (const item of result.data.items) {
+                // stars
+                octokit
+                  .request(`GET /repos/${item.repository.full_name}/stargazers`)
+                  .then(res => {
+                    return res.data
+                  })
+                  .then(data => {
+                    db.doc(
+                      `logs/${language.language}/${fileExtension}/${item.sha}`
+                    ).set({
+                      ...item,
+                      logs_repo_stars: data.length,
+                    })
+                    addedItems++
+                  })
+                  .catch(err => {
+                    console.log(err)
+                  })
+                await sleep(5)
+              }
+
+              if (addedItems > 0)
+                console.log(
+                  `${addedItems} new logs added (${
+                    result.data.incomplete_results ? 'incomplete' : 'complete'
+                  })`
+                )
+
+              console.log(`* waiting ${visitLimitGapMs} ms for another try`)
+            } catch (e) {
+              console.log(e)
+              await sleep(visitLimitGapMs)
+            }
+
+            await sleep(visitLimitGapMs)
+          }
         }
-
-        if (addedItems > 0) console.log(`${addedItems} new logs added`)
-
-        console.log(`* waiting ${visitLimitGapMs} ms for another try`)
-        await sleep(visitLimitGapMs)
       }
     }
   }

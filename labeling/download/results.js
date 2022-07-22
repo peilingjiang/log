@@ -1,3 +1,4 @@
+import { Octokit } from '@octokit/rest'
 import dotenv from 'dotenv'
 import fs from 'fs'
 
@@ -26,7 +27,20 @@ const db = admin.firestore()
 
 /* -------------------------------------------------------------------------- */
 
+const sleep = ms => {
+  return new Promise(resolve => {
+    setTimeout(resolve, ms)
+  })
+}
+
 const main = async () => {
+  const octokit = new Octokit({
+    // eslint-disable-next-line no-undef
+    auth: process.env.GITHUB_TOKEN,
+    userAgent:
+      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36',
+  })
+
   const logs = {}
   const logsGist = {
     counts: {}, // counts for each fileExtension
@@ -54,9 +68,11 @@ const main = async () => {
         logs_order: totalLogsCount,
       }
 
-      querySnapshot.forEach(doc => {
+      for (const doc of querySnapshot.docs) {
+        const docData = doc.data()
+
         logs[language.language][fileExtension].push({
-          ...doc.data(),
+          ...docData,
           ..._log_info,
         })
 
@@ -66,13 +82,36 @@ const main = async () => {
           .update(_log_info)
 
         // save logs gist
+        // octokit
+        //   .request(`GET /repos/${docData.repository.full_name}/stargazers`)
+        //   .then(res => {
+        //     return res.data
+        //   })
+        //   .then(data => {
+        //     logsGist.logs[
+        //       `${language.language}-${fileExtension}-${logsCountThisExtension}`
+        //     ] = {
+        //       id: doc.id,
+        //       stars: data.length,
+        //     }
+
+        //     if (data.length > 0) console.log(data.length)
+        //   })
+        //   .catch(err => {
+        //     console.log(err)
+        //   })
+        // await sleep(10)
+
+        // save logs gist without stars
         logsGist.logs[
           `${language.language}-${fileExtension}-${logsCountThisExtension}`
-        ] = doc.id
+        ] = {
+          id: doc.id,
+        }
 
         logsCountThisExtension++
         totalLogsCount++
-      })
+      }
 
       logsGist.counts[`${language.language}-${fileExtension}`] =
         logsCountThisExtension + 1

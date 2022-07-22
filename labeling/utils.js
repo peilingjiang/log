@@ -1,22 +1,22 @@
 export const languages = [
   {
     language: 'JavaScript',
-    statement: 'console.log(*)',
+    statement: 'console.log',
     file_extensions: ['js', 'ts', 'jsx', 'cjs', 'mjs'],
   },
   {
     language: 'Python',
-    statement: 'print(*)',
+    statement: 'print',
     file_extensions: ['py'],
   },
   {
     language: 'Java',
-    statement: 'System.out.print*(*)',
+    statement: 'System.out.print',
     file_extensions: ['java'],
   },
   {
     language: 'C',
-    statement: 'printf(*)',
+    statement: 'printf',
     file_extensions: ['c'],
   },
 ]
