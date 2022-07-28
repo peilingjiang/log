@@ -1,3 +1,5 @@
+// used by results.js
+
 export const languages = [
   {
     language: 'JavaScript',

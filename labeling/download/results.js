@@ -51,88 +51,110 @@ const main = async () => {
 
   for (const language of languages) {
     logs[language.language] = {}
+    logsGist.logs[language.language] = {}
 
     for (const fileExtension of language.file_extensions) {
       console.log(`downloading ${language.language} : ${fileExtension}`)
       logs[language.language][fileExtension] = []
+      logsGist.logs[language.language][fileExtension] = {}
 
+      console.log('* getting querySnapshot')
       const querySnapshot = await db
         .collection(`logs/${language.language}/${fileExtension}`)
         .get()
+      console.log(`* got querySnapshot ${querySnapshot.docs.length}`)
 
       let logsCountThisExtension = 0
+      let deletedLogsCountThisExtension = 0
 
-      const _log_info = {
-        logs_id: `${language.language}-${fileExtension}-${logsCountThisExtension}`,
-        logs_in_type_order: logsCountThisExtension,
-        logs_order: totalLogsCount,
-      }
-
+      // break
       for (const doc of querySnapshot.docs) {
         const docData = doc.data()
 
-        logs[language.language][fileExtension].push({
-          ...docData,
-          ..._log_info,
-        })
+        if (docData.logs_repo_stars === undefined) {
+          // console.log(
+          //   `${language.language} : ${fileExtension} : ${doc.id} : no stars field :(`
+          // )
+          await db
+            .collection(`logs/${language.language}/${fileExtension}`)
+            .doc(doc.id)
+            .delete()
 
-        // update to Firebase
-        db.collection(`logs/${language.language}/${fileExtension}`)
-          .doc(doc.id)
-          .update(_log_info)
+          deletedLogsCountThisExtension++
+        } else {
+          const _log_info = {
+            logs_id: `${language.language}-${fileExtension}-${logsCountThisExtension}`,
+            logs_in_type_order: logsCountThisExtension,
+            logs_order: totalLogsCount,
+          }
 
-        // save logs gist
-        // octokit
-        //   .request(`GET /repos/${docData.repository.full_name}/stargazers`)
-        //   .then(res => {
-        //     return res.data
-        //   })
-        //   .then(data => {
-        //     logsGist.logs[
-        //       `${language.language}-${fileExtension}-${logsCountThisExtension}`
-        //     ] = {
-        //       id: doc.id,
-        //       stars: data.length,
-        //     }
+          // ! save to logs
+          logs[language.language][fileExtension].push({
+            ...docData,
+            ..._log_info,
+          })
 
-        //     if (data.length > 0) console.log(data.length)
-        //   })
-        //   .catch(err => {
-        //     console.log(err)
-        //   })
-        // await sleep(10)
+          // ! update to Firebase
+          db.collection(`logs/${language.language}/${fileExtension}`)
+            .doc(doc.id)
+            .update(_log_info)
 
-        // save logs gist without stars
-        logsGist.logs[
-          `${language.language}-${fileExtension}-${logsCountThisExtension}`
-        ] = {
-          id: doc.id,
+          // ! save logs gist
+
+          // octokit
+          //   .request(`GET /repos/${docData.repository.full_name}/stargazers`)
+          //   .then(res => {
+          //     return res.data
+          //   })
+          //   .then(data => {
+          //     logsGist.logs[
+          //       `${language.language}-${fileExtension}-${logsCountThisExtension}`
+          //     ] = {
+          //       id: doc.id,
+          //       stars: data.length,
+          //     }
+
+          //     if (data.length > 0) console.log(data.length)
+          //   })
+          //   .catch(err => {
+          //     console.log(err)
+          //   })
+          // await sleep(10)
+
+          // save logs gist without stars
+          logsGist.logs[language.language][fileExtension][
+            logsCountThisExtension
+          ] = {
+            id: doc.id,
+            stars: docData.logs_repo_stars,
+          }
+
+          logsCountThisExtension++
+          totalLogsCount++
         }
-
-        logsCountThisExtension++
-        totalLogsCount++
       }
 
       logsGist.counts[`${language.language}-${fileExtension}`] =
-        logsCountThisExtension + 1
+        logsCountThisExtension
 
       // const docsCount = querySnapshot.docs.length
       console.log(
-        `*downloaded ${language.language} : ${fileExtension} : ${
-          logsCountThisExtension + 1
-        }`
+        `* downloaded ${language.language} : ${fileExtension} : ${logsCountThisExtension}`
+      )
+      console.log(
+        `* deleted ${language.language} : ${fileExtension} : ${deletedLogsCountThisExtension}`
       )
     }
   }
 
   fs.writeFileSync('../viewer/src/logs.json', JSON.stringify(logs, null, 2))
-  console.log(`*logs written to the file : ${totalLogsCount + 1}`)
+  console.log(`-* logs written to the file : ${totalLogsCount}`)
 
   fs.writeFileSync(
     '../viewer/src/logsGist.json',
     JSON.stringify(logsGist, null, 2)
   )
-  console.log(`*logsGist written to the file : ${totalLogsCount + 1}`)
+  console.log(`-* logsGist written to the file : ${totalLogsCount}`)
 }
 
 main()

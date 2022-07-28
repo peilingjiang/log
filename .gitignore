@@ -3,6 +3,8 @@
 secret.py
 adminsdk.json
 
+**/viewer/**/log.json
+
 # Logs
 logs
 *.log
