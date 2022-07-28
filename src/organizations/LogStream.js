@@ -627,7 +627,7 @@ export default class LogStream extends Component {
         bounding,
         groupId,
         format,
-        groupColor,
+        // groupColor,
         paused,
         ////
         snap,

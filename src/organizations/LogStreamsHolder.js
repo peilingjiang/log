@@ -4,7 +4,7 @@ import isEqual from 'react-fast-compare'
 
 import LogStream from './LogStream.js'
 import { assertExistence, cloneLogGroup } from '../methods/utils.js'
-import { findPosition, pxWrap } from '../methods/findPosition.js'
+import { findPosition, pxTrim, pxWrap } from '../methods/findPosition.js'
 import { logStreamGapToAnchorPx, _Aug, _L, _R, _T } from '../constants.js'
 import { getSnapPosition } from '../methods/snap.js'
 
@@ -78,6 +78,7 @@ export default class LogStreamsHolder extends Component {
     const { element, updateLogGroup } = this.props
 
     if (!assertExistence(element)) {
+      // ! page
       // TODO find position on the page
       this.setState({
         bounding: {
@@ -101,10 +102,18 @@ export default class LogStreamsHolder extends Component {
         })
       })
     } else {
+      // ! element
+
+      // only optimize position if none of the elements has moved
+      for (let { bounding } of this.props.logGroups) {
+        if (pxTrim(bounding.left) || pxTrim(bounding.top)) return
+      }
+
       const optimizedPosition = findPosition(element, this.ref.current)
       this.setState({
         bounding: optimizedPosition,
       })
+
       // update groups
       this.props.logGroups.forEach(logGroup => {
         updateLogGroup(logGroup.groupId, {
