@@ -13,6 +13,12 @@ export default class Button extends Component {
     }
   }
 
+  componentDidMount() {
+    setLog({
+      useSourceMaps: true,
+    })
+  }
+
   render() {
     return (
       <div className="button-example">
@@ -27,6 +33,7 @@ export default class Button extends Component {
             e.target.log(e.target.value)
           }}
         />
+        {/* -------------------------------------------------------------------------- */}
         <button
           id="submit-button"
           onClick={e => {
@@ -35,7 +42,7 @@ export default class Button extends Component {
                 submitClickedTimes: this.state.submitClickedTimes + 1,
               },
               () => {
-                log().el(e.target)
+                log()
                 // log(this.state.submitClickedTimes)
                 //   .name('submit')
                 //   .color('#c999ff')
@@ -49,6 +56,7 @@ export default class Button extends Component {
         >
           Submit
         </button>
+        {/* -------------------------------------------------------------------------- */}
         <button
           id="clear-button"
           onClick={e => {
@@ -57,7 +65,10 @@ export default class Button extends Component {
                 text: '',
                 clearClickedTimes: this.state.clearClickedTimes + 1,
               },
-              () => e.target.log(this.state.clearClickedTimes).name('clear')
+              () => {
+                // e.target.log(this.state.clearClickedTimes).name('clear')
+                log().el(e.target)
+              }
             )
           }}
         >
