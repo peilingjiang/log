@@ -1,13 +1,24 @@
-$selection-dot-size: $padding-mid;
-$all-way-dot-size: $padding-large;
+$selection-dot-size: $padding-large;
+$all-way-dot-size: $padding-x-large;
 
 .hyper-selection-rect {
   z-index: 999;
 
+  // .hyper-selection-area-unselected {
+  //   position: fixed;
+  //   left: 0;
+  //   top: 0;
+  //   width: 100vw;
+  //   height: 100vh;
+  //   background-color: $dark-grey;
+  //   opacity: $opacity-xh;
+  // }
+
   .hyper-selection-rect-area {
     position: fixed;
-    background: rgba($elegant-blue, $opacity-xh);
+    // background: rgba($elegant-blue, $opacity-xh);
     pointer-events: none;
+    box-shadow: 0 0 0 max(100vh, 100vw) rgba($dark-grey, $opacity-xh);
   }
 
   .hyper-selection-dot {
@@ -15,9 +26,10 @@ $all-way-dot-size: $padding-large;
     border-radius: 50%;
     width: $selection-dot-size;
     height: $selection-dot-size;
-    background-color: $elegant-blue;
+    // background-color: $elegant-blue;
+    background-color: $dark-grey;
     outline: 3px solid $white;
-    outline-offset: -2px;
+    outline-offset: -1px;
   }
 
   .all-way-move-dot {
@@ -33,8 +45,8 @@ $all-way-dot-size: $padding-large;
     cursor: all-scroll;
 
     svg {
-      opacity: $opacity-mid;
-      font-size: $font-size-default;
+      opacity: $opacity-high;
+      font-size: $font-size-large;
 
       path {
         fill: $white;

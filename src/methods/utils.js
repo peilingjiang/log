@@ -105,8 +105,18 @@ export const stringifyDOMElement = (ele, _depth = 1) => {
 /* -------------------------------------------------------------------------- */
 // geometry
 
-export const getElementBounding = element => {
-  return element.getBoundingClientRect()
+export const getElementBounding = (element, draggedOffset = null) => {
+  if (!draggedOffset) return element.getBoundingClientRect()
+  const { left, top, width, height, right, bottom } =
+    element.getBoundingClientRect()
+  return {
+    left: left - draggedOffset.x,
+    top: top - draggedOffset.y,
+    right: right - draggedOffset.x,
+    bottom: bottom - draggedOffset.y,
+    width: width,
+    height: height,
+  }
 }
 
 export const mergeBoundingRects = rects => {
@@ -161,7 +171,7 @@ export const cloneLogGroup = logGroup => {
 
 export const keyWithSmallestValue = obj => {
   const smallestValue = Math.min(...Object.keys(obj).map(key => obj[key]))
-  return Object.keys(obj).filter(key => obj[key] === smallestValue)[0]
+  return Number(Object.keys(obj).filter(key => obj[key] === smallestValue)[0])
 }
 
 /* -------------------------------------------------------------------------- */

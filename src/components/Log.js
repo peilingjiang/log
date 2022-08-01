@@ -12,6 +12,7 @@ import {
   _config,
   _rootStyles,
 } from '../constants.js'
+import tinycolor from 'tinycolor2'
 
 export default class Log extends Component {
   static get propTypes() {

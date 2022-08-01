@@ -9,15 +9,20 @@ import { timelineSelectionAreaOffsetButterPx } from '../constants.js'
 import AllWayMove from '../icons/all-way-move.svg'
 
 export const SelectionRect = ({ filterArea, handleTimelineSetArea }) => {
+  const selectionSize = {
+    width: pxWrap(pxTrim(filterArea.right) - pxTrim(filterArea.left)),
+    height: pxWrap(pxTrim(filterArea.bottom) - pxTrim(filterArea.top)),
+  }
   return (
     <div className="hyper-selection-rect">
+      {/* <div className="hyper-selection-area-unselected"></div> */}
       <div
         className="hyper-selection-rect-area"
         style={{
           left: filterArea.left,
           top: filterArea.top,
-          width: pxWrap(pxTrim(filterArea.right) - pxTrim(filterArea.left)),
-          height: pxWrap(pxTrim(filterArea.bottom) - pxTrim(filterArea.top)),
+          width: selectionSize.width,
+          height: selectionSize.height,
         }}
       />
       <SelectionDot

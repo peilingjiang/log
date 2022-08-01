@@ -196,24 +196,38 @@
 .hyper-here-there {
   display: flex;
   flex-direction: column;
-  gap: $padding-xs;
+  gap: $padding-small;
   // align-items: center;
 
   font-weight: 700;
   color: $purple;
 
-  p {
+  .here-here {
+    // font-family: 'Pacifico', cursive !important;
+    font-family: 'Mochiy Pop One', sans-serif !important;
+    font-size: $font-size-large;
+    // font-weight: 300;
+    display: block;
+    width: min-content;
+    user-select: none;
+  }
+
+  .here-details {
     display: flex;
     gap: $padding-xxs;
 
-    span {
+    span,
+    b {
       font-size: $font-size-small;
-      font-weight: 300;
       color: $white;
       // background: $dark-mid-grey;
-      background: $grey;
-      padding: $padding-xs $padding-xs;
+      // background: $grey;
+      padding: $padding-xs;
       border-radius: $padding-xs;
+    }
+
+    span {
+      font-weight: 300;
     }
   }
 }

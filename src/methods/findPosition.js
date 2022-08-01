@@ -2,6 +2,7 @@ import {
   logStreamGapToAnchorPx,
   pageElementsQuery,
   positionFindingWorstAllowed,
+  switchPositionRegistrationDifferenceThresholdPx2,
   _B,
   _L,
   _R,
@@ -13,7 +14,11 @@ import {
   keyWithSmallestValue,
 } from './utils.js'
 
-export const findPosition = (anchorElement, logElement) => {
+export const findPosition = (
+  anchorElement,
+  logElement,
+  existingRegistration = undefined
+) => {
   // TODO avoid being outside of the page view
 
   // get all rects of page elements
@@ -26,12 +31,28 @@ export const findPosition = (anchorElement, logElement) => {
       !anchorElement.contains(e) &&
       !e.contains(anchorElement) &&
       (!assertExistence(e.dataset.id) || e.dataset.id !== logElement.dataset.id)
-    )
+    ) {
       existingPageRects.push(getElementBounding(e))
+    }
   }
 
   const anchorBounding = getElementBounding(anchorElement)
-  const logBounding = getElementBounding(logElement)
+
+  let boundingRectForLog = getElementBounding(logElement)
+  const logBounding = {
+    left: boundingRectForLog.left,
+    right: boundingRectForLog.right,
+    top: boundingRectForLog.top,
+    bottom: boundingRectForLog.bottom,
+    width: boundingRectForLog.width,
+    height: boundingRectForLog.height,
+    x: boundingRectForLog.x,
+    y: boundingRectForLog.y,
+  }
+  if (logBounding.height === 0) {
+    logBounding.height = 100 // TODO reserve actual height for log streams
+    logBounding.bottom -= 100
+  }
 
   const overlapByPosId = {}
 
@@ -63,6 +84,16 @@ export const findPosition = (anchorElement, logElement) => {
   }
 
   const smallestKey = keyWithSmallestValue(overlapByPosId)
+  const smallestOverlap = overlapByPosId[smallestKey]
+
+  if (
+    existingRegistration !== undefined &&
+    overlapByPosId[existingRegistration] - smallestOverlap <
+      switchPositionRegistrationDifferenceThresholdPx2
+  ) {
+    return registeredPositions(existingRegistration, anchorBounding)
+  }
+
   return registeredPositions(smallestKey, anchorBounding)
 }
 
@@ -91,7 +122,8 @@ export const _getPos = (
   rightNum,
   bottomNum,
   horizontalAlign,
-  verticalAlign
+  verticalAlign,
+  registration
 ) => {
   return {
     left: pxWrap(leftNum),
@@ -100,6 +132,7 @@ export const _getPos = (
     bottom: pxWrap(bottomNum),
     horizontalAlign: horizontalAlign,
     verticalAlign: verticalAlign,
+    registration: registration,
   }
 }
 
@@ -111,16 +144,32 @@ export const registeredPositions = (posId, anchorBounding) => {
 
   switch (Number(posId)) {
     case 1:
-      return _getPos(left, bottom + gap, undefined, undefined, _L, _T)
+      return _getPos(left, bottom + gap, undefined, undefined, _L, _T, 1)
 
     case 2:
-      return _getPos(right + gap, top, undefined, undefined, _L, _T)
+      return _getPos(right + gap, top, undefined, undefined, _L, _T, 2)
 
     case 3:
-      return _getPos(left, undefined, undefined, innerWidth - top + gap, _L, _B)
+      return _getPos(
+        left,
+        undefined,
+        undefined,
+        innerWidth - top + gap,
+        _L,
+        _B,
+        3
+      )
 
     case 4:
-      return _getPos(undefined, top, innerWidth - left + gap, undefined, _R, _T)
+      return _getPos(
+        undefined,
+        top,
+        innerWidth - left + gap,
+        undefined,
+        _R,
+        _T,
+        4
+      )
 
     case 5:
       return _getPos(
@@ -129,7 +178,8 @@ export const registeredPositions = (posId, anchorBounding) => {
         innerWidth - right,
         undefined,
         _R,
-        _T
+        _T,
+        5
       )
 
     case 6:
@@ -139,7 +189,8 @@ export const registeredPositions = (posId, anchorBounding) => {
         undefined,
         innerHeight - bottom,
         _R,
-        _B
+        _B,
+        6
       )
 
     case 7:
@@ -149,7 +200,8 @@ export const registeredPositions = (posId, anchorBounding) => {
         innerWidth - right,
         innerHeight - top + gap,
         _R,
-        _B
+        _B,
+        7
       )
 
     case 8:
@@ -159,7 +211,8 @@ export const registeredPositions = (posId, anchorBounding) => {
         innerWidth - left + gap,
         innerHeight - bottom,
         _R,
-        _B
+        _B,
+        8
       )
 
     default:

@@ -47,17 +47,23 @@ export default class App extends Component {
 
     const { language, fileExtension, order } = this.state
 
-    const thisDocId = LogsGist.logs[`${language}-${fileExtension}-${order}`]
+    const thisDocId =
+      LogsGist.logs[language][fileExtension][order.toString()].id
     const thisExtensionCount = LogsGist.counts[`${language}-${fileExtension}`]
 
-    this.maxOrderForLanguageExtension = thisExtensionCount - 1
+    if (thisExtensionCount > 0) {
+      this.maxOrderForLanguageExtension = thisExtensionCount - 1
 
-    // get this log from firestore
-    const logDocRef = doc(db, `logs/${language}/${fileExtension}/${thisDocId}`)
+      // get this log from firestore
+      const logDocRef = doc(
+        db,
+        `logs/${language}/${fileExtension}/${thisDocId}`
+      )
 
-    getDoc(logDocRef).then(log => {
-      this.setState({ log: log.data() })
-    })
+      getDoc(logDocRef).then(log => {
+        this.setState({ log: log.data() })
+      })
+    }
   }
 
   render() {

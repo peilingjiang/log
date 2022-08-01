@@ -122,7 +122,8 @@ export const logGroupInterface = PropTypes.exact({
 export const stackActualCallerDepth = 5
 
 // out of 8 possible positions around the anchor element, we only allow the first N best ones
-export const positionFindingWorstAllowed = 5
+export const positionFindingWorstAllowed = 4
+export const switchPositionRegistrationDifferenceThresholdPx2 = 2500
 
 export const minimalStringShowLength = 7
 export const foldedArrayShowItemCount = 3
@@ -156,7 +157,7 @@ export const _Aug = 'augmented'
 export const _Time = 'timeline'
 
 export const pageElementsQuery =
-  'body * :not(.hyper-log-host, .hyper-log-streams-holder, .hyper-log-streams-holder *, #sudo-pointer-element, .leader-line, .leader-line *, .hyper-log-timeline, .hyper-log-timeline *)'
+  'body * :not(#root, .hyper-log-host, .hyper-log-streams-holder, .hyper-log-streams-holder *, #sudo-pointer-element, .leader-line, .leader-line *, .hyper-log-timeline, .hyper-log-timeline *)'
 
 /* -------------------------------------------------------------------------- */
 
@@ -177,6 +178,7 @@ export const _config = Object.seal({
 
 export const _rootStyles = Object.seal({
   darkGrey: '#666',
+  grey: '#999',
   lightGrey: '#cfcfcf',
 
   elegantRed: '#e23e57',

@@ -40,6 +40,7 @@ export default class LogStreamsHolder extends Component {
         bottom: '0px',
         verticalAlign: _T,
         horizontalAlign: _L,
+        registration: undefined,
       },
     }
 
@@ -104,12 +105,16 @@ export default class LogStreamsHolder extends Component {
     } else {
       // ! element
 
-      // only optimize position if none of the elements has moved
-      for (let { bounding } of this.props.logGroups) {
-        if (pxTrim(bounding.left) || pxTrim(bounding.top)) return
-      }
+      // ! only optimize position if none of the elements has moved
+      // for (let { bounding } of this.props.logGroups) {
+      //   if (pxTrim(bounding.left) || pxTrim(bounding.top)) return
+      // }
 
-      const optimizedPosition = findPosition(element, this.ref.current)
+      const optimizedPosition = findPosition(
+        element,
+        this.ref.current,
+        this.state.bounding.registration
+      )
       this.setState({
         bounding: optimizedPosition,
       })

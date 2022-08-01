@@ -32,6 +32,7 @@ export default class LogHost extends Component {
     this.updateLog = this.updateLog.bind(this)
 
     this._resizeHandler = this._resizeHandler.bind(this)
+    this._shortcutHandler = this._shortcutHandler.bind(this)
 
     this.hostFunctions = {
       togglePauseTheWholeLogSystem:
@@ -50,6 +51,7 @@ export default class LogHost extends Component {
 
     // add event listeners
     window.addEventListener('resize', this._resizeHandler)
+    window.addEventListener('keypress', this._shortcutHandler)
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -95,6 +97,17 @@ export default class LogHost extends Component {
     }, 50)
   }
 
+  _shortcutHandler(e) {
+    if (e.ctrlKey) {
+      if (e.key === 's') {
+        e.preventDefault()
+        e.stopPropagation()
+
+        // add new smart stream here
+      }
+    }
+  }
+
   // shouldComponentUpdate(nextProps, nextState) {
   //   return !isEqual(this.state, nextState) || !isEqual(this.props, nextProps)
   // }
@@ -104,7 +117,7 @@ export default class LogHost extends Component {
 
     // window.log
     window.log = (...args) => {
-      return new HyperLog(this, requests => {
+      return new HyperLog(this, args, requests => {
         addLog(this, args, null, requests)
       })
     }
@@ -118,7 +131,7 @@ export default class LogHost extends Component {
     //   addLog(logHost, args, this)
     // }
     HTMLElement.prototype.log = function (...args) {
-      return new HyperLog(logHost, requests => {
+      return new HyperLog(logHost, args, requests => {
         addLog(logHost, args, this, requests)
       })
     }

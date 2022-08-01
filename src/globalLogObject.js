@@ -1,8 +1,10 @@
 import { _R } from './constants.js'
+import { assertString } from './methods/utils.js'
 
 export class HyperLog {
-  constructor(component, addLogFunction) {
+  constructor(component, args, addLogFunction) {
     this.component = component
+    this.args = args
     this.requests = {}
 
     // call addLog
@@ -12,6 +14,11 @@ export class HyperLog {
   }
 
   el(element = null) {
+    if (assertString(element)) {
+      console.log(element)
+      element = document.querySelector(element)
+      console.log(element)
+    }
     this.requests.element = element
     return this
   }
@@ -68,6 +75,16 @@ export class HyperLog {
 
   shape(shape = true) {
     this.requests.format = shape ? 'shape' : 'text'
+    return this
+  }
+
+  /* -------------------------------------------------------------------------- */
+
+  availableModules = ['offsets']
+
+  module(tryUseModule = true) {
+    this.requests.module =
+      tryUseModule && this.availableModules.includes(this.args[0])
     return this
   }
 

@@ -6,25 +6,37 @@ export default class PagesList extends Component {
     return (
       <ul
         style={{
+          fontSize: '1.6em',
           margin: '3rem',
           listStyle: 'none',
-          lineHeight: '150%',
+          lineHeight: '170%',
+          textDecoration: 'none',
         }}
       >
         <li>
-          <Link to={'/types'}>Different Types</Link>
+          <Link to={'/types'}>💡 Everything</Link>
         </li>
         <li>
-          <Link to={'/button'}>Button and Text</Link>
+          <Link to={'/button'}>🖼️ Basic Components - Button and Text</Link>
         </li>
         <li>
-          <Link to={'/px'}>Display Numbers with Units</Link>
+          <Link to={'/px'}>📊 Shapes and Snapping</Link>
         </li>
         <li>
-          <Link to={'/distance'}>Measuring Viewing Distances</Link>
+          <Link to={'/adhoc'}>📏 Show Offsets - Ad hoc Module</Link>
         </li>
         <li>
-          <Link to={'/tracking'}>Track Viewing Distances and Gaze</Link>
+          <Link to={'/distance'}>
+            🍱 Explore Objects I - Measure Viewing Distances
+          </Link>
+        </li>
+        <li>
+          <Link to={'/tracking'}>
+            🍱 Explore Objects II - Track Viewing Distances and Gaze
+          </Link>
+        </li>
+        <li>
+          <Link to={'/here'}>🎯 Reachability - Here and There</Link>
         </li>
       </ul>
     )

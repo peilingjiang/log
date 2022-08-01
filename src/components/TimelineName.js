@@ -32,59 +32,63 @@ export const TimelineName = ({
       onMouseDown={handleTimelineDragAround}
       onDoubleClick={handleTimelinePositionReset}
     >
-      <Move />{' '}
-      <span
-        className="timeline-name-text"
-        style={{
-          textDecoration: logPaused ? 'line-through' : undefined,
-        }}
-      >
-        timeline
-      </span>
-      <Arrow
-        className="timeline-icon rotate-180 timeline-back-icon"
-        title="back to augmented mode"
-        onClick={e =>
-          preventEventWrapper(e, () => hostFunctions.changeOrganization(_Aug))
-        }
-      />
-      {logPaused ? (
-        <Restart
-          className="timeline-icon timeline-restart-icon"
-          title="resume"
+      <div>
+        <Move />{' '}
+        <span
+          className="timeline-name-text"
+          style={{
+            textDecoration: logPaused ? 'line-through' : undefined,
+          }}
+        >
+          timeline
+        </span>
+      </div>
+      <div>
+        <Arrow
+          className="timeline-icon rotate-180 timeline-back-icon"
+          title="back to augmented mode"
           onClick={e =>
-            preventEventWrapper(e, hostFunctions.togglePauseTheWholeLogSystem)
+            preventEventWrapper(e, () => hostFunctions.changeOrganization(_Aug))
           }
         />
-      ) : (
-        <Pause
-          className="timeline-icon timeline-pause-icon"
-          title="pause"
-          onClick={e =>
-            preventEventWrapper(e, hostFunctions.togglePauseTheWholeLogSystem)
-          }
+        {logPaused ? (
+          <Restart
+            className="timeline-icon timeline-restart-icon"
+            title="resume"
+            onClick={e =>
+              preventEventWrapper(e, hostFunctions.togglePauseTheWholeLogSystem)
+            }
+          />
+        ) : (
+          <Pause
+            className="timeline-icon timeline-pause-icon"
+            title="pause"
+            onClick={e =>
+              preventEventWrapper(e, hostFunctions.togglePauseTheWholeLogSystem)
+            }
+          />
+        )}
+        <Area
+          className={`timeline-icon timeline-area-icon${
+            timelineEnableArea ? ' timeline-area-enabled-icon' : ''
+          }`}
+          title="select the area of interest to filter logs"
+          onClick={e => preventEventWrapper(e, handleTimelineArea)}
         />
-      )}
-      <Area
-        className={`timeline-icon timeline-area-icon${
-          timelineEnableArea ? ' timeline-area-enabled-icon' : ''
-        }`}
-        title="select the area of interest to filter logs"
-        onClick={e => preventEventWrapper(e, handleTimelineArea)}
-      />
-      {timelineFolded ? (
-        <Expand
-          className="timeline-icon timeline-expand-icon"
-          title="unfold the timeline view"
-          onClick={e => preventEventWrapper(e, handleTimelineFold)}
-        />
-      ) : (
-        <Fold
-          className="timeline-icon timeline-fold-icon"
-          title="minimize the timeline view"
-          onClick={e => preventEventWrapper(e, handleTimelineFold)}
-        />
-      )}
+        {timelineFolded ? (
+          <Expand
+            className="timeline-icon timeline-expand-icon"
+            title="unfold the timeline view"
+            onClick={e => preventEventWrapper(e, handleTimelineFold)}
+          />
+        ) : (
+          <Fold
+            className="timeline-icon timeline-fold-icon"
+            title="minimize the timeline view"
+            onClick={e => preventEventWrapper(e, handleTimelineFold)}
+          />
+        )}
+      </div>
     </div>
   )
 }

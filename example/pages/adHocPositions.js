@@ -5,7 +5,7 @@ import '../css/pages/SmartPix.scss'
 // import Moon from '../media/moon.jpg'
 import Cat from '../media/cat.png'
 
-export default class SmartPix extends Component {
+export default class AdHocPositions extends Component {
   constructor(props) {
     super(props)
 
@@ -51,13 +51,7 @@ export default class SmartPix extends Component {
           [`${targetName}Y`]: startPos.top + e.clientY - startPos.y,
         },
         () => {
-          e.target
-            .log(this.state[`${targetName}X`])
-            .id(targetName)
-            .name('offsetX')
-            .unit('px')
-            .history(0)
-            .shape()
+          e.target.log('offsets').id(targetName).module()
         }
       )
     }

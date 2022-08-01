@@ -10,6 +10,7 @@ import Arrow from '../icons/arrow.svg'
 import CenterStage from '../icons/center-stage.svg'
 import { pxTrim } from '../methods/findPosition.js'
 import { HereThere } from '../formatter/HereThere.js'
+import tinycolor from 'tinycolor2'
 
 export default class LogBody extends Component {
   static get propTypes() {
@@ -108,6 +109,7 @@ export default class LogBody extends Component {
             color === _DEF
               ? undefined
               : `${hexAndOpacityToRGBA(color, _rootStyles.opacityDefault)}`,
+          outlineColor: hasNoArgs ? tinycolor(color).darken(30) : undefined,
         }}
         onScroll={this.handleScroll}
       >
@@ -144,7 +146,7 @@ export default class LogBody extends Component {
           )}
           {count > 1 && <span className="hyper-log-count">{count}</span>}
           {hasNoArgs ? (
-            <HereThere stack={stack} color={color} />
+            <HereThere key={`here-${id}`} stack={stack} color={color} />
           ) : (
             <Formatter
               // key={

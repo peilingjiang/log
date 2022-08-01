@@ -27,7 +27,8 @@
   }
 
   &.here-there-log {
-    overflow: hidden !important;
+    // overflow: hidden !important;
+    overflow: visible;
 
     .hyper-log-body {
       // background: rgba($purple, $opacity-mid);
@@ -35,6 +36,9 @@
       overflow: hidden !important;
       scrollbar-width: none !important;
       border-radius: $padding-xs;
+
+      outline-width: 1px;
+      outline-style: solid;
 
       &::-webkit-scrollbar {
         height: 0 !important;

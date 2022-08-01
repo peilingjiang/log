@@ -35,13 +35,14 @@ export default class Button extends Component {
                 submitClickedTimes: this.state.submitClickedTimes + 1,
               },
               () => {
+                log().el(e.target)
                 // log(this.state.submitClickedTimes)
                 //   .name('submit')
                 //   .color('#c999ff')
-                log(this.state.submitClickedTimes)
-                  .el(e.target)
-                  .name('submit')
-                  .color('#c999ff')
+                // log(this.state.submitClickedTimes)
+                //   .el(e.target)
+                //   .name('submit')
+                //   .color('#c999ff')
               }
             )
           }}

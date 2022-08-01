@@ -1,5 +1,7 @@
 import isEqual from 'react-fast-compare'
+import tinycolor from 'tinycolor2'
 import { v4 as uuid } from 'uuid'
+import { v5 as uuidv5 } from 'uuid'
 
 import {
   boundingDefault,
@@ -34,6 +36,7 @@ export const newLog = (
   groupId,
   timestamp,
   parsedStack,
+  hereThereColor,
   requests
 ) => {
   assertArguments([
@@ -63,7 +66,7 @@ export const newLog = (
     count: 1,
     ////
     // customization
-    color: requests.color || _DEF,
+    color: requests.color || (args.length === 0 ? hereThereColor : _DEF),
     unit: requests.unit || '',
     history: assertNumber(requests.history)
       ? requests.history
@@ -106,6 +109,17 @@ export const addLog = (logHost, args, element = null, requests = {}) => {
         )
       const groupElementId = idFromString(stringifyDOMElement(element))
 
+      // ! color from location in CODE
+      const idFromLocation = uuidv5(
+        `${parsedStack.path}?line=${parsedStack.line}&char=${parsedStack.char}`,
+        uuidv5.URL
+      )
+      const hereThereColor = tinycolor(idFromLocation.slice(0, 6))
+        .lighten(20)
+        .toHexString()
+      // if to use this color
+      const isHereThereLog = args.length === 0
+
       // ! first log of its group
       // can't find id among current groups
       if (prevIds.length === 0 || !prevIds.includes(groupId))
@@ -131,7 +145,8 @@ export const addLog = (logHost, args, element = null, requests = {}) => {
           bounding: boundingDefault,
           followType: assertExistence(element) ? 'stick' : 'independent', // TODO remove?
           ////
-          groupColor: requests.color || randomColor(),
+          groupColor:
+            requests.color || (isHereThereLog ? hereThereColor : randomColor()),
           ////
           paused: false,
           deleted: false,
@@ -198,6 +213,7 @@ export const addLog = (logHost, args, element = null, requests = {}) => {
         groupId,
         timestamp,
         parsedStack,
+        hereThereColor,
         requests
       )
       // newState.logGroups[groupId].logs.push(aFreshNewLog)

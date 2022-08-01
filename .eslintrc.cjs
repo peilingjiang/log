@@ -14,6 +14,7 @@ module.exports = {
   },
   globals: {
     log: 'readonly',
+    setLog: 'readonly',
   },
   plugins: ['react'],
   rules: {

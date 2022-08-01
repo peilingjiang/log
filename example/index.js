@@ -10,8 +10,10 @@ import PagesList from './PagesList.js'
 import Types from './pages/Types.js'
 import Button from './pages/Button.js'
 import SmartPix from './pages/SmartPix.js'
+import AdHocPositions from './pages/adHocPositions.js'
 import ViewDist from './pages/ViewDist.js'
 import Tracking from './pages/Tracking.js'
+import { Here } from './pages/here.js'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
@@ -32,8 +34,10 @@ root.render(
           <Route path="types" element={<Types />} />
           <Route path="button" element={<Button />} />
           <Route path="px" element={<SmartPix />} />
+          <Route path="adhoc" element={<AdHocPositions />} />
           <Route path="distance" element={<ViewDist />} />
           <Route path="tracking" element={<Tracking />} />
+          <Route path="here" element={<Here />} />
         </Route>
       </Routes>
     </BrowserRouter>
