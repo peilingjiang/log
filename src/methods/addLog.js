@@ -111,7 +111,7 @@ export const addLog = (logHost, args, element = null, requests = {}) => {
 
       // ! color from location in CODE
       const idFromLocation = uuidv5(
-        `${parsedStack.path}?line=${parsedStack.line}&char=${parsedStack.char}`,
+        `${parsedStack.file}?line=${parsedStack.line}&char=${parsedStack.char}`,
         uuidv5.URL
       )
       const hereThereColor = tinycolor(idFromLocation.slice(0, 6))

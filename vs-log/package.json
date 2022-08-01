@@ -1,0 +1,51 @@
+{
+  "name": "vs-log",
+  "displayName": "VS Log",
+  "description": "VS Code extension for a novel logging framework.",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.69.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguage:javascript",
+    "onLanguage:typescript"
+  ],
+  "main": "./src/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "vs-log.helloWorld",
+        "title": "Hello World"
+      }
+    ]
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "node ./test/runTest.js",
+    "build": "vsce package"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/peilingjiang/log.git"
+  },
+  "devDependencies": {
+    "@types/glob": "^7.2.0",
+    "@types/mocha": "^9.1.1",
+    "@types/node": "18.x",
+    "@types/vscode": "^1.69.0",
+    "@vscode/test-electron": "^2.1.5",
+    "eslint": "^8.21.0",
+    "glob": "^8.0.3",
+    "mocha": "^10.0.0",
+    "typescript": "^4.7.4",
+    "vsce": "^2.10.0"
+  },
+  "dependencies": {
+    "tinycolor2": "^1.4.2",
+    "uuid": "^8.3.2"
+  }
+}
