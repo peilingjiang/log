@@ -62,7 +62,7 @@ const doLogHighLight = document => {
   // const toDecorateItems = []
 
   let match
-  const regEx = /log\(\)/g
+  const regEx = /\blog\(\)/g
   const regExForCustomColor = /log\(\)[\s\S]*\.color\(['|"](.+?)['|"]\)/gm
 
   for (let i = 0; i < document.lineCount; i++) {

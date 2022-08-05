@@ -43,7 +43,7 @@
     "prettier": "^2.7.1",
     "react-router-dom": "^6.3.0",
     "remote-calibrator": "^0.6.3-beta.2",
-    "sass": "^1.54.0",
+    "sass": "^1.54.3",
     "sass-loader": "^13.0.2",
     "style-loader": "^3.3.1",
     "ts-loader": "^9.3.1",
