@@ -16,7 +16,7 @@ import Text from '../icons/text.svg'
 import Snap from '../icons/snap.svg'
 import Unsnap from '../icons/unsnap.svg'
 import CenterStage from '../icons/center-stage.svg'
-import UnCenterStage from '../icons/un-center-stage.svg'
+// import UnCenterStage from '../icons/un-center-stage.svg'
 import TimelineSlider from '../icons/slider.svg'
 import Stack from '../icons/stack.svg'
 
@@ -64,16 +64,16 @@ export default class LogStreamMenu extends Component {
       menuFunctions: {
         toggleUseTimeline,
         expandStream,
-        startRelink,
+        // startRelink,
         pauseStream,
         deleteStream,
         shapeIt,
-        startSnap,
-        undoSnap,
+        // startSnap,
+        // undoSnap,
         toggleChoosingCenterStaged,
         setCenterStagedId,
       },
-      snap,
+      // snap,
       useTimeline,
     } = this.props
 
@@ -101,35 +101,35 @@ export default class LogStreamMenu extends Component {
       )
     }
 
-    if (isShape && isAugmented) {
-      specialItems.push(
-        !snap ? (
-          <p
-            key={'menu-snap'}
-            className={`stream-menu-item special-menu-item cursor-crosshair${
-              shouldDisable ? ' disabled' : ''
-            }`}
-            onMouseDown={startSnap}
-            title="snap to element point"
-          >
-            <Snap />
-            <span>snap</span>
-          </p>
-        ) : (
-          <p
-            key={'menu-snap'}
-            className={`stream-menu-item special-menu-item${
-              shouldDisable ? ' disabled' : ''
-            }`}
-            onMouseDown={undoSnap}
-            title="unsnap"
-          >
-            <Unsnap />
-            <span>unsnap</span>
-          </p>
-        )
-      )
-    }
+    // if (isShape && isAugmented) {
+    //   specialItems.push(
+    //     !snap ? (
+    //       <p
+    //         key={'menu-snap'}
+    //         className={`stream-menu-item special-menu-item cursor-crosshair${
+    //           shouldDisable ? ' disabled' : ''
+    //         }`}
+    //         onMouseDown={startSnap}
+    //         title="snap to element point"
+    //       >
+    //         <Snap />
+    //         <span>snap</span>
+    //       </p>
+    //     ) : (
+    //       <p
+    //         key={'menu-snap'}
+    //         className={`stream-menu-item special-menu-item${
+    //           shouldDisable ? ' disabled' : ''
+    //         }`}
+    //         onMouseDown={undoSnap}
+    //         title="unsnap"
+    //       >
+    //         <Unsnap />
+    //         <span>unsnap</span>
+    //       </p>
+    //     )
+    //   )
+    // }
 
     if (logsCount > 2) {
       specialItems.push(
@@ -208,7 +208,7 @@ export default class LogStreamMenu extends Component {
           <span>{expand ? 'fold' : 'expand'}</span>
         </p>
 
-        {isAugmented && (
+        {/* {isAugmented && (
           <p
             className={`stream-menu-item cursor-crosshair${
               shouldDisable ? ' disabled' : ''
@@ -216,11 +216,10 @@ export default class LogStreamMenu extends Component {
             onMouseDown={startRelink}
             title="attach to element"
           >
-            {/* <Relink /> attach */}
             <Relink />
             <span>attach</span>
           </p>
-        )}
+        )} */}
 
         {/* -------------------------------------------------------------------------- */}
         {/* special items */}

@@ -11,8 +11,13 @@
   padding: 0;
 
   .timeline-name {
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+
     gap: $padding-xs;
     background: $light !important;
+    padding: $padding-xs !important;
 
     .timeline-name-text {
       font-weight: 700;

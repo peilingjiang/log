@@ -23,6 +23,7 @@ module.exports = {
       { vars: 'all', args: 'after-used', ignoreRestSiblings: false },
     ],
     'no-inner-declarations': 'off',
+    eqeqeq: 'error',
   },
   ignorePatterns: ['node_modules/', 'lib/'],
 }

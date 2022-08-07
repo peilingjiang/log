@@ -1,20 +1,24 @@
+// ! name
+
 .hyper-log-stream-name {
-  display: inline-flex;
-  align-items: center;
-  justify-content: space-between;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
   gap: $padding-xs;
 
   background: rgba($white, $opacity-mid);
   color: $black;
   font-size: $font-size-small;
   margin: 0;
-  padding: $padding-xs;
+  padding: $padding-xs 0;
   white-space: nowrap;
   user-select: none;
 
   & > div {
-    display: inline-flex;
+    display: flex;
     align-items: center;
+    justify-content: flex-start;
     gap: $padding-xs;
 
     padding: 0;
@@ -23,8 +27,54 @@
 
   svg {
     font-size: $font-size-small;
+    pointer-events: none;
+  }
+
+  .name-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: calc($font-size-small + 2 * $padding-xxs);
+    height: calc($font-size-small + 2 * $padding-xxs);
+    // margin: -$padding-xxs;
+    padding: 0;
+    // border-radius: $radius-xs;
+
+    svg path {
+      fill: $light-grey;
+    }
+
+    &:hover {
+      background: $dark-grey;
+
+      svg path {
+        fill: $white !important;
+      }
+    }
+
+    &.active-icon {
+      svg path {
+        fill: $dark-grey;
+      }
+    }
+  }
+
+  .hyper-log-stream-name-relink {
+    &:hover {
+      cursor: crosshair;
+    }
+  }
+
+  .center-stage-id-copy {
+    cursor: pointer;
+    user-select: none;
   }
 }
+
+/* -------------------------------------------------------------------------- */
+
+// ! menu
 
 $menu-height: calc($font-size-small + $padding-small * 2 + $padding-xxs * 2);
 $menu-height-text: calc(

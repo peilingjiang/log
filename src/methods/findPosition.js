@@ -80,7 +80,12 @@ export const findPosition = (
         }
       })
       .reduce((a, b) => a + b, 0)
-    overlapByPosId[posId] = overlapWithExistingPageElements
+    const overlapWithOffscreenArea = isAnyOffscreen(testPseudoRect)
+      ? pseudoOffscreenOverlap(testPseudoRect)
+      : 0
+
+    overlapByPosId[posId] =
+      overlapWithExistingPageElements + overlapWithOffscreenArea
   }
 
   const smallestKey = keyWithSmallestValue(overlapByPosId)
@@ -102,6 +107,7 @@ export const overlappingArea = (rect1, rect2) => {
     Math.min(rect1.right, rect2.right) - Math.max(rect1.left, rect2.left)
   const yOverlap =
     Math.min(rect1.bottom, rect2.bottom) - Math.max(rect1.top, rect2.top)
+
   return xOverlap * yOverlap
 }
 
@@ -111,6 +117,28 @@ export const isOverlapped = (rect1, rect2) => {
     rect1.right > rect2.left &&
     rect1.top < rect2.bottom &&
     rect1.bottom > rect2.top
+  )
+}
+
+export const pseudoOffscreenOverlap = testRect => {
+  // the area of testRect minus the area of window
+  return (
+    testRect.width * testRect.height -
+    overlappingArea(testRect, {
+      left: 0,
+      top: 0,
+      right: window.innerWidth,
+      bottom: window.innerHeight,
+    })
+  )
+}
+
+export const isAnyOffscreen = rect => {
+  return (
+    rect.left < 0 ||
+    rect.right > window.innerWidth ||
+    rect.top < 0 ||
+    rect.bottom > window.innerHeight
   )
 }
 
@@ -230,17 +258,19 @@ export const pxTrim = value => {
 }
 
 export const getTestValue = (accessor, testPosition) => {
-  if (testPosition[accessor]) return pxTrim(testPosition[accessor])
-  const { innerWidth, innerHeight } = window
+  if (testPosition[accessor].length) return pxTrim(testPosition[accessor])
+
   switch (accessor) {
     case 'left':
-      return innerWidth - pxTrim(testPosition.right) - testPosition.width
+      // return innerWidth - pxTrim(testPosition.right) - testPosition.width
+      return pxTrim(testPosition.right) - testPosition.width
 
     case 'right':
       return pxTrim(testPosition.left) + testPosition.width
 
     case 'top':
-      return innerHeight - pxTrim(testPosition.bottom) - testPosition.height
+      // return innerHeight - pxTrim(testPosition.bottom) - testPosition.height
+      return pxTrim(testPosition.bottom) - testPosition.height
 
     case 'bottom':
       return pxTrim(testPosition.top) + testPosition.height

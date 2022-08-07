@@ -10,6 +10,7 @@ import {
   logGroupInterface,
   logInterface,
   _Aug,
+  _config,
   _H,
   _L,
   _R,
@@ -22,6 +23,7 @@ import {
   bindableElement,
   canUseShape,
   cloneLogGroup,
+  dist,
   idFromString,
   removeLogId,
   stringifyDOMElement,
@@ -156,8 +158,9 @@ export default class LogStream extends Component {
     this.setState({ expand: !this.state.expand })
   }
 
-  startRelink(e) {
+  startRelink(e, startMouse) {
     const { logGroup, updateLogGroup, updateLog, hostRef } = this.props
+
     if (hostRef.current) {
       // make this stream the current active stream
       this.setState({ current: true })
@@ -171,14 +174,23 @@ export default class LogStream extends Component {
         sudoPointerElement => {
           hostRef.current.appendChild(sudoPointerElement)
         },
-        _rootStyles.elementOutlineBound
+        // _rootStyles.elementOutlineBound
+        _rootStyles.darkGrey
       )
 
       // ! move
       function _mousemove(event) {
+        const moveMouse = [event.clientX, event.clientY]
+
         sudoPointerElement.style.top = pxWrap(event.clientY)
         sudoPointerElement.style.left = pxWrap(event.clientX)
+
         leaderLine.position()
+        leaderLine.color =
+          dist(...startMouse, ...moveMouse) >=
+          _config.attachLineLengthThresholdPx
+            ? _rootStyles.elementOutlineBound
+            : _rootStyles.darkGrey
 
         // ! highlight the element
         // remove the old ones first
@@ -189,6 +201,13 @@ export default class LogStream extends Component {
         for (let i = 0; i < highlightedElements.length; i++)
           if (!event.target.isSameNode(highlightedElements[i]))
             outlineToHighlightElement(highlightedElements[i], false)
+
+        if (
+          dist(...startMouse, ...moveMouse) <
+          _config.attachLineLengthThresholdPx
+        )
+          return
+
         // add new ones
         if (bindableElement(event.target))
           outlineToHighlightElement(event.target, true)
@@ -210,6 +229,12 @@ export default class LogStream extends Component {
 
         if (sudoPointerElement) sudoPointerElement.remove()
         leaderLine.remove()
+
+        const endMouse = [e.clientX, e.clientY]
+        if (
+          dist(...startMouse, ...endMouse) < _config.attachLineLengthThresholdPx
+        )
+          return
 
         // check if there's a new element to link
         const newElement = bindableElement(e.target) ? e.target : null
@@ -269,7 +294,16 @@ export default class LogStream extends Component {
     updateLogGroup(logGroup.groupId, newGroup)
   }
 
-  startSnap(e) {
+  startSnap(e, canSnap) {
+    // get the center of the target element
+    const targetBounding = e.target.getBoundingClientRect()
+    const startMouse = [
+      targetBounding.left + targetBounding.width / 2,
+      targetBounding.top + targetBounding.height / 2,
+    ]
+
+    if (!canSnap) return this.startRelink(e, startMouse)
+
     const { logGroup, updateLogGroup, hostRef } = this.props
     const undoSnap = this.undoSnap.bind(this)
 
@@ -286,13 +320,15 @@ export default class LogStream extends Component {
         sudoPointerElement => {
           hostRef.current.appendChild(sudoPointerElement)
         },
-        _rootStyles.elegantRed
+        // _rootStyles.elegantRed
+        _rootStyles.darkGrey
       )
 
       let snapElement, snapAnchorPoint
 
       // ! move
       function _mousemove(event) {
+        const moveMouse = [event.clientX, event.clientY]
         const nearest = findNearestSnapPoint(event.clientX, event.clientY)
 
         const highlightedElements = document.querySelectorAll(
@@ -301,6 +337,12 @@ export default class LogStream extends Component {
         for (let i = 0; i < highlightedElements.length; i++)
           if (!event.target.isSameNode(highlightedElements[i]))
             outlineToHighlightElement(highlightedElements[i], false, 'mid')
+
+        if (
+          dist(...startMouse, ...moveMouse) <
+          _config.attachLineLengthThresholdPx
+        )
+          return
 
         if (nearest) {
           const { nearestPointElement, nearestPoint } = nearest
@@ -320,6 +362,11 @@ export default class LogStream extends Component {
         }
 
         leaderLine.position()
+        leaderLine.color =
+          dist(...startMouse, ...moveMouse) >=
+          _config.attachLineLengthThresholdPx
+            ? _rootStyles.elegantRed
+            : _rootStyles.darkGrey
 
         // highlight the element
         // document.body.classList.add('forced-outline-bound-inside')
@@ -332,6 +379,8 @@ export default class LogStream extends Component {
         document.removeEventListener('mouseup', _)
         document.removeEventListener('mousemove', _mousemove)
 
+        const endMouse = [e.clientX, e.clientY]
+
         streamSetState({ current: false })
         hostRef.current.classList.remove('no-pointer-events')
         ;[...document.querySelectorAll('.forced-outline-bound-mid')].forEach(
@@ -343,6 +392,11 @@ export default class LogStream extends Component {
         if (sudoPointerElement) sudoPointerElement.remove()
         leaderLine.remove()
 
+        if (
+          dist(...startMouse, ...endMouse) < _config.attachLineLengthThresholdPx
+        )
+          return
+
         // check if there's an element to snap to
         if (snapElement) {
           // update stream element to e.target
@@ -351,6 +405,11 @@ export default class LogStream extends Component {
           ) // TODO allow change
           updateLogGroup(logGroup.groupId, {
             ...cloneLogGroup(logGroup),
+            // update attach element as well
+            // ?
+            element: snapElement,
+            groupElementId: idFromString(stringifyDOMElement(snapElement)),
+            ////
             snap: true,
             snapElement: snapElement,
             snapElementId: idFromString(
@@ -521,6 +580,10 @@ export default class LogStream extends Component {
   }
 
   handleDragAround(e) {
+    if (e.target.classList.contains('name-icon')) {
+      return
+    }
+
     const { logGroup, updateLogGroup, handleStreamDragAround } = this.props
     const streamSetState = this.setState.bind(this)
 
@@ -621,6 +684,7 @@ export default class LogStream extends Component {
       choosingCenterStaged,
     } = this.state
     const {
+      logGroup,
       logGroup: {
         name,
         logs,
@@ -757,6 +821,8 @@ export default class LogStream extends Component {
       logWrapperStyles.flexDirection = 'row'
     }
 
+    const canSnap = format === 'shape' && organization === _Aug
+
     return (
       <div
         className={`hyper-log-stream${expand ? ' stream-expand' : ''}${
@@ -779,13 +845,16 @@ export default class LogStream extends Component {
       >
         <LogStreamName
           name={name}
+          logGroup={logGroup}
           paused={paused}
           orientation={orientation}
+          canSnap={canSnap}
           snap={snap}
           streamGrabbing={grabbing}
           handleDragAround={this.handleDragAround}
           handlePositionReset={this.handlePositionReset}
           centerStagedId={view.centerStagedId}
+          menuFunctions={this.menuFunctions}
         />
 
         {/* actual logs */}

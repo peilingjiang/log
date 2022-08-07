@@ -15,10 +15,11 @@ export const setupLeaderLine = (event, renderSudoElement, color) => {
     sudoPointerElement,
     {
       path: 'straight',
+      startPlug: 'disc',
       endPlug: 'arrow2',
     }
   )
-  leaderLine.size = 3
+  leaderLine.size = 2.5
   leaderLine.color = color
 
   return { sudoPointerElement, leaderLine }

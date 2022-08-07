@@ -122,7 +122,7 @@ export const logGroupInterface = PropTypes.exact({
 export const stackActualCallerDepth = 5
 
 // out of 8 possible positions around the anchor element, we only allow the first N best ones
-export const positionFindingWorstAllowed = 4
+export const positionFindingWorstAllowed = 3
 export const switchPositionRegistrationDifferenceThresholdPx2 = 2500
 
 export const minimalStringShowLength = 7
@@ -174,6 +174,7 @@ export const _config = Object.seal({
   shapeRectWidth: '17px',
   ////
   snapThresholdPx: 15,
+  attachLineLengthThresholdPx: 15,
 })
 
 export const _rootStyles = Object.seal({

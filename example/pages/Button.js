@@ -42,14 +42,16 @@ export default class Button extends Component {
                 submitClickedTimes: this.state.submitClickedTimes + 1,
               },
               () => {
-                log()
+                // log()
+
                 // log(this.state.submitClickedTimes)
                 //   .name('submit')
                 //   .color('#c999ff')
-                // log(this.state.submitClickedTimes)
-                //   .el(e.target)
-                //   .name('submit')
-                //   .color('#c999ff')
+
+                log(this.state.submitClickedTimes)
+                  // .el(e.target)
+                  .name('submit')
+                  .color('#c999ff')
               }
             )
           }}
@@ -66,8 +68,10 @@ export default class Button extends Component {
                 clearClickedTimes: this.state.clearClickedTimes + 1,
               },
               () => {
-                // e.target.log(this.state.clearClickedTimes).name('clear')
-                log().el(e.target)
+                /////
+                e.target.log(this.state.clearClickedTimes).name('clear')
+                ////
+                // log().el(e.target)
               }
             )
           }}
