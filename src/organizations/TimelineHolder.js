@@ -9,6 +9,7 @@ import {
   constrain,
   getElementBounding,
   idFromString,
+  preventEventWrapper,
   stringifyDOMElement,
 } from '../methods/utils.js'
 import {
@@ -117,18 +118,17 @@ export default class TimelineHolder extends Component {
       }
 
       const handleMouseMove = moveEvent => {
-        e.preventDefault()
-        e.stopPropagation()
-
-        this.setState({
-          right: pxWrap(
-            constrain(
-              start.right - moveEvent.clientX + start.x,
-              -this.ref.current.offsetWidth +
-                timelineSelectionAreaOffsetButterPx,
-              window.innerWidth - timelineSelectionAreaOffsetButterPx
-            )
-          ),
+        preventEventWrapper(moveEvent, () => {
+          this.setState({
+            right: pxWrap(
+              constrain(
+                start.right - moveEvent.clientX + start.x,
+                -this.ref.current.offsetWidth +
+                  timelineSelectionAreaOffsetButterPx * 2,
+                window.innerWidth - timelineSelectionAreaOffsetButterPx * 2
+              )
+            ),
+          })
         })
       }
 

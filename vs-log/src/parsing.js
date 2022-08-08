@@ -21,8 +21,7 @@ export const parseAllCodeFiles = async () => {
       if (!isExcludedFile(file.path, configurations.excludes)) {
         const doc = await workspace.openTextDocument(file)
         if (doc) {
-          parseCodeFile(doc)
-          totalParsed++
+          totalParsed += parseCodeFile(doc)
         }
       }
     }
@@ -43,17 +42,26 @@ export const parseCodeFile = document => {
     parsingCache[document.fileName] &&
     document.getText() === parsingCache[document.fileName].text
   ) {
-    return
+    return 0
   }
 
   console.log(`parsing                | ${document.fileName}`)
-  const result = parse(document.getText(), {
-    sourceType: 'unambiguous',
-    plugins: ['typescript', 'jsx', 'classProperties', 'objectRestSpread'],
-  })
 
-  parsingCache[document.fileName] = {
-    text: document.getText(),
-    result: result,
+  try {
+    const result = parse(document.getText(), {
+      sourceType: 'unambiguous',
+      plugins: ['typescript', 'jsx', 'classProperties', 'objectRestSpread'],
+      errorRecovery: true,
+    })
+
+    parsingCache[document.fileName] = {
+      text: document.getText(),
+      result: result,
+    }
+
+    return 1
+  } catch (e) {
+    console.error(`parsing                | error parsing ${document.fileName}`)
+    return 0
   }
 }

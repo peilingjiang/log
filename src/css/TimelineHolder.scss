@@ -15,7 +15,7 @@
     align-items: center !important;
     justify-content: space-between !important;
 
-    gap: $padding-xs;
+    gap: $padding-x-large;
     background: $light !important;
     padding: $padding-xs !important;
 
@@ -24,9 +24,11 @@
     }
 
     .timeline-icon {
-      cursor: pointer;
       padding: $padding-xs;
       // background: $white;
+
+      cursor: pointer;
+      pointer-events: initial !important;
 
       &.timeline-back-icon {
         transform: rotate(180deg);

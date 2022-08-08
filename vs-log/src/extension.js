@@ -55,7 +55,7 @@ export function activate(context) {
 
   // ! status bar
   // add a label to the status bar
-  statusBarLabel = window.createStatusBarItem(vscode.StatusBarAlignment.Right)
+  statusBarLabel = window.createStatusBarItem(vscode.StatusBarAlignment.Left)
   statusBarLabel.text = 'HyperLog'
   statusBarLabel.show()
 
