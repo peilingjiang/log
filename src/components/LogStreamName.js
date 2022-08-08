@@ -1,9 +1,9 @@
-import React, { Component, createRef } from 'react'
+import React, { Component, PureComponent, createRef } from 'react'
 import PropTypes from 'prop-types'
 import isEqual from 'react-fast-compare'
 
-import { logGroupInterface, _V } from '../constants.js'
-import { removeArgsDescriptions } from '../methods/utils.js'
+import { logGroupInterface, _rootStyles, _V } from '../constants.js'
+import { onlyNumbers, removeArgsDescriptions } from '../methods/utils.js'
 
 import Move from '../icons/move.svg'
 import Relink from '../icons/relink-name.svg'
@@ -14,7 +14,10 @@ export default class LogStreamName extends Component {
   static get propTypes() {
     return {
       name: PropTypes.string.isRequired,
-      logGroup: logGroupInterface.isRequired,
+      ////
+      logGroupElement: PropTypes.instanceOf(HTMLElement),
+      logGroupId: PropTypes.string.isRequired,
+      ////
       paused: PropTypes.bool.isRequired,
       orientation: PropTypes.string.isRequired,
       canSnap: PropTypes.bool.isRequired,
@@ -61,17 +64,18 @@ export default class LogStreamName extends Component {
   render() {
     const {
       name,
-      logGroup,
+      logGroupElement,
+      logGroupId,
       canSnap,
       snap,
       streamGrabbing,
       orientation,
       paused,
       centerStagedId,
-      menuFunctions: { startSnap },
+      menuFunctions: { startSnap, setCenterStagedId },
     } = this.props
 
-    const attachedToElement = logGroup.element !== null
+    const attachedToElement = logGroupElement !== null
 
     return (
       <div
@@ -101,7 +105,11 @@ export default class LogStreamName extends Component {
         </div>
 
         {centerStagedId ? (
-          <CenterStageNav centerStagedId={centerStagedId} />
+          <CenterStageNav
+            centerStagedId={centerStagedId}
+            setCenterStagedId={setCenterStagedId}
+            logGroupId={logGroupId}
+          />
         ) : null}
       </div>
     )
@@ -139,31 +147,110 @@ class RelinkName extends Component {
 
 /* -------------------------------------------------------------------------- */
 
-class CenterStageNav extends Component {
+class CenterStageNav extends PureComponent {
   static get propTypes() {
     return {
       centerStagedId: PropTypes.string.isRequired,
+      logGroupId: PropTypes.string.isRequired,
+      setCenterStagedId: PropTypes.func.isRequired,
     }
   }
 
+  constructor(props) {
+    super(props)
+
+    this.idRef = createRef()
+    this.copyIconRef = createRef()
+  }
+
   render() {
-    const { centerStagedId } = this.props
+    const { centerStagedId, logGroupId, setCenterStagedId } = this.props
+
+    const parsedIdParts = parseCenterStagedId(centerStagedId)
+    const centerStagedSequence = parsedIdParts.slice(1)
+
     return (
       <div className="center-stage-holder">
-        <div className="center-stage-id-copy name-icon">
+        <div
+          ref={this.copyIconRef}
+          className="center-stage-id-copy name-icon"
+          onClick={() => {
+            // this.copyIconRef.current.style.background =
+            //   _rootStyles.elementOutlineBound
+            // setTimeout(() => {
+            //   this.copyIconRef.current.style.background = ''
+            // }, 300)
+
+            navigator.clipboard.writeText(
+              this.idRef.current.innerText.replace(/\n/g, '')
+            )
+          }}
+        >
           <Copy />
         </div>
-        <span className="font-bold">{parseCenterStagedId(centerStagedId)}</span>
+        <p ref={this.idRef} className="stage-id-nav">
+          {centerStagedSequence.map((part, ind) => (
+            <CenterStageNavItem
+              key={`${centerStagedId}-${ind}`}
+              centerStagedIdPart={removeArgsDescriptions(part)}
+              ind={ind}
+              isLastPart={ind === centerStagedSequence.length - 1}
+              parsedIdParts={parsedIdParts}
+              logGroupId={logGroupId}
+              setCenterStagedId={setCenterStagedId}
+            />
+          ))}
+        </p>
       </div>
     )
   }
 }
 
+const CenterStageNavItem = ({
+  centerStagedIdPart,
+  ind,
+  isLastPart,
+  parsedIdParts,
+  logGroupId,
+  setCenterStagedId,
+}) => {
+  return (
+    <span
+      className={`center-stage-id-part font-bold${
+        isLastPart ? ' center-stage-id-last' : ''
+      }`}
+      onClick={() => {
+        setCenterStagedId(
+          logGroupId,
+          reconstructCenterStagedId(ind, parsedIdParts)
+        )
+      }}
+    >
+      {parseIdPart(centerStagedIdPart)}
+    </span>
+  )
+}
+
+CenterStageNavItem.propTypes = {
+  centerStagedIdPart: PropTypes.string.isRequired,
+  ind: PropTypes.number.isRequired,
+  isLastPart: PropTypes.bool.isRequired,
+  parsedIdParts: PropTypes.array.isRequired,
+  logGroupId: PropTypes.string.isRequired,
+  setCenterStagedId: PropTypes.func.isRequired,
+}
+
 /* -------------------------------------------------------------------------- */
 
 const parseCenterStagedId = centerStagedId => {
-  return `.${removeArgsDescriptions(centerStagedId)
-    .split('-')
-    .slice(1)
-    .join('.')}`
+  return centerStagedId.split('-')
+}
+
+const parseIdPart = id => {
+  return onlyNumbers(id) ? `[${id}]` : `.${id}`
+}
+
+const reconstructCenterStagedId = (indInSequence, parsedIdParts) => {
+  // the second plus 1 is for uselessArgsPositionIndex
+  return parsedIdParts.slice(0, indInSequence + 1 + 1).join('-')
 }

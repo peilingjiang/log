@@ -66,9 +66,39 @@
     }
   }
 
-  .center-stage-id-copy {
-    cursor: pointer;
-    user-select: none;
+  .center-stage-holder {
+    .center-stage-id-copy {
+      cursor: pointer;
+      user-select: none;
+
+      &:active {
+        background: $bright-orange;
+      }
+    }
+
+    .stage-id-nav {
+      padding: 0;
+      margin: 0;
+
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+
+      .center-stage-id-part {
+        font-size: $font-size-small;
+        line-height: 100%;
+        padding: $padding-xxs 1px;
+
+        &:not(.center-stage-id-last) {
+          cursor: alias;
+
+          &:hover {
+            background: $dark-grey;
+            color: $white;
+          }
+        }
+      }
+    }
   }
 }
 
@@ -170,7 +200,7 @@ $menu-height-text: calc(
       background: $dark-grey !important;
 
       svg path {
-        fill: $white !important;
+        fill: $white;
       }
     }
 
@@ -186,14 +216,29 @@ $menu-height-text: calc(
       @include menu-item-special-config($elegant-green);
     }
 
-    &.menu-un-center-staged-item,
-    &.menu-un-center-staged-item:hover {
+    &.menu-already-center-staged {
       background: $bright-yellow;
 
       path {
-        fill: $white;
+        fill: $white !important;
+      }
+
+      &:hover,
+      &.menu-choosing-item {
+        path {
+          fill: $bright-yellow !important;
+        }
       }
     }
+
+    // &.menu-un-center-staged-item,
+    // &.menu-un-center-staged-item:hover {
+    //   background: $bright-yellow;
+
+    //   path {
+    //     fill: $white;
+    //   }
+    // }
 
     // &.special-menu-item {
     //   margin-top: $padding-small;

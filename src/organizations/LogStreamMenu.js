@@ -6,15 +6,15 @@ import { _Aug } from '../constants.js'
 
 import Expand from '../icons/expand.svg'
 import Fold from '../icons/fold.svg'
-import Relink from '../icons/relink.svg'
+// import Relink from '../icons/relink.svg'
 import Pause from '../icons/pause.svg'
 import Restart from '../icons/restart.svg'
 import Delete from '../icons/delete.svg'
 
 import Shape from '../icons/shape.svg'
 import Text from '../icons/text.svg'
-import Snap from '../icons/snap.svg'
-import Unsnap from '../icons/unsnap.svg'
+// import Snap from '../icons/snap.svg'
+// import Unsnap from '../icons/unsnap.svg'
 import CenterStage from '../icons/center-stage.svg'
 // import UnCenterStage from '../icons/un-center-stage.svg'
 import TimelineSlider from '../icons/slider.svg'
@@ -162,36 +162,45 @@ export default class LogStreamMenu extends Component {
     }
 
     if (allowingCenterStaged) {
-      if (centerStagedId.length) {
-        // already has a center staged id
-        specialItems.push(
-          <p
-            key={'menu-un-center-staged'}
-            className={`stream-menu-item special-menu-item menu-un-center-staged-item`}
-            onClick={() => {
+      specialItems.push(
+        <p
+          key={'menu-center-staged'}
+          className={`stream-menu-item special-menu-item${
+            choosingCenterStaged ? ' menu-choosing-item' : ''
+          }${centerStagedId.length ? ' menu-already-center-staged' : ''}`}
+          onClick={() => {
+            if (choosingCenterStaged) {
               setCenterStagedId(groupId, '')
-            }}
-            title="dismantle the center stage"
-          >
-            <CenterStage />
-          </p>
-        )
-      } else {
-        specialItems.push(
-          <p
-            key={'menu-center-staged'}
-            className={`stream-menu-item special-menu-item${
-              choosingCenterStaged ? ' menu-choosing-item' : ''
-            }`}
-            onClick={() => {
+              // no need to toggle, set choosing to false when update id
+              // toggleChoosingCenterStaged()
+            } else {
               toggleChoosingCenterStaged()
-            }}
-            title="center stage a component"
-          >
-            <CenterStage />
-          </p>
-        )
-      }
+            }
+          }}
+          title={
+            choosingCenterStaged
+              ? 'dismantle the center stage'
+              : 'center stage a component'
+          }
+        >
+          <CenterStage />
+        </p>
+      )
+      // if (centerStagedId.length) {
+      //   // already has a center staged id
+      //   specialItems.push(
+      //     <p
+      //       key={'menu-un-center-staged'}
+      //       className={`stream-menu-item special-menu-item menu-un-center-staged-item`}
+      //       onClick={() => {
+      //         setCenterStagedId(groupId, '')
+      //       }}
+      //       title="dismantle the center stage"
+      //     >
+      //       <CenterStage />
+      //     </p>
+      //   )
+      // } else {}
     }
 
     return (

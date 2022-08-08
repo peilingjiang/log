@@ -688,8 +688,9 @@ export default class LogStream extends Component {
       logGroup: {
         name,
         logs,
-        bounding,
         groupId,
+        element,
+        bounding,
         format,
         // groupColor,
         paused,
@@ -845,7 +846,8 @@ export default class LogStream extends Component {
       >
         <LogStreamName
           name={name}
-          logGroup={logGroup}
+          logGroupElement={element}
+          logGroupId={groupId}
           paused={paused}
           orientation={orientation}
           canSnap={canSnap}
