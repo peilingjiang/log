@@ -33,7 +33,10 @@ export const socket = io.connect(`http://${host}:2022/`)
 
 // ? is it the best practice to open the socket here?
 socket.on('connect', () => {
-  console.log('%cConnected to VS Log Server!', 'color: #ff42a1')
+  console.log(
+    '%cConnected to VS Log Server!',
+    'color: #ff42a1; font-weight: bold'
+  )
 
   socket.on('ast', data => {
     globalAST.current = data

@@ -20,7 +20,27 @@
         "command": "vs-log.helloWorld",
         "title": "Hello World"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "VS Log",
+      "displayName": "VS Log",
+      "properties": {
+        "VS Log.includes": {
+          "title": "Included Files",
+          "type": "string",
+          "markdownDescription": "Files to be parsed by the VS Log server (split with `space`)",
+          "default": "**/*.{js,ts}",
+          "scope": "window"
+        },
+        "VS Log.excludes": {
+          "title": "Excluded Files",
+          "type": "string",
+          "markdownDescription": "Files to be excluded from parsing (split with `space`)",
+          "default": "**/node_modules/**",
+          "scope": "window"
+        }
+      }
+    }
   },
   "scripts": {
     "lint": "eslint .",
@@ -55,6 +75,7 @@
   "dependencies": {
     "@babel/parser": "^7.18.11",
     "express": "^4.18.1",
+    "minimatch": "^5.1.0",
     "socket.io": "^4.5.1",
     "tinycolor2": "^1.4.2",
     "uuid": "^8.3.2"

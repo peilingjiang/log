@@ -25,5 +25,5 @@ module.exports = {
     'no-inner-declarations': 'off',
     eqeqeq: 'error',
   },
-  ignorePatterns: ['node_modules/', 'lib/'],
+  ignorePatterns: ['node_modules/', 'lib/', 'dist/'],
 }

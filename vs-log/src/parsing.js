@@ -1,19 +1,37 @@
-import vscode, { commands, window, workspace } from 'vscode'
+import { workspace } from 'vscode'
 import { parse } from '@babel/parser'
+
 import { io } from './server'
+import { configurations } from './global'
 
 // import { isValidDocument } from './utils'
 import { parsingCache } from './global'
+import { isExcludedFile } from './utils'
 
-export const parseAllCodeFiles = () => {
-  workspace.findFiles('**/*.{js,ts}', '**/node_modules/**').then(files => {
-    files.forEach(file => {
-      // get doc from file
-      workspace.openTextDocument(file).then(doc => {
-        if (doc) parseCodeFile(doc)
-      })
-    })
-  })
+export const parseAllCodeFiles = async () => {
+  let totalParsed = 0
+
+  for (const includingFileGlob of configurations.includes) {
+    const files = await workspace.findFiles(
+      includingFileGlob,
+      configurations.excludes[0]
+    )
+
+    for (const file of files) {
+      if (!isExcludedFile(file.path, configurations.excludes)) {
+        const doc = await workspace.openTextDocument(file)
+        if (doc) {
+          parseCodeFile(doc)
+          totalParsed++
+        }
+      }
+    }
+  }
+
+  console.log(`parsing                | finished parsing ${totalParsed} files`)
+
+  io.emit('ast', parsingCache)
+
   // workspace.textDocuments.forEach(document => {
   //   if (!isValidDocument(document.languageId())) return
   //   parseCodeFile(document)
@@ -38,6 +56,4 @@ export const parseCodeFile = document => {
     text: document.getText(),
     result: result,
   }
-
-  io.emit('ast', parsingCache)
 }

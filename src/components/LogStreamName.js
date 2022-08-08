@@ -2,7 +2,7 @@ import React, { Component, PureComponent, createRef } from 'react'
 import PropTypes from 'prop-types'
 import isEqual from 'react-fast-compare'
 
-import { logGroupInterface, _rootStyles, _V } from '../constants.js'
+import { _V } from '../constants.js'
 import { onlyNumbers, removeArgsDescriptions } from '../methods/utils.js'
 
 import Move from '../icons/move.svg'

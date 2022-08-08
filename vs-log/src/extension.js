@@ -44,24 +44,22 @@ export function activate(context) {
   workspace.onDidOpenTextDocument(e => {
     doLogHighLight(e.document)
     ////
-    parseAllCodeFiles()
+    // parseAllCodeFiles()
   })
-
-  doLogHighLight(window.activeTextEditor.document)
 
   // ! parse on saving the file
   workspace.onDidSaveTextDocument(() => {
+    console.log('VS Code                | file saving')
     parseAllCodeFiles()
   })
 
+  // ! status bar
   // add a label to the status bar
   statusBarLabel = window.createStatusBarItem(vscode.StatusBarAlignment.Right)
   statusBarLabel.text = 'HyperLog'
   statusBarLabel.show()
 
-  // Parse all code files on opening the workspace
-  // parseAllCodeFiles()
-
+  // ! socket
   io.on('connection', socket => {
     console.log(`HyperLog connected    *| ${socket.id}`)
 
@@ -75,6 +73,11 @@ export function activate(context) {
   server.listen(2022, () => {
     console.log(`VS Log Server         *| http://localhost:2022`)
   })
+
+  // Parse all code files on opening the workspace
+  parseAllCodeFiles()
+  // highlight the current document
+  doLogHighLight(window.activeTextEditor.document)
 }
 
 // this method is called when your extension is deactivated
