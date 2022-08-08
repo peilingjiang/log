@@ -1,9 +1,5 @@
 # Change Log
 
-All notable changes to the "vs-log" extension will be documented in this file.
-
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
-
 ## [Unreleased]
 
-- Initial release
+- Highlighting `log()` and `log()[...].color([...])` based on their locations (file, line, and char number) in code.
