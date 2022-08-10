@@ -1,0 +1,58 @@
+.side-dragger-wrapper {
+  position: relative;
+
+  margin: 0;
+  padding: 0;
+
+  display: flex;
+  flex-direction: row;
+
+  overflow: hidden;
+
+  height: calc(100vh - $padding-xx-large);
+
+  .timeline-side-dragger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    padding: $padding-xs;
+    background: $white;
+
+    cursor: grab;
+
+    &:hover {
+      background: $light;
+    }
+
+    &.timeline-side-dragger-active {
+      background: $light !important;
+    }
+
+    svg {
+      pointer-events: none;
+      font-size: $font-size-default;
+      margin: 0;
+    }
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+
+@keyframes width-expand {
+  0% {
+    width: 0;
+    background: $light-grey;
+  }
+
+  100% {
+    width: calc($font-size-default);
+    background: $white;
+  }
+}
+
+.animation-width-expand {
+  animation-duration: $transition-normal-slow;
+  animation-name: width-expand;
+}

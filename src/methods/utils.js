@@ -151,10 +151,13 @@ export const copyObject = obj => {
   return JSON.parse(JSON.stringify(obj))
 }
 
-export const deepCopyArrayOfLogs = arr => {
-  return arr.map(log => {
-    return { ...log }
+export const cloneLogTimeline = logTimeline => {
+  const newLogTimeline = []
+  logTimeline.map(logInfo => {
+    newLogTimeline.push({ ...logInfo })
   })
+
+  return newLogTimeline
 }
 
 export const cloneLogGroups = logGroups => {
@@ -175,6 +178,12 @@ export const cloneLogGroup = logGroup => {
     ...logGroup,
     logs: deepCopyArrayOfLogs(logGroup.logs),
   }
+}
+
+export const deepCopyArrayOfLogs = arr => {
+  return arr.map(log => {
+    return { ...log }
+  })
 }
 
 export const keyWithSmallestValue = obj => {

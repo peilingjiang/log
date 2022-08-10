@@ -48,6 +48,7 @@ $padding-mid: 0.9rem;
 $padding-large: 1rem;
 $padding-x-large: 1.5rem;
 $padding-xx-large: 2rem;
+$padding-xxx-large: 4rem;
 
 $scrollbar-width: $padding-xs;
 $scrollbar-width-large: $padding-small;
@@ -60,6 +61,7 @@ $font-size-large: 1rem;
 
 $transition-fast: 100ms;
 $transition-normal: 300ms;
+$transition-normal-slow: 500ms;
 $transition-slow: 700ms;
 $transition-highlight: 3000ms;
 

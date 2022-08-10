@@ -18,6 +18,7 @@ export default class LogHost extends Component {
     this.state = {
       logPaused: false,
       logGroups: {},
+      logTimeline: [],
       organization: g.defaultOrganization, // timeline, augmented, list?, grid?
       ////
       timelineHighlightedLogId: null,
@@ -113,7 +114,7 @@ export default class LogHost extends Component {
   // }
 
   defineLogs() {
-    const logHost = this
+    // const logHost = this
 
     // window.log
     window.log = (...args) => {
@@ -121,20 +122,14 @@ export default class LogHost extends Component {
         addLog(this, args, null, requests)
       })
     }
-    // window.log = (...args) => {
-    //   addLog(this, args, null)
-    //   return this
-    // }
 
     // element.log
+    // ! functional approach
     // HTMLElement.prototype.log = function (...args) {
-    //   addLog(logHost, args, this)
+    //   return new HyperLog(logHost, args, requests => {
+    //     addLog(logHost, args, this, requests)
+    //   })
     // }
-    HTMLElement.prototype.log = function (...args) {
-      return new HyperLog(logHost, args, requests => {
-        addLog(logHost, args, this, requests)
-      })
-    }
 
     // Number.prototype.log = function (...args) {}
   }
@@ -318,7 +313,7 @@ export default class LogHost extends Component {
     return streamsHolders
   }
 
-  renderTimelineLogs(logGroups, logPaused) {
+  renderTimelineLogs(logGroups, logTimeline, logPaused) {
     // calculate the total number of logs
     let totalLogs = 0
     for (const logGroupId in logGroups) {
@@ -331,6 +326,7 @@ export default class LogHost extends Component {
         <TimelineHolder
           logPaused={logPaused}
           logGroups={logGroups}
+          logTimeline={logTimeline}
           totalLogCount={totalLogs}
           updateLogGroup={this.updateLogGroup}
           updateLog={this.updateLog}
@@ -344,7 +340,7 @@ export default class LogHost extends Component {
   /* -------------------------------------------------------------------------- */
 
   render() {
-    const { logPaused, logGroups, organization } = this.state
+    const { logPaused, logGroups, logTimeline, organization } = this.state
 
     let renderedLogElements
     switch (organization) {
@@ -352,7 +348,11 @@ export default class LogHost extends Component {
         renderedLogElements = this.renderAugmentedLogs(logGroups)
         break
       case _Time:
-        renderedLogElements = this.renderTimelineLogs(logGroups, logPaused)
+        renderedLogElements = this.renderTimelineLogs(
+          logGroups,
+          logTimeline,
+          logPaused
+        )
         break
       default:
         break

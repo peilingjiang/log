@@ -51,7 +51,7 @@ export default class AdHocPositions extends Component {
           [`${targetName}Y`]: startPos.top + e.clientY - startPos.y,
         },
         () => {
-          e.target.log('offsets').id(targetName).module()
+          log('offsets').e(e.target).id(targetName).module()
         }
       )
     }

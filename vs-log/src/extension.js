@@ -3,8 +3,8 @@
 import vscode, { commands, window, workspace } from 'vscode'
 
 import { doLogHighLight, removeHighLight } from './decorations'
-import { parsingCache } from './global'
-import { parseAllCodeFiles } from './parsing'
+import { extensionConfigurations, parsingCache } from './global'
+import { parseAllCodeFilesAndEmit } from './parsing'
 import { io, server } from './server'
 
 let statusBarLabel
@@ -43,14 +43,12 @@ export function activate(context) {
 
   workspace.onDidOpenTextDocument(e => {
     doLogHighLight(e.document)
-    ////
-    // parseAllCodeFiles()
   })
 
   // ! parse on saving the file
   workspace.onDidSaveTextDocument(() => {
     console.log('VS Code                | file saving')
-    parseAllCodeFiles()
+    parseAllCodeFilesAndEmit(false)
   })
 
   // ! status bar
@@ -65,17 +63,22 @@ export function activate(context) {
 
     if (Object.keys(parsingCache).length) socket.emit('ast', parsingCache)
 
+    socket.on('request:ast', async () => {
+      await parseAllCodeFilesAndEmit(true)
+    })
+
     socket.on('disconnect', () => {
       console.log(`HyperLog disconnected *| ${socket.id}`)
     })
   })
-  5
-  server.listen(2022, () => {
-    console.log(`VS Log Server         *| http://localhost:2022`)
+
+  const port = extensionConfigurations.get('port')
+  server.listen(port, () => {
+    console.log(`VS Log Server         *| http://localhost:${port}`)
   })
 
   // Parse all code files on opening the workspace
-  parseAllCodeFiles()
+  parseAllCodeFilesAndEmit(true)
   // highlight the current document
   doLogHighLight(window.activeTextEditor.document)
 }

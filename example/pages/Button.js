@@ -30,7 +30,7 @@ export default class Button extends Component {
             this.setState({
               text: e.target.value,
             })
-            e.target.log(e.target.value)
+            log(e.target.value).e(e.target)
           }}
         />
         {/* -------------------------------------------------------------------------- */}

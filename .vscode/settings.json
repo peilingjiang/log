@@ -6,5 +6,5 @@
     "*/logs.json": true
   },
   "VS Log.includes": "**/*.{js,ts}",
-  "VS Log.excludes": "**/node_modules/** **/dist/** **/lib/** **/vs-log/** **/labeling/** **/*.config.js **/webpack.*.js"
+  "VS Log.excludes": "**/node_modules/** **/dist/** **/lib/** **/vs-log/** **/labeling/** **/*.config.js **/webpack.*.js **/src/**"
 }

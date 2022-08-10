@@ -56,19 +56,19 @@ export const logViewDefault = Object.seal({
 
 /* -------------------------------------------------------------------------- */
 
+export const timestampItemInterface = PropTypes.exact({
+  now: PropTypes.number,
+  // ! change 3 places to re-enable this Date type
+  // date: PropTypes.object,
+})
+
 // ! log
 export const logInterface = PropTypes.exact({
   id: PropTypes.string,
   groupId: PropTypes.string,
   element: PropTypes.instanceOf(Element),
   args: PropTypes.array,
-  timestamps: PropTypes.arrayOf(
-    PropTypes.exact({
-      now: PropTypes.number,
-      // ! change 3 places to re-enable this Date type
-      // date: PropTypes.object,
-    })
-  ),
+  timestamps: PropTypes.arrayOf(timestampItemInterface).isRequired,
   stack: stackInterface,
   count: PropTypes.number,
   ////
@@ -115,11 +115,33 @@ export const logGroupInterface = PropTypes.exact({
   // customization
 })
 
+// ! logTimelineItem
+export const logTimelineItemInterface = PropTypes.exact({
+  timestamp: timestampItemInterface.isRequired,
+  groupId: PropTypes.string.isRequired,
+  logInd: PropTypes.number.isRequired,
+  timestampInd: PropTypes.number.isRequired,
+})
+
+export const registryInterface = PropTypes.exact({
+  identifier: PropTypes.string.isRequired,
+  filePath: PropTypes.string.isRequired,
+  stackPath: PropTypes.string.isRequired,
+  stackFile: PropTypes.string.isRequired,
+  stackLine: PropTypes.number.isRequired,
+  stackChar: PropTypes.number.isRequired,
+  depth: PropTypes.number.isRequired,
+  depthStack: PropTypes.arrayOf(PropTypes.string).isRequired,
+})
+
 /* -------------------------------------------------------------------------- */
 
 // the meaningful line of where the log is from should not be the log wrapper interface
 // instead, we trace back to the actual caller
 export const stackActualCallerDepth = 5
+// when comparing two paths, from web and file system,
+// we only care about the last part of the path
+export const stackFilePathCompareDepth = 3
 
 // out of 8 possible positions around the anchor element, we only allow the first N best ones
 export const positionFindingWorstAllowed = 3
@@ -132,6 +154,15 @@ export const foldedObjectShowItemCount = 3
 export const expandedStreamDisableAutoScrollThresholdPx = 700
 export const timelineDisableAutoScrollThresholdPx = 200
 export const timelineSelectionAreaOffsetButterPx = 20
+
+export const timelineWaitConnectionTimeout = 5000
+export const timelineEachExpandLevelSliderWidthPx = 20
+
+export const timelineSideDragLevelWidth = {
+  indentationPx: 100,
+  declarationPx: 150,
+  filePx: 250,
+}
 
 export const timelineGroupWiseOffsetPx = {
   shared: 100,

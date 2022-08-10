@@ -8,8 +8,9 @@ import { configurations } from './global'
 import { parsingCache } from './global'
 import { isExcludedFile } from './utils'
 
-export const parseAllCodeFiles = async () => {
+export const parseAllCodeFilesAndEmit = async (emitEverything = false) => {
   let totalParsed = 0
+  const newCache = {}
 
   for (const includingFileGlob of configurations.includes) {
     const files = await workspace.findFiles(
@@ -21,7 +22,7 @@ export const parseAllCodeFiles = async () => {
       if (!isExcludedFile(file.path, configurations.excludes)) {
         const doc = await workspace.openTextDocument(file)
         if (doc) {
-          totalParsed += parseCodeFile(doc)
+          totalParsed += parseCodeFile(doc, newCache)
         }
       }
     }
@@ -29,7 +30,19 @@ export const parseAllCodeFiles = async () => {
 
   console.log(`parsing                | finished parsing ${totalParsed} files`)
 
-  io.emit('ast', parsingCache)
+  if (Object.keys(parsingCache).length) {
+    if (emitEverything) {
+      io.emit('ast', parsingCache)
+      console.log(
+        `emitting              *| emitting ${totalParsed} asts (all of them)`
+      )
+    } else {
+      io.emit('ast', newCache)
+      console.log(
+        `emitting              *| emitting ${Object.keys(newCache).length} asts`
+      )
+    }
+  }
 
   // workspace.textDocuments.forEach(document => {
   //   if (!isValidDocument(document.languageId())) return
@@ -37,7 +50,7 @@ export const parseAllCodeFiles = async () => {
   // })
 }
 
-export const parseCodeFile = document => {
+export const parseCodeFile = (document, newCache) => {
   if (
     parsingCache[document.fileName] &&
     document.getText() === parsingCache[document.fileName].text
@@ -54,7 +67,7 @@ export const parseCodeFile = document => {
       errorRecovery: true,
     })
 
-    parsingCache[document.fileName] = {
+    parsingCache[document.fileName] = newCache[document.fileName] = {
       text: document.getText(),
       result: result,
     }

@@ -51,8 +51,8 @@ export default class SmartPix extends Component {
           [`${targetName}Y`]: startPos.top + e.clientY - startPos.y,
         },
         () => {
-          e.target
-            .log(this.state[`${targetName}X`])
+          log(this.state[`${targetName}X`])
+            .e(e.target)
             .id(targetName)
             .name('offsetX')
             .unit('px')

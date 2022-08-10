@@ -14,10 +14,15 @@
     flex-direction: row !important;
     align-items: center !important;
     justify-content: space-between !important;
+    flex-shrink: 0;
 
     gap: $padding-x-large;
     background: $light !important;
-    padding: $padding-xs !important;
+
+    padding: 0 $padding-xs !important;
+    height: $padding-xx-large !important;
+
+    user-select: none;
 
     .timeline-name-text {
       font-weight: 700;
@@ -93,7 +98,7 @@
   .timeline-scroll-wrapper {
     height: 100%;
     overflow-y: scroll;
-    padding: $padding-small $padding-small $padding-xx-large 0;
+    padding: 0 $padding-small 0 0;
 
     // scroll-behavior: smooth;
 

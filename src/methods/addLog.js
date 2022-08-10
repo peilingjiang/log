@@ -21,6 +21,8 @@ import {
   assertObject,
   assertString,
   cloneLogGroups,
+  cloneLogTimeline,
+  deepCopyArrayOfLogs,
   getObjectIds,
   getTimestamp,
   idFromString,
@@ -73,6 +75,15 @@ export const newLog = (
       : _config.logStreamHistoryRenderDepth - 1,
   }
 }
+
+/* -------------------------------------------------------------------------- */
+/*
+   ________   _______   _______   ______   ________  ________ 
+  /        \_/       \_/       \//      \ /        \/        \
+ /         /         /         //       //         /       __/
+/         /         /         /        //         /       / / 
+\___/____/\________/\________/\________/\________/\________/  
+*/
 
 export const addLog = (logHost, args, element = null, requests = {}) => {
   // ! do not do anything when paused
@@ -189,11 +200,11 @@ export const addLog = (logHost, args, element = null, requests = {}) => {
           return {
             ...newState,
             logGroups: {
-              ...newState.logGroups,
+              ...cloneLogGroups(newState.logGroups),
               [groupId]: {
                 ...newState.logGroups[groupId],
                 logs: [
-                  ...logs.slice(0, logs.length - 1),
+                  ...deepCopyArrayOfLogs(logs).slice(0, logs.length - 1),
                   {
                     ...lastLog,
                     timestamps: [...lastLog.timestamps, timestamp],
@@ -202,6 +213,15 @@ export const addLog = (logHost, args, element = null, requests = {}) => {
                 ],
               },
             },
+            logTimeline: [
+              ...cloneLogTimeline(prevState.logTimeline),
+              {
+                timestamp: timestamp,
+                groupId: groupId,
+                logInd: logs.length - 1,
+                timestampInd: lastLog.timestamps.length,
+              },
+            ],
           }
         }
       }
@@ -222,12 +242,21 @@ export const addLog = (logHost, args, element = null, requests = {}) => {
       return {
         ...newState,
         logGroups: {
-          ...newState.logGroups,
+          ...cloneLogGroups(newState.logGroups),
           [groupId]: {
             ...newState.logGroups[groupId],
-            logs: [...logs, aFreshNewLog],
+            logs: [...deepCopyArrayOfLogs(logs), aFreshNewLog],
           },
         },
+        logTimeline: [
+          ...cloneLogTimeline(prevState.logTimeline),
+          {
+            timestamp: timestamp,
+            groupId: groupId,
+            logInd: logs.length,
+            timestampInd: 0,
+          },
+        ],
       }
     })
   })

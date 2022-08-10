@@ -1,8 +1,10 @@
-import React, { Component, createRef, memo } from 'react'
+import React, { Component, createRef, memo, useRef } from 'react'
 import PropTypes from 'prop-types'
+import isEqual from 'react-fast-compare'
 
 import { TimelineName } from '../components/TimelineName.js'
 import LogStreamWrapperInTimeline from './LogStreamWrapperInTimeline.js'
+import TimelineExpandSlider from '../components/TimelineExpandSlider.js'
 
 import {
   bindableElement,
@@ -14,21 +16,32 @@ import {
 } from '../methods/utils.js'
 import {
   logGroupInterface,
+  logInterface,
+  logTimelineItemInterface,
   pageElementsQuery,
   timelineDisableAutoScrollThresholdPx,
   timelineGroupWiseOffsetPx,
   timelineSelectionAreaOffsetButterPx,
   _Time,
 } from '../constants.js'
+import { getLog } from '../methods/getLog.js'
 import { isOverlapped, pxTrim, pxWrap } from '../methods/findPosition.js'
-import isEqual from 'react-fast-compare'
 import { SelectionRect } from '../components/SelectionRect.js'
+import { socket } from '../global.js'
+import {
+  getExpandLevels,
+  getTimelineOffset,
+  preprocessASTsToGetRegistries,
+  sumRegistries,
+} from '../methods/ast.js'
+import TimelineExpandSideDragger from '../components/TimelineExpandSideDragger.js'
 
 export default class TimelineHolder extends Component {
   static get propTypes() {
     return {
       logPaused: PropTypes.bool.isRequired,
       logGroups: PropTypes.object.isRequired,
+      logTimeline: PropTypes.arrayOf(logTimelineItemInterface).isRequired,
       totalLogCount: PropTypes.number.isRequired,
       updateLogGroup: PropTypes.func.isRequired,
       updateLog: PropTypes.func.isRequired,
@@ -54,6 +67,12 @@ export default class TimelineHolder extends Component {
       }, // { left, top, right, bottom }
       enableFilterArea: false,
       pinnedGroupId: null, // TODO
+      /* -------------------------------------------------------------------------- */
+      // ! AST
+      asts: {},
+      registries: {},
+      /* -------------------------------------------------------------------------- */
+      offsetBudget: 0,
     }
 
     this.ref = createRef()
@@ -70,6 +89,28 @@ export default class TimelineHolder extends Component {
     this.handleTimelineSetArea = this.handleTimelineSetArea.bind(this)
 
     this.handleTimelineFold = this.handleTimelineFold.bind(this)
+
+    this.setTimelineOffsetBudget = this.setTimelineOffsetBudget.bind(this)
+  }
+
+  componentDidMount() {
+    socket.on('ast', data => {
+      console.log('%cReceived AST', 'color: #ff42a1')
+
+      const newRegistries = preprocessASTsToGetRegistries(
+        this.props.logGroups,
+        this.props.logTimeline,
+        data,
+        this.state.registries
+      )
+
+      if (Object.keys(data).length > 0)
+        this.setState({
+          asts: data,
+          registries: newRegistries,
+        })
+    })
+    socket.emit('request:ast')
   }
 
   componentDidUpdate(prevProps) {
@@ -86,6 +127,10 @@ export default class TimelineHolder extends Component {
         this.scrollWrapperRef.current.scrollTop =
           this.scrollWrapperRef.current?.scrollHeight
       }
+  }
+
+  componentWillUnmount() {
+    socket.off('ast')
   }
 
   /* -------------------------------------------------------------------------- */
@@ -165,18 +210,41 @@ export default class TimelineHolder extends Component {
 
   /* -------------------------------------------------------------------------- */
 
+  // ! expand timeline
+  setTimelineOffsetBudget(newBudget) {
+    this.setState({ offsetBudget: newBudget })
+  }
+
+  /* -------------------------------------------------------------------------- */
+
   render() {
     const {
       logPaused,
       logGroups,
+      logTimeline,
       updateLogGroup,
       updateLog,
       hostRef,
       hostFunctions,
     } = this.props
 
-    const { folded, hovered, grabbing, right, filterArea, enableFilterArea } =
-      this.state
+    const {
+      folded,
+      hovered,
+      grabbing,
+      right,
+      filterArea,
+      enableFilterArea,
+      asts,
+      registries,
+      offsetBudget,
+    } = this.state
+
+    const hasSomeAST = asts === null ? false : Object.keys(asts).length > 0
+
+    // ! recover depth relationships from registries
+    const registriesByFileName = hasSomeAST ? sumRegistries(registries) : {}
+    const expandLevels = getExpandLevels(registriesByFileName)
 
     // const numberOfThreads = Object.keys(logGroups).length
 
@@ -228,6 +296,7 @@ export default class TimelineHolder extends Component {
           }}
         >
           <TimelineName
+            key={'timeline-name'}
             logPaused={logPaused}
             timelineFolded={folded}
             timelineGrabbing={grabbing}
@@ -239,23 +308,43 @@ export default class TimelineHolder extends Component {
             hostFunctions={hostFunctions}
           />
           {!folded && (
-            <div
-              ref={this.scrollWrapperRef}
-              className="timeline-scroll-wrapper"
-            >
-              <div className="timeline-wrapper">
-                {/* {backgroundAlignmentElements} */}
-                <TimelineLogItems
-                  logGroups={logGroups}
-                  updateLogGroup={updateLogGroup}
-                  updateLog={updateLog}
-                  hostRef={hostRef}
-                  hostFunctions={hostFunctions}
-                  handleStreamHover={this.handleStreamHover}
-                  handleStreamDragAround={this.handleStreamDragAround}
-                  ////
-                  filteredOutElements={filteredOutElements}
+            <div className="side-dragger-wrapper">
+              {/* {hasSomeAST && (
+                <TimelineExpandSlider
+                  key={'timeline-expand-slider'}
+                  timelineRef={this.ref}
                 />
+              )} */}
+              {hasSomeAST && (
+                <TimelineExpandSideDragger
+                  expandLevels={expandLevels}
+                  timelineOffsetBudget={offsetBudget}
+                  setTimelineOffsetBudget={this.setTimelineOffsetBudget}
+                />
+              )}
+              <div
+                ref={this.scrollWrapperRef}
+                className="timeline-scroll-wrapper"
+              >
+                <div className="timeline-wrapper">
+                  {/* {backgroundAlignmentElements} */}
+                  <TimelineLogItems
+                    logGroups={logGroups}
+                    logTimeline={logTimeline}
+                    updateLogGroup={updateLogGroup}
+                    updateLog={updateLog}
+                    hostRef={hostRef}
+                    hostFunctions={hostFunctions}
+                    handleStreamHover={this.handleStreamHover}
+                    handleStreamDragAround={this.handleStreamDragAround}
+                    ////
+                    filteredOutElements={filteredOutElements}
+                    ////
+                    registriesByFileName={registriesByFileName}
+                    expandLevels={expandLevels}
+                    timelineOffsetBudget={offsetBudget}
+                  />
+                </div>
               </div>
             </div>
           )}
@@ -267,6 +356,7 @@ export default class TimelineHolder extends Component {
 
 const TimelineLogItemsMemo = ({
   logGroups,
+  logTimeline,
   updateLogGroup,
   updateLog,
   hostRef,
@@ -274,95 +364,169 @@ const TimelineLogItemsMemo = ({
   handleStreamHover,
   handleStreamDragAround,
   filteredOutElements,
+  ////
+  registriesByFileName,
+  expandLevels,
+  timelineOffsetBudget,
 }) => {
-  return Object.keys(logGroups)
-    .map(key => {
-      const logGroup = logGroups[key]
-      const logs = logGroup.logs
+  // Object.keys(logGroups)
+  //   .map(key => {
+  //     const logGroup = logGroups[key]
+  //     const logs = logGroup.logs
 
-      if (filteredOutElements.length) {
-        for (let el of filteredOutElements) {
-          if (
-            // idFromString(stringifyDOMElement(el)) === logGroup.groupElementId
-            el.isSameNode(logGroup.element)
-          ) {
-            return []
-          }
+  //     if (filteredOutElements.length) {
+  //       for (let el of filteredOutElements) {
+  //         if (
+  //           // idFromString(stringifyDOMElement(el)) === logGroup.groupElementId
+  //           el.isSameNode(logGroup.element)
+  //         ) {
+  //           return []
+  //         }
+  //       }
+  //     }
+
+  //     // const offset = standardOffset * threadInd // !
+
+  //     // background alignment element
+  //     // backgroundAlignmentElements.push(
+  //     //   <div
+  //     //     key={groupId}
+  //     //     className="timeline-background-alignment"
+  //     //     style={{
+  //     //       marginLeft: pxWrap(offset),
+  //     //       padding: `0 ${pxWrap(standardOffset)} 0 0`,
+  //     //     }}
+  //     //   ></div>
+  //     // )
+
+  //     return logs.map(logObj => {
+  //       if (logObj.count > 1) {
+  //         return logObj.timestamps.map((timestamp, timestampInd) => ({
+  //           logGroup: logGroup,
+  //           logObj: {
+  //             ...logObj,
+  //             count: 1,
+  //             timestamps: [timestamp],
+  //           },
+  //           rawInd: timestampInd,
+  //         }))
+  //       } else {
+  //         return [{ logGroup, logObj, rawInd: 0 }]
+  //       }
+  //     })
+  //   })
+  //   .flat(2)
+  //   .sort((a, b) => {
+  //     return a.logObj.timestamps[0].now - b.logObj.timestamps[0].now
+  //   })
+  //   .map(({ logGroup, logObj, /* offset, */ rawInd }) => {
+  //     // const isShape = logGroup.format === 'shape'
+
+  //     const logLocationDepthRegistry = getDepthRegistry(
+  //       asts,
+  //       logObj,
+  //       parsedLogASTRegistries
+  //     )
+
+  //     return (
+  //       // ! timeline-log-item-wrapper
+  //       <div
+  //         key={`${logObj.id}-${rawInd}-time`}
+  //         className="timeline-log-item-wrapper"
+  //         style={{
+  //           borderLeft: `5px solid ${logGroup.groupColor}`,
+  //         }}
+  //         data-id={logObj.id}
+  //       >
+  //         <LogStreamWrapperInTimeline
+  //           key={`${logObj.id}-${rawInd}-time-stream`}
+  //           logGroup={logGroup}
+  //           log={logObj}
+  //           updateLogGroup={updateLogGroup}
+  //           updateLog={updateLog}
+  //           hostRef={hostRef}
+  //           handleStreamHover={handleStreamHover}
+  //           handleStreamDragAround={handleStreamDragAround}
+  //           organization={_Time}
+  //           hostFunctions={hostFunctions}
+  //           ////
+  //           // timelineOffset={0} // !
+  //           logLocationDepthRegistry={logLocationDepthRegistry}
+  //         />
+
+  //         <span className="timeline-timestamp">
+  //           {Math.round(logObj.timestamps[0].now)}
+  //         </span>
+  //       </div>
+  //     )
+  //   })
+
+  const toFilterOutElements = filteredOutElements.length > 0
+
+  // ! get offsets for each log group
+  let offsets = {}
+  Object.keys(logGroups).forEach(key => {
+    offsets[key] = getTimelineOffset(
+      logGroups[key],
+      registriesByFileName,
+      timelineOffsetBudget,
+      expandLevels
+    )
+  })
+
+  // ! map
+  return logTimeline.map((logIdentifier, ind) => {
+    const logGroup = logGroups[logIdentifier.groupId]
+
+    // ! filter out elements
+    if (toFilterOutElements && logGroup.element) {
+      for (let el of filteredOutElements) {
+        if (
+          // idFromString(stringifyDOMElement(el)) === logGroup.groupElementId
+          el.isSameNode(logGroup.element)
+        ) {
+          return null
         }
       }
+    }
 
-      // const offset = standardOffset * threadInd // !
+    const logObj = getLog(logGroup, logIdentifier)
 
-      // background alignment element
-      // backgroundAlignmentElements.push(
-      //   <div
-      //     key={groupId}
-      //     className="timeline-background-alignment"
-      //     style={{
-      //       marginLeft: pxWrap(offset),
-      //       padding: `0 ${pxWrap(standardOffset)} 0 0`,
-      //     }}
-      //   ></div>
-      // )
+    return (
+      <div
+        key={`${ind}-time`}
+        className="timeline-log-item-wrapper"
+        style={{
+          borderLeft: `5px solid ${logGroup.groupColor}`,
+        }}
+        // data-id={logObj.id}
+      >
+        <LogStreamWrapperInTimeline
+          key={`${ind}-time-stream`}
+          logGroup={logGroup}
+          log={logObj}
+          updateLogGroup={updateLogGroup}
+          updateLog={updateLog}
+          hostRef={hostRef}
+          handleStreamHover={handleStreamHover}
+          handleStreamDragAround={handleStreamDragAround}
+          organization={_Time}
+          hostFunctions={hostFunctions}
+          ////
+          timelineOffset={offsets[logIdentifier.groupId]}
+        />
 
-      return logs.map(logObj => {
-        if (logObj.count > 1) {
-          return logObj.timestamps.map((timestamp, timestampInd) => ({
-            logGroup: logGroup,
-            logObj: {
-              ...logObj,
-              count: 1,
-              timestamps: [timestamp],
-            },
-            rawInd: timestampInd,
-          }))
-        } else {
-          return [{ logGroup, logObj, rawInd: 0 }]
-        }
-      })
-    })
-    .flat(2)
-    .sort((a, b) => {
-      return a.logObj.timestamps[0].now - b.logObj.timestamps[0].now
-    })
-    .map(({ logGroup, logObj, /* offset, */ rawInd }) => {
-      // const isShape = logGroup.format === 'shape'
-
-      return (
-        // ! timeline-log-item-wrapper
-        <div
-          key={`${logObj.id}-${rawInd}-time`}
-          className="timeline-log-item-wrapper"
-          style={{
-            borderLeft: `5px solid ${logGroup.groupColor}`,
-          }}
-          data-id={logObj.id}
-        >
-          <LogStreamWrapperInTimeline
-            key={`${logObj.id}-${rawInd}-time-stream`}
-            logGroup={logGroup}
-            log={logObj}
-            updateLogGroup={updateLogGroup}
-            updateLog={updateLog}
-            hostRef={hostRef}
-            handleStreamHover={handleStreamHover}
-            handleStreamDragAround={handleStreamDragAround}
-            organization={_Time}
-            hostFunctions={hostFunctions}
-            ////
-            timelineOffset={0} // !
-          />
-
-          <span className="timeline-timestamp">
-            {Math.round(logObj.timestamps[0].now)}
-          </span>
-        </div>
-      )
-    })
+        <span className="timeline-timestamp">
+          {Math.round(logObj.timestamps[0].now)}
+        </span>
+      </div>
+    )
+  })
 }
 
 TimelineLogItemsMemo.propTypes = {
   logGroups: PropTypes.object.isRequired,
+  logTimeline: PropTypes.arrayOf(logTimelineItemInterface).isRequired,
   updateLogGroup: PropTypes.func.isRequired,
   updateLog: PropTypes.func.isRequired,
   hostRef: PropTypes.object.isRequired,
@@ -371,6 +535,10 @@ TimelineLogItemsMemo.propTypes = {
   handleStreamDragAround: PropTypes.func.isRequired,
   filteredOutElements: PropTypes.arrayOf(PropTypes.instanceOf(Element))
     .isRequired,
+  ////
+  registriesByFileName: PropTypes.object.isRequired,
+  expandLevels: PropTypes.object.isRequired,
+  timelineOffsetBudget: PropTypes.number.isRequired,
 }
 
 const TimelineLogItems = memo(TimelineLogItemsMemo, isEqual)

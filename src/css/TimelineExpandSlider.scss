@@ -1,0 +1,62 @@
+// ! not using, see sideDragger
+
+.timeline-expand-slider {
+  position: relative;
+  margin: 0 0 0 auto;
+  // padding: $padding-xxs;
+  height: calc($font-size-default + 2 * $padding-xs);
+
+  display: flex;
+  justify-content: flex-start;
+
+  background: $dark-grey;
+
+  .this-way-icon {
+    position: absolute;
+    top: 50%;
+    right: 120%;
+    transform: translate(0, -50%);
+    font-size: $font-size-default;
+  }
+
+  .timeline-expand-slider-drag {
+    display: flex;
+    padding: $padding-xs;
+    line-height: 100%;
+    gap: 0;
+
+    background: $light-grey;
+
+    &:hover {
+      cursor: grab;
+    }
+
+    &:active {
+      cursor: grabbing;
+    }
+  }
+
+  svg {
+    pointer-events: none;
+    font-size: $font-size-default;
+    margin: 0;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+
+@keyframes height-expand {
+  0% {
+    height: 0;
+  }
+
+  100% {
+    height: calc($font-size-default + 2 * $padding-xs);
+  }
+}
+
+.animation-height-expand {
+  animation-duration: $transition-normal;
+  // animation-delay: $transition-fast;
+  animation-name: height-expand;
+}

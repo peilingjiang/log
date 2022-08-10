@@ -2,12 +2,12 @@
 
 import { io } from 'socket.io-client'
 
-import { _Aug, _Time } from './constants.js'
+import { timelineWaitConnectionTimeout, _Aug, _Time } from './constants.js'
 import { assertObject } from './methods/utils.js'
 
 export const g = Object.seal({
   preserveConsole: false,
-  useSourceMaps: false,
+  useSourceMaps: true,
   directionDown: true,
   defaultOrganization: _Time,
 })
@@ -26,24 +26,26 @@ export const g = Object.seal({
 
 /* -------------------------------------------------------------------------- */
 
-const globalAST = Object.seal({ current: {} })
+// export const globalAST = Object.seal({ current: {} })
 
-const host = window.location.hostname
+// const host = window.location.hostname
+const host = 'localhost'
+
 export const socket = io.connect(`http://${host}:2022/`, {
   reconnection: true,
   reconnectionDelay: 1000,
   reconnectionDelayMax: 5000,
-  reconnectionAttempts: 5,
+  reconnectionAttempts: timelineWaitConnectionTimeout / 1000,
 })
 
 // ? is it the best practice to open the socket here?
 socket.on('connect', () => {
   console.log(
-    '%cConnected to VS Log Server!',
+    '%cConnected to VS Log Server',
     'color: #ff42a1; font-weight: bold'
   )
 
-  socket.on('ast', data => {
-    globalAST.current = data
-  })
+  // socket.on('ast', data => {
+  //   globalAST.current = data
+  // })
 })

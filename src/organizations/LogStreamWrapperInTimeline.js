@@ -9,9 +9,11 @@ import { _H } from '../constants.js'
 import { pxWrap } from '../methods/findPosition.js'
 import LogStreamMenu from './LogStreamMenu.js'
 import LogStreamName from '../components/LogStreamName.js'
+import { sumRegistries } from '../methods/ast.js'
 
 export default class LogStreamWrapperInTimeline extends LogStream {
   // not an actual stream, works as a wrap to host a single log object
+  /* ! registriesByFileName, expandedLevels, timelineOffsetBudget */
 
   componentDidUpdate() {}
 
@@ -19,8 +21,10 @@ export default class LogStreamWrapperInTimeline extends LogStream {
     return (
       !isEqual(nextProps.logGroup.view, this.props.logGroup.view) ||
       !isEqual(nextProps.log, this.props.log) ||
+      !isEqual(nextProps.timelineOffset, this.props.timelineOffset) ||
       !isEqual(nextState, this.state)
     )
+    // return false
   }
 
   render() {
@@ -43,10 +47,10 @@ export default class LogStreamWrapperInTimeline extends LogStream {
         }${isShape ? ' shape-stream' : ''}${
           hovered ? ' stream-hovered up-front' : ''
         }${current ? ' stream-current' : ''}`}
-        // style={{
-        //   borderLeft: `7px solid ${groupColor}`,
-        //   marginLeft: pxWrap(timelineOffset),
-        // }}
+        style={{
+          // borderLeft: `7px solid ${groupColor}`,
+          marginLeft: pxWrap(timelineOffset),
+        }}
         onMouseEnter={this.handleMouseEnter}
         onMouseLeave={this.handleMouseOut}
       >

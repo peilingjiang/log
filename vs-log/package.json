@@ -25,6 +25,13 @@
       "title": "VS Log",
       "displayName": "VS Log",
       "properties": {
+        "VS Log.port": {
+          "title": "Port",
+          "type": "number",
+          "default": 2022,
+          "description": "The port to communicate with the HyperLog client side (default at 2022)",
+          "scope": "window"
+        },
         "VS Log.includes": {
           "title": "Included Files",
           "type": "string",
