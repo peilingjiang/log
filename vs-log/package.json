@@ -4,7 +4,7 @@
   "description": "VS Code extension for a novel logging framework.",
   "version": "0.0.1",
   "engines": {
-    "vscode": "^1.69.0"
+    "vscode": "^1.70.0"
   },
   "categories": [
     "Other"

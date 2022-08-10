@@ -27,6 +27,7 @@
     }
 
     &.timeline-side-dragger-active {
+      cursor: grabbing;
       background: $light !important;
     }
 

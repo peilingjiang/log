@@ -12,22 +12,22 @@ export default class Types extends Component {
 
     log(undefined, null)
 
-    // log(['a', ['b', ['c', ['d', ['e']]]]])
+    log(['a', ['b', ['c', ['d', ['e']]]]])
 
-    // log(
-    //   1,
-    //   'log',
-    //   [1, 'log'],
-    //   [
-    //     1,
-    //     'log',
-    //     [
-    //       "My name is James. What's your name? How are you feeling today?",
-    //       true,
-    //       234,
-    //     ],
-    //   ]
-    // )
+    log(
+      1,
+      'log',
+      [1, 'log'],
+      [
+        1,
+        'log',
+        [
+          "My name is James. What's your name? How are you feeling today?",
+          true,
+          234,
+        ],
+      ]
+    )
 
     testMultipleFiles()
 
@@ -45,12 +45,12 @@ export default class Types extends Component {
       }, Math.random() * 1000)
     }
 
-    // for (let i = 0; i < 2; i++) log(this)
+    for (let i = 0; i < 2; i++) log(this)
 
-    // for (let i = 0; i < 20; i++)
-    //   log(Math.round(Math.random() * 200)).e(
-    //     document.getElementById('home-link')
-    //   )
+    for (let i = 0; i < 20; i++)
+      log(Math.round(Math.random() * 200)).e(
+        document.getElementById('home-link')
+      )
   }
 
   render() {
