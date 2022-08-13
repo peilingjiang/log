@@ -10,47 +10,40 @@ export default class Types extends Component {
   componentDidMount() {
     // console.log('Start logging...')
 
-    log(undefined, null)
+    // log(undefined, null)
 
-    log(['a', ['b', ['c', ['d', ['e']]]]])
+    // log(['a', ['b', ['c', ['d', ['e']]]]])
 
-    log(
-      1,
-      'log',
-      [1, 'log'],
-      [
-        1,
-        'log',
-        [
-          "My name is James. What's your name? How are you feeling today?",
-          true,
-          234,
-        ],
-      ]
-    )
+    // log(
+    //   1,
+    //   'log',
+    //   [1, 'log'],
+    //   [
+    //     1,
+    //     'log',
+    //     [
+    //       "My name is James. What's your name? How are you feeling today?",
+    //       true,
+    //       234,
+    //     ],
+    //   ]
+    // )
+
+    testAnotherTopLevelDeclaration()
 
     testMultipleFiles()
 
-    for (let i = 0; i < 10; i++) {
-      setTimeout(() => {
-        log({
-          value: {
-            viewingDistanceCm: 500 * Math.random(),
-            nearPointCm: { x: Math.random(), y: Math.random() },
-            latencyMs: 100,
-          },
-          timestamp: performance.now(),
-          method: 'Random',
-        }).e(document.getElementById('home-link'))
-      }, Math.random() * 1000)
+    for (let i = 0; i < 2; i++) {
+      log(this)
+      for (let j = 0; j < 2; j++) {
+        log('nested loop', j)
+      }
     }
 
-    for (let i = 0; i < 2; i++) log(this)
-
-    for (let i = 0; i < 20; i++)
-      log(Math.round(Math.random() * 200)).e(
-        document.getElementById('home-link')
-      )
+    // for (let i = 0; i < 20; i++)
+    //   log(Math.round(Math.random() * 200)).e(
+    //     document.getElementById('home-link')
+    //   )
   }
 
   render() {
@@ -64,5 +57,23 @@ export default class Types extends Component {
         Logging out many different things...
       </div>
     )
+  }
+}
+
+function testAnotherTopLevelDeclaration() {
+  log("I'm from another top level declaration!")
+
+  for (let i = 0; i < 10; i++) {
+    setTimeout(() => {
+      log({
+        value: {
+          viewingDistanceCm: 500 * Math.random(),
+          nearPointCm: { x: Math.random(), y: Math.random() },
+          latencyMs: 100,
+        },
+        timestamp: performance.now(),
+        method: 'Random',
+      }).e(document.getElementById('home-link'))
+    }, Math.random() * 1000)
   }
 }

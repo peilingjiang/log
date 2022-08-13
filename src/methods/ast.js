@@ -149,11 +149,14 @@ const proceed = (instance, bodyInd) => {
 
   while (result && !assertArray(result) && !reachedTheLogStatement(result)) {
     result = proceedDeeper(result)
-    if (result && result.type) increasedStack.push(result.type)
+    if (result && result.type && !ignoredStackTypes.includes(result.type))
+      increasedStack.push(result.type)
   }
 
   return [increasedStack, result]
 }
+
+const ignoredStackTypes = ['BlockStatement']
 
 const proceedDeeper = instance => {
   const type = instance.type
@@ -291,7 +294,10 @@ export const getExpandLevels = files => {
   let hasMultipleDeclarations = false
 
   for (const fileName in files) {
-    if (files[fileName].topLevelDeclarations.length > 1)
+    if (
+      files[fileName].topLevelDeclarations.length > 1 ||
+      Object.keys(files).length > 0
+    )
       hasMultipleDeclarations = true
     if (files[fileName].maxDepth > files[fileName].minDepth)
       hasIndentation = true
@@ -312,8 +318,14 @@ export const getMaxExpandOffset = expandLevels => {
   const { indentation, declarations, files } = expandLevels
   const { indentationPx, declarationPx, filePx } = timelineSideDragLevelWidth
   return (
-    indentation * indentationPx + declarations * declarationPx + files * filePx
+    // indentation * indentationPx + declarations * declarationPx + files * filePx
+    indentation * indentationPx + declarations * declarationPx + files * 0
   )
+}
+
+export const hasLeastOneExpandLevel = expandLevels => {
+  const { indentation, declarations, files } = expandLevels
+  return indentation || declarations
 }
 
 export const getTimelineOffset = (
@@ -336,11 +348,15 @@ export const getTimelineOffset = (
   // ! indentation
   if (expandLevels.indentation) {
     // const extremeDepthsOfAll = overallExtremeDepths(registriesByFileName)
-    const extremeDepthsOfAll = {
-      max: fileRegistry.maxDepth,
-      min: fileRegistry.minDepth,
-    }
-    const overallLevels = extremeDepthsOfAll.max - extremeDepthsOfAll.min + 1
+    // const extremeDepthsOfAll = {
+    //   max: fileRegistry.maxDepth,
+    //   min: fileRegistry.minDepth,
+    // }
+    const extremeDepthsOfAll = getExtremeDepthsByTopLevelDeclarations(
+      fileRegistry,
+      logGroupRegistry.topLevelDeclaration
+    )
+    const overallLevels = extremeDepthsOfAll.max - extremeDepthsOfAll.min
 
     const budgetForIndentation = Math.min(budget, indentationPx)
     const eachLevelOffset = budgetForIndentation / overallLevels
@@ -349,11 +365,95 @@ export const getTimelineOffset = (
       eachLevelOffset * (logGroupRegistry.depth - extremeDepthsOfAll.min)
   }
 
+  budget = Math.max(0, budget - expandLevels.indentation * indentationPx)
+
   // ! declarations
+  if (expandLevels.declarations && budget > 0) {
+    const budgetForDeclarations = Math.min(budget, declarationPx)
+    const eachDeclarationOffset =
+      budgetForDeclarations / getTopLevelDeclarationsCount(registriesByFileName)
+
+    totalOffset +=
+      eachDeclarationOffset *
+      fileRegistry.topLevelDeclarations.indexOf(
+        logGroupRegistry.topLevelDeclaration
+      )
+    // + Math.min(1, budget / declarationPx) * indentationPx
+  }
+
+  // budget = Math.max(0, budget - expandLevels.declaration * declarationPx)
 
   // ! files
+  // if (expandLevels.files && budget > 0) {
+  //   const budgetForFiles = Math.min(budget, filePx)
+  //   const eachFileOffset =
+  //     budgetForFiles / Object.keys(registriesByFileName).length
+
+  //   totalOffset +=
+  //     eachFileOffset * Object.keys(registriesByFileName).indexOf(logFile)
+  // }
 
   return totalOffset
+}
+
+export const getTimelineOffsets = (
+  logGroups,
+  registriesByFileName,
+  budget,
+  expandLevels
+) => {
+  if (budget === 0 || getMaxExpandOffset(expandLevels) === 0) return 0
+
+  const { indentationPx, declarationPx, filePx } = timelineSideDragLevelWidth
+  const offsets = {}
+
+  // ! indentation
+
+  for (const logGroupId in logGroups) {
+    offsets[logGroupId] = 0
+
+    if (expandLevels.indentation) {
+      const logGroup = logGroups[logGroupId]
+      const logObj = logGroup.logs[0] // repLog
+      const logFile = logObj.stack.file
+      const fileRegistry = registriesByFileName[logFile] // !
+      const logGroupRegistry = fileRegistry.groups[logGroup.groupId]
+
+      const extremeDepthsOfAll = getExtremeDepthsByTopLevelDeclarations(
+        fileRegistry,
+        logGroupRegistry.topLevelDeclaration
+      )
+      const overallLevels = extremeDepthsOfAll.max - extremeDepthsOfAll.min
+
+      const budgetForIndentation = Math.min(budget, indentationPx)
+      const eachLevelOffset = budgetForIndentation / overallLevels
+
+      offsets[logGroup.groupId] +=
+        eachLevelOffset * (logGroupRegistry.depth - extremeDepthsOfAll.min)
+    }
+  }
+
+  budget = Math.max(0, budget - expandLevels.indentation * indentationPx)
+
+  // ! declarations
+  if (expandLevels.declarations && budget > 0) {
+    const allDeclarations = getAllDeclarations(registriesByFileName, offsets)
+    allDeclarations.sort((a, b) => a.totalOffset - b.totalOffset)
+    for (const declarationIndex in allDeclarations)
+      allDeclarations[declarationIndex].index = declarationIndex
+
+    const budgetForDeclarations = Math.min(budget, declarationPx)
+    const eachDeclarationOffset =
+      budgetForDeclarations / (allDeclarations.length - 1)
+
+    for (const logGroupId in logGroups) {
+      offsets[logGroupId] +=
+        eachDeclarationOffset *
+        _getDeclarationByGroupId(allDeclarations, logGroupId).index
+    }
+  }
+
+  return offsets
 }
 
 /* -------------------------------------------------------------------------- */
@@ -369,4 +469,87 @@ export const overallExtremeDepths = registriesByFileName => {
     if (registry.minDepth < min) min = registry.minDepth
   }
   return { max, min }
+}
+
+export const getExtremeDepthsByTopLevelDeclarations = (
+  fileRegistry,
+  targetDeclaration
+) => {
+  let min = Infinity
+  let max = 0
+  for (const groupId in fileRegistry.groups) {
+    const thisRegistry = fileRegistry.groups[groupId]
+    if (thisRegistry.topLevelDeclaration === targetDeclaration) {
+      if (thisRegistry.depth < min) min = thisRegistry.depth
+      if (thisRegistry.depth > max) max = thisRegistry.depth
+    }
+  }
+
+  return { max, min }
+}
+
+/* -------------------------------------------------------------------------- */
+
+export const _declarationExists = (declarations, declarationName) => {
+  for (const declaration of declarations)
+    if (declaration.name === declarationName) return true
+  return false
+}
+
+export const _getDeclarationFromAllDeclarations = (
+  declarations,
+  declarationName
+) => {
+  for (const declaration of declarations)
+    if (declaration.name === declarationName) return declaration
+  return null
+}
+
+export const getAllDeclarations = (registriesByFileName, currentOffsets) => {
+  const declarations = []
+  for (const fileName in registriesByFileName) {
+    const registry = registriesByFileName[fileName]
+    for (const groupId in registry.groups) {
+      const thisRegistry = registry.groups[groupId]
+
+      if (_declarationExists(declarations, thisRegistry.topLevelDeclaration))
+        _getDeclarationFromAllDeclarations(
+          declarations,
+          thisRegistry.topLevelDeclaration
+        ).groupIds.push(groupId)
+      else
+        declarations.push({
+          name: thisRegistry.topLevelDeclaration,
+          file: fileName,
+          groupIds: [groupId],
+        })
+    }
+  }
+
+  // get the total offsets from each of the groupId associated with this declaration
+  for (const declaration of declarations) {
+    declaration.totalOffsets = declaration.groupIds
+      .map(groupId => {
+        return currentOffsets[groupId]
+      })
+      .reduce((a, b) => a + b, 0)
+  }
+
+  return declarations
+}
+
+export const _getDeclarationByGroupId = (declarations, groupId) => {
+  for (const declaration of declarations)
+    if (declaration.groupIds.includes(groupId)) return declaration
+  return null
+}
+
+export const getTopLevelDeclarationsCount = registriesByFileName => {
+  let count = 0
+  for (const fileName in registriesByFileName) {
+    const registry = registriesByFileName[fileName]
+    count += registry.topLevelDeclarations.length
+  }
+
+  return count - 1
 }

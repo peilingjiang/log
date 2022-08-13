@@ -11,6 +11,7 @@ import Restart from '../icons/restart.svg'
 import Area from '../icons/area.svg'
 import Expand from '../icons/expand.svg'
 import Fold from '../icons/fold.svg'
+import { pxWrap } from '../methods/findPosition.js'
 
 export const TimelineName = ({
   logPaused,
@@ -22,6 +23,7 @@ export const TimelineName = ({
   handleTimelineArea,
   handleTimelineFold,
   hostFunctions,
+  timelineOffsetBudget,
 }) => {
   return (
     <div
@@ -32,8 +34,8 @@ export const TimelineName = ({
       onMouseDown={handleTimelineDragAround}
       onDoubleClick={handleTimelinePositionReset}
     >
-      <div>
-        <Move />{' '}
+      <div className="timeline-name-title">
+        <Move className="timeline-move-icon" />{' '}
         <span
           className="timeline-name-text"
           style={{
@@ -43,7 +45,15 @@ export const TimelineName = ({
           timeline
         </span>
       </div>
-      <div>
+
+      {/* <div
+        className="pseudo-expander"
+        style={{
+          paddingLeft: pxWrap(timelineOffsetBudget),
+        }}
+      ></div> */}
+
+      <div className="timeline-name-icons">
         <Arrow
           className="timeline-icon rotate-180 timeline-back-icon"
           title="back to augmented mode"
@@ -103,4 +113,5 @@ TimelineName.propTypes = {
   handleTimelineArea: PropTypes.func.isRequired,
   handleTimelineFold: PropTypes.func.isRequired,
   hostFunctions: PropTypes.object.isRequired,
+  timelineOffsetBudget: PropTypes.number.isRequired,
 }

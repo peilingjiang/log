@@ -69,7 +69,7 @@ export default class Button extends Component {
               },
               () => {
                 /////
-                e.target.log(this.state.clearClickedTimes).name('clear')
+                log(this.state.clearClickedTimes).name('clear').e(e.target)
                 ////
                 // log().el(e.target)
               }

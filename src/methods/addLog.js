@@ -125,11 +125,17 @@ export const addLog = (logHost, args, element = null, requests = {}) => {
         `${parsedStack.file}?line=${parsedStack.line}&char=${parsedStack.char}`,
         uuidv5.URL
       )
-      const hereThereColor = tinycolor(idFromLocation.slice(0, 6))
+
+      let hereThereColor = tinycolor(idFromLocation.slice(0, 6))
         .lighten(20)
         .toHexString()
+
+      if (hereThereColor === '#ffffff')
+        hereThereColor = tinycolor(idFromLocation.slice(0, 6))
+          .lighten(10)
+          .toHexString()
       // if to use this color
-      const isHereThereLog = args.length === 0
+      // const isHereThereLog = args.length === 0
 
       // ! first log of its group
       // can't find id among current groups
@@ -157,7 +163,8 @@ export const addLog = (logHost, args, element = null, requests = {}) => {
           followType: assertExistence(element) ? 'stick' : 'independent', // TODO remove?
           ////
           groupColor:
-            requests.color || (isHereThereLog ? hereThereColor : randomColor()),
+            // requests.color || (isHereThereLog ? hereThereColor : randomColor()),
+            requests.color || hereThereColor,
           ////
           paused: false,
           deleted: false,

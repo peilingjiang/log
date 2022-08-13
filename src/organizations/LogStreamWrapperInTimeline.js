@@ -7,9 +7,8 @@ import ShapeLog from '../components/ShapeLog.js'
 import { canUseShape } from '../methods/utils.js'
 import { _H } from '../constants.js'
 import { pxWrap } from '../methods/findPosition.js'
-import LogStreamMenu from './LogStreamMenu.js'
-import LogStreamName from '../components/LogStreamName.js'
-import { sumRegistries } from '../methods/ast.js'
+// import LogStreamMenu from './LogStreamMenu.js'
+// import LogStreamName from '../components/LogStreamName.js'
 
 export default class LogStreamWrapperInTimeline extends LogStream {
   // not an actual stream, works as a wrap to host a single log object
@@ -47,10 +46,12 @@ export default class LogStreamWrapperInTimeline extends LogStream {
         }${isShape ? ' shape-stream' : ''}${
           hovered ? ' stream-hovered up-front' : ''
         }${current ? ' stream-current' : ''}`}
+        ////
         style={{
-          // borderLeft: `7px solid ${groupColor}`,
-          marginLeft: pxWrap(timelineOffset),
+          // marginLeft: pxWrap(timelineOffset),
+          boxShadow: `-0.25rem 0 0 0 ${groupColor}`,
         }}
+        ////
         onMouseEnter={this.handleMouseEnter}
         onMouseLeave={this.handleMouseOut}
       >

@@ -157,10 +157,11 @@ export const timelineSelectionAreaOffsetButterPx = 20
 
 export const timelineWaitConnectionTimeout = 5000
 export const timelineEachExpandLevelSliderWidthPx = 20
+export const timelineSideDraggerSnapThresholdPx = 15
 
 export const timelineSideDragLevelWidth = {
-  indentationPx: 100,
-  declarationPx: 150,
+  indentationPx: 80,
+  declarationPx: 300,
   filePx: 250,
 }
 

@@ -328,6 +328,10 @@ export const randomColor = () => {
   return c.toHex8String()
 }
 
+export const applyHighOpacityTo = rgbaHex => {
+  return tinycolor(rgbaHex).setAlpha(0.15).toRgbString()
+}
+
 /* -------------------------------------------------------------------------- */
 // units
 

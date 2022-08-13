@@ -19,13 +19,37 @@
     gap: $padding-x-large;
     background: $light !important;
 
-    padding: 0 $padding-xs !important;
+    padding: 0 $padding-xs 0 0 !important;
     height: $padding-xx-large !important;
 
     user-select: none;
 
+    .pseudo-expander {
+      flex-grow: 1;
+      flex-shrink: 0;
+
+      height: 100%;
+    }
+
     .timeline-name-text {
       font-weight: 700;
+    }
+
+    .timeline-name-title {
+      width: 100%;
+      gap: 0;
+
+      flex-shrink: 1;
+      flex-grow: 1;
+
+      .timeline-move-icon {
+        margin: 0 $padding-small;
+      }
+    }
+
+    .timeline-name-icons {
+      flex-shrink: 0;
+      flex-grow: 1;
     }
 
     .timeline-icon {
@@ -98,12 +122,14 @@
   .timeline-scroll-wrapper {
     height: 100%;
     overflow-y: scroll;
-    padding: 0 $padding-small 0 0;
+    padding: 0 $padding-xs 0 0;
 
     // scroll-behavior: smooth;
 
     background: rgba($white, $opacity-mid);
     backdrop-filter: blur(5px);
+
+    flex-grow: 1;
 
     @include scrollbar($scrollbar-width-large, $white, $grey, $dark-grey);
     &::-webkit-scrollbar {
@@ -146,12 +172,26 @@
     // z-index: 1;
 
     .hyper-log-stream-in-time {
+      flex-shrink: 0;
       padding: $padding-xxs 0 $padding-xxs $padding-xs;
+      margin: 0 0 0 $padding-xs;
+    }
+
+    .pseudo-expander {
+      flex-grow: 1;
+      flex-shrink: 0;
+
+      height: 1rem;
     }
 
     .timeline-timestamp {
       @include font-fixed;
       font-size: $font-size-small;
+      padding: $padding-xxs 0;
+
+      // flex-grow: 1;
+      flex-shrink: 0;
+      text-align: right;
     }
   }
 }

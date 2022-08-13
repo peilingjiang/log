@@ -5,6 +5,10 @@ import { constrain, preventEventWrapper } from '../methods/utils.js'
 
 import ThisWay from '../icons/this-way.svg'
 import { getMaxExpandOffset } from '../methods/ast.js'
+import {
+  timelineSideDraggerSnapThresholdPx,
+  timelineSideDragLevelWidth,
+} from '../constants.js'
 
 export default class TimelineExpandSideDragger extends Component {
   static get propTypes() {
@@ -40,11 +44,27 @@ export default class TimelineExpandSideDragger extends Component {
 
       const mouseMove = moveEvent => {
         const delta = moveEvent.clientX - startPosition.x
-        const newOffset = constrain(
+        let newOffset = constrain(
           startPosition.offset - delta,
           0,
           getMaxExpandOffset(expandLevels)
         )
+
+        // ! snap
+        const { indentationPx, declarationPx } = timelineSideDragLevelWidth
+        for (let snappingOffset of [
+          0,
+          indentationPx,
+          indentationPx + declarationPx,
+        ]) {
+          if (
+            Math.abs(newOffset - snappingOffset) <
+            timelineSideDraggerSnapThresholdPx
+          ) {
+            newOffset = snappingOffset
+            break
+          }
+        }
 
         setTimelineOffsetBudget(newOffset)
       }

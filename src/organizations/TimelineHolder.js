@@ -4,9 +4,10 @@ import isEqual from 'react-fast-compare'
 
 import { TimelineName } from '../components/TimelineName.js'
 import LogStreamWrapperInTimeline from './LogStreamWrapperInTimeline.js'
-import TimelineExpandSlider from '../components/TimelineExpandSlider.js'
+// import TimelineExpandSlider from '../components/TimelineExpandSlider.js'
 
 import {
+  applyHighOpacityTo,
   bindableElement,
   constrain,
   getElementBounding,
@@ -31,6 +32,8 @@ import { socket } from '../global.js'
 import {
   getExpandLevels,
   getTimelineOffset,
+  getTimelineOffsets,
+  hasLeastOneExpandLevel,
   preprocessASTsToGetRegistries,
   sumRegistries,
 } from '../methods/ast.js'
@@ -306,6 +309,7 @@ export default class TimelineHolder extends Component {
             handleTimelineArea={this.handleTimelineArea}
             handleTimelineFold={this.handleTimelineFold}
             hostFunctions={hostFunctions}
+            timelineOffsetBudget={offsetBudget}
           />
           {!folded && (
             <div className="side-dragger-wrapper">
@@ -315,7 +319,7 @@ export default class TimelineHolder extends Component {
                   timelineRef={this.ref}
                 />
               )} */}
-              {hasSomeAST && (
+              {hasSomeAST && hasLeastOneExpandLevel(expandLevels) && (
                 <TimelineExpandSideDragger
                   expandLevels={expandLevels}
                   timelineOffsetBudget={offsetBudget}
@@ -464,15 +468,21 @@ const TimelineLogItemsMemo = ({
   const toFilterOutElements = filteredOutElements.length > 0
 
   // ! get offsets for each log group
-  let offsets = {}
-  Object.keys(logGroups).forEach(key => {
-    offsets[key] = getTimelineOffset(
-      logGroups[key],
-      registriesByFileName,
-      timelineOffsetBudget,
-      expandLevels
-    )
-  })
+  // let offsets = {}
+  // Object.keys(logGroups).forEach(key => {
+  //   offsets[key] = getTimelineOffset(
+  //     logGroups[key],
+  //     registriesByFileName,
+  //     timelineOffsetBudget,
+  //     expandLevels
+  //   )
+  // })
+  const offsets = getTimelineOffsets(
+    logGroups,
+    registriesByFileName,
+    timelineOffsetBudget,
+    expandLevels
+  )
 
   // ! map
   return logTimeline.map((logIdentifier, ind) => {
@@ -497,7 +507,9 @@ const TimelineLogItemsMemo = ({
         key={`${ind}-time`}
         className="timeline-log-item-wrapper"
         style={{
-          borderLeft: `5px solid ${logGroup.groupColor}`,
+          borderLeft: `${pxWrap(
+            offsets[logIdentifier.groupId]
+          )} solid ${applyHighOpacityTo(logGroup.groupColor)}`,
         }}
         // data-id={logObj.id}
       >
@@ -516,7 +528,21 @@ const TimelineLogItemsMemo = ({
           timelineOffset={offsets[logIdentifier.groupId]}
         />
 
-        <span className="timeline-timestamp">
+        {/* <div
+          className="pseudo-expander"
+          style={{
+            paddingLeft: pxWrap(
+              timelineOffsetBudget - offsets[logIdentifier.groupId]
+            ),
+          }}
+        ></div> */}
+
+        <span
+          className="timeline-timestamp"
+          // style={{
+          //   paddingLeft: pxWrap(offsets[logIdentifier.groupId]),
+          // }}
+        >
           {Math.round(logObj.timestamps[0].now)}
         </span>
       </div>
