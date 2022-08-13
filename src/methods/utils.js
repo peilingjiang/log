@@ -33,8 +33,10 @@ export const arrayFirst = (arr, n = 1) => {
 }
 
 export const preventEventWrapper = (e, callback) => {
-  e.preventDefault()
-  e.stopPropagation()
+  if (e && e.preventDefault) {
+    e.preventDefault()
+    e.stopPropagation()
+  }
   callback()
 }
 
