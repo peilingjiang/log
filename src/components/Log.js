@@ -35,6 +35,10 @@ export default class Log extends Component {
       view: logViewInterface.isRequired,
       choosingCenterStaged: PropTypes.bool.isRequired,
       highlightChanged: PropTypes.bool.isRequired,
+      ////
+      logStats: PropTypes.object.isRequired,
+      useStats: PropTypes.bool.isRequired,
+      // toggleUseStats: PropTypes.func.isRequired, // in streamFunctions
     }
   }
 

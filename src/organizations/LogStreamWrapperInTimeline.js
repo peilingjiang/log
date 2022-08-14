@@ -4,7 +4,7 @@ import isEqual from 'react-fast-compare'
 import LogStream from './LogStream.js'
 import Log from '../components/Log.js'
 import ShapeLog from '../components/ShapeLog.js'
-import { canUseShape } from '../methods/utils.js'
+import { canUseShape, getLogStats } from '../methods/utils.js'
 import { _H } from '../constants.js'
 import { pxWrap } from '../methods/findPosition.js'
 // import LogStreamMenu from './LogStreamMenu.js'
@@ -21,7 +21,17 @@ export default class LogStreamWrapperInTimeline extends LogStream {
       !isEqual(nextProps.logGroup.view, this.props.logGroup.view) ||
       !isEqual(nextProps.log, this.props.log) ||
       !isEqual(nextProps.timelineOffset, this.props.timelineOffset) ||
-      !isEqual(nextState, this.state)
+      !isEqual(nextState, this.state) ||
+      !isEqual(
+        getLogStats(
+          nextProps.logGroup.logs,
+          nextProps.logGroup.view.centerStagedId
+        ),
+        getLogStats(
+          this.props.logGroup.logs,
+          this.props.logGroup.view.centerStagedId
+        )
+      )
     )
     // return false
   }
@@ -29,13 +39,14 @@ export default class LogStreamWrapperInTimeline extends LogStream {
   render() {
     const { expand, hovered, grabbing, current } = this.state
     const {
-      logGroup: { groupId, groupColor, format, view },
+      logGroup: { groupId, groupColor, format, view, logs },
       log,
       organization,
       hostFunctions,
     } = this.props
 
     const isShape = format === 'shape'
+    const logStats = getLogStats(logs, view.centerStagedId)
 
     return (
       <div
@@ -88,6 +99,8 @@ export default class LogStreamWrapperInTimeline extends LogStream {
               view={view}
               choosingCenterStaged={false} // TODO
               highlightChanged={false}
+              ////
+              logStats={logStats}
             />
           ) : (
             <ShapeLog
@@ -106,6 +119,9 @@ export default class LogStreamWrapperInTimeline extends LogStream {
               view={view}
               choosingCenterStaged={false} // TODO
               highlightChanged={false}
+              ////
+              logStats={logStats}
+              useStats={true}
             />
           )}
         </div>

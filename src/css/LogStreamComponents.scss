@@ -9,6 +9,7 @@
 
   background: rgba($white, $opacity-mid);
   backdrop-filter: blur($blur-xh);
+  box-shadow: 0 1px 0 0 $white;
 
   color: $black;
   font-size: $font-size-small;

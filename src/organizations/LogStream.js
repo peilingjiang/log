@@ -24,6 +24,7 @@ import {
   canUseShape,
   cloneLogGroup,
   dist,
+  getLogStats,
   idFromString,
   removeLogId,
   stringifyDOMElement,
@@ -80,6 +81,8 @@ export default class LogStream extends Component {
       ////
       useTimeline: false,
       timelineLogOrderReversed: 0,
+      ////
+      useStats: false,
     }
     this.inExternalOperation = false
 
@@ -114,6 +117,8 @@ export default class LogStream extends Component {
       setUnfoldedIds: this.setUnfoldedIds.bind(this),
       setHighlightedIds: this.setHighlightedIds.bind(this),
       setScrollView: this.setScrollView.bind(this),
+      ////
+      toggleUseStats: this.toggleUseStats.bind(this),
     }
   }
 
@@ -556,6 +561,11 @@ export default class LogStream extends Component {
     })
   }
 
+  toggleUseStats() {
+    if (this.props.organization === _T) return
+    this.setState({ useStats: !this.state.useStats })
+  }
+
   /* -------------------------------------------------------------------------- */
 
   handleMouseEnter() {
@@ -685,9 +695,10 @@ export default class LogStream extends Component {
       useTimeline,
       timelineLogOrderReversed,
       choosingCenterStaged,
+      useStats,
     } = this.state
+
     const {
-      logGroup,
       logGroup: {
         name,
         logs,
@@ -717,11 +728,16 @@ export default class LogStream extends Component {
     let logElements = []
     let orderReversed = logs.length
 
+    ////
+    const logStats = getLogStats(logs, view.centerStagedId)
+    ////
+
     if (!useTimeline) {
       logElements = logs.map(log => {
         // to add a valid shape log, the stream must be a shape (format)
         // and this log must have a valid unit
-        return !isShape || !canUseShape(log, view.centerStagedId) ? (
+        const useShapeLog = isShape && canUseShape(log, view.centerStagedId)
+        return !useShapeLog ? (
           <Log
             key={`${log.id} ${log.timestamps.at(-1).now}`}
             groupId={groupId}
@@ -738,6 +754,9 @@ export default class LogStream extends Component {
             view={view}
             choosingCenterStaged={choosingCenterStaged}
             highlightChanged={useTimeline}
+            ////
+            logStats={logStats}
+            useStats={useStats}
           />
         ) : (
           <ShapeLog
@@ -757,11 +776,14 @@ export default class LogStream extends Component {
             view={view}
             choosingCenterStaged={false}
             highlightChanged={useTimeline}
+            ////
+            logStats={logStats}
+            useStats={useStats}
           />
         )
       })
     } else {
-      // ! timeline!
+      // ! timeline slider |-------||-------|
       const log = logs[logs.length - timelineLogOrderReversed - 1]
 
       logElements =
@@ -783,6 +805,9 @@ export default class LogStream extends Component {
             view={view}
             choosingCenterStaged={choosingCenterStaged}
             highlightChanged={useTimeline}
+            ////
+            logStats={logStats}
+            useStats={useStats}
           />
         ) : (
           <ShapeLog
@@ -802,6 +827,9 @@ export default class LogStream extends Component {
             view={view}
             choosingCenterStaged={false}
             highlightChanged={false} // TODO highlight changed?
+            ////
+            logStats={logStats}
+            useStats={useStats}
           />
         )
     }

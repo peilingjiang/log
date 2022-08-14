@@ -7,6 +7,8 @@ import { v5 as uuidv5 } from 'uuid'
 import { stackActualCallerDepth, validUnits } from '../constants.js'
 import { g } from '../global.js'
 
+export const pseudoFunc = () => {}
+
 export const getTimestamp = () => {
   return {
     now: performance.now(),
@@ -59,9 +61,11 @@ export const removeArgsDescriptions = args => {
 }
 
 export const parseCenterStagedValueFromId = (args, id) => {
-  const sequentialGetters = removeArgsDescriptions(id).split('-')
+  if (id.length === 0) return [args, id]
 
+  const sequentialGetters = removeArgsDescriptions(id).split('-')
   let progressId = ''
+
   for (const getterInd in sequentialGetters) {
     const getter = sequentialGetters[getterInd]
     const parsedGetter = assertNumber(getter) ? parseInt(getter) : getter
@@ -81,6 +85,11 @@ export const parseCenterStagedValueFromId = (args, id) => {
 
 export const constrain = (x, min, max) => {
   return Math.max(min, Math.min(x, max))
+}
+
+export const map = (x, inMin, inMax, outMin, outMax) => {
+  if (inMin === inMax) return outMax
+  return ((x - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin
 }
 
 export const dist = (x1, y1, x2, y2) => {
@@ -352,9 +361,9 @@ export const canUseShape = (log, centerStagedId = '') => {
   const rawArgs = log.args
 
   let args
-  if (centerStagedId.length)
+  if (centerStagedId.length) {
     args = [parseCenterStagedValueFromId(rawArgs, centerStagedId)[0]]
-  else args = rawArgs
+  } else args = rawArgs
 
   if (args.length !== 1) return false
   // return (
@@ -365,4 +374,33 @@ export const canUseShape = (log, centerStagedId = '') => {
     assertNumber(args[0]) ||
     (assertString(args[0]) && _checkIfContainsValidUnit(args[0]))
   )
+}
+
+export const getLogStats = (logs, centerStagedId = '') => {
+  let min = Infinity,
+    max = -Infinity,
+    sum = 0,
+    count = 0
+
+  logs.map(log => {
+    if (canUseShape(log, centerStagedId)) {
+      let arg
+      if (centerStagedId.length) {
+        arg = parseCenterStagedValueFromId(log.args, centerStagedId)[0]
+      } else arg = log.args[0]
+
+      min = Math.min(min, arg)
+      max = Math.max(max, arg)
+      sum += arg
+      count++
+    }
+  })
+
+  return {
+    min,
+    max,
+    sum,
+    count,
+    average: sum / count,
+  }
 }

@@ -14,11 +14,13 @@ import {
   assertNumber,
   constrain,
   hexAndOpacityToRGBA,
+  map,
   parseCenterStagedValueFromId,
 } from '../methods/utils.js'
 // import { Formatter } from '../formatter/Main.js'
 
 import Arrow from '../icons/arrow.svg'
+import { pxTrim } from '../methods/findPosition.js'
 
 export default class ShapeLog extends Log {
   render() {
@@ -30,7 +32,10 @@ export default class ShapeLog extends Log {
       orientation,
       organization,
       hostFunctions,
+      streamFunctions,
       view: { centerStagedId },
+      logStats: { min, max, average },
+      useStats,
     } = this.props
 
     /* -------------------------------------------------------------------------- */
@@ -56,12 +61,18 @@ export default class ShapeLog extends Log {
           }
         : {}
 
-    const opacity = constrain(
-      _rootStyles.opacityDefault -
-        _config.logStreamHistoryRenderOpacityUnitDecrease * orderReversed,
-      0.5,
-      1
-    )
+    const opacity = expandedLog
+      ? 1
+      : constrain(
+          _rootStyles.opacityDefault -
+            _config.logStreamHistoryRenderOpacityUnitDecrease * orderReversed,
+          0.5,
+          1
+        )
+
+    const shapeValue = useStats
+      ? `${_rootStyles.maxLogWidthRem * map(pxTrim(value), min, max, 0, 1)}rem`
+      : value
 
     return (
       (expandedLog || orderReversed < history + 1) && (
@@ -75,13 +86,16 @@ export default class ShapeLog extends Log {
               color === _DEF
                 ? hexAndOpacityToRGBA(_rootStyles.darkGrey, opacity)
                 : hexAndOpacityToRGBA(color, opacity),
-            width: isHorizontal ? value : _config.shapeRectWidth,
-            height: isHorizontal ? _config.shapeRectWidth : value,
+            width: isHorizontal ? shapeValue : _config.shapeRectWidth,
+            height: isHorizontal ? _config.shapeRectWidth : shapeValue,
           }}
           data-id={id}
         >
           <p className="shape-log-note" style={noteStyle}>
-            <span>{value}</span>{' '}
+            <span
+              className="shape-log-value"
+              onClick={streamFunctions.toggleUseStats}
+            >{`${useStats ? '[%] ' : ''}${value}`}</span>{' '}
             {isAugmented ? (
               <span
                 className="log-body-timestamp shape-timestamp cursor-pointer font-fixed-width"

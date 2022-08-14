@@ -231,6 +231,11 @@
 
       padding: 0 $padding-xs;
 
+      .shape-log-value {
+        cursor: pointer;
+        white-space: nowrap;
+      }
+
       span {
         @include font-fixed;
 

@@ -83,6 +83,36 @@ export default class LogStreamMenu extends Component {
 
     const specialItems = []
 
+    if (logsCount > 2) {
+      specialItems.push(
+        useTimeline ? (
+          <p
+            key={'menu-use-timeline'}
+            className={`stream-menu-item special-menu-item${
+              shouldDisable ? ' disabled' : ''
+            }`}
+            onMouseDown={toggleUseTimeline}
+            title="view the stream in stack view"
+          >
+            <Stack />
+            <span>stack</span>
+          </p>
+        ) : (
+          <p
+            key={'menu-use-timeline'}
+            className={`stream-menu-item special-menu-item${
+              shouldDisable ? ' disabled' : ''
+            }`}
+            onMouseDown={toggleUseTimeline}
+            title="view the stream with a timeline slider"
+          >
+            <TimelineSlider />
+            <span>timeline</span>
+          </p>
+        )
+      )
+    }
+
     if (useShape) {
       specialItems.push(
         <p
@@ -131,36 +161,6 @@ export default class LogStreamMenu extends Component {
     //   )
     // }
 
-    if (logsCount > 2) {
-      specialItems.push(
-        useTimeline ? (
-          <p
-            key={'menu-use-timeline'}
-            className={`stream-menu-item special-menu-item${
-              shouldDisable ? ' disabled' : ''
-            }`}
-            onMouseDown={toggleUseTimeline}
-            title="view the stream in stack view"
-          >
-            <Stack />
-            <span>stack</span>
-          </p>
-        ) : (
-          <p
-            key={'menu-use-timeline'}
-            className={`stream-menu-item special-menu-item${
-              shouldDisable ? ' disabled' : ''
-            }`}
-            onMouseDown={toggleUseTimeline}
-            title="view the stream with a timeline slider"
-          >
-            <TimelineSlider />
-            <span>timeline</span>
-          </p>
-        )
-      )
-    }
-
     if (allowingCenterStaged) {
       specialItems.push(
         <p
@@ -205,17 +205,19 @@ export default class LogStreamMenu extends Component {
 
     return (
       <div className={`hyper-log-stream-menu stream-menu-${orientation}`}>
-        <p
-          className={`stream-menu-item menu-expand-item${
-            useTimeline ? ' disabled' : ''
-          }`}
-          onClick={expandStream}
-          title="expand"
-        >
-          {/* {expand ? <Fold /> : <Expand />} {expand ? 'fold' : 'expand'} */}
-          {expand ? <Fold /> : <Expand />}
-          <span>{expand ? 'fold' : 'expand'}</span>
-        </p>
+        {!useTimeline && (
+          <p
+            className={`stream-menu-item menu-expand-item${
+              useTimeline ? ' disabled' : ''
+            }`}
+            onClick={expandStream}
+            title="expand"
+          >
+            {/* {expand ? <Fold /> : <Expand />} {expand ? 'fold' : 'expand'} */}
+            {expand ? <Fold /> : <Expand />}
+            <span>{expand ? 'fold' : 'expand'}</span>
+          </p>
+        )}
 
         {/* {isAugmented && (
           <p
