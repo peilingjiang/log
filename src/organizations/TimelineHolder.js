@@ -521,7 +521,9 @@ const TimelineLogItemsMemo = ({
         className="timeline-log-item-wrapper"
         style={{
           borderLeft: `${pxWrap(
-            offsets[logIdentifier.groupId]
+            logIdentifier.groupId in offsets
+              ? offsets[logIdentifier.groupId]
+              : 0
           )} solid ${applyOpacityTo(logGroup.groupColor, 0.25)}`,
         }}
         // data-id={logObj.id}

@@ -243,7 +243,7 @@ export const getExpandLevels = files => {
   for (const fileName in files) {
     if (
       files[fileName].topLevelDeclarations.length > 1 ||
-      Object.keys(files).length > 0
+      Object.keys(files).length > 1
     )
       hasMultipleDeclarations = true
     if (files[fileName].maxDepth > files[fileName].minDepth)
@@ -271,7 +271,7 @@ export const getMaxExpandOffset = expandLevels => {
 }
 
 export const hasLeastOneExpandLevel = expandLevels => {
-  const { indentation, declarations, files } = expandLevels
+  const { indentation, declarations } = expandLevels
   return indentation || declarations
 }
 

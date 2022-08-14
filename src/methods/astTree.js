@@ -1,6 +1,7 @@
 export const proceedDeeper = instance => {
   const type = instance.type
 
+  /* -------------------------------------------------------------------------- */
   if (type.includes('Declaration')) {
     switch (type) {
       case 'ImportDeclaration':
@@ -9,11 +10,19 @@ export const proceedDeeper = instance => {
         return instance.body
       case 'FunctionDeclaration':
         return instance.body
+      case 'VariableDeclaration':
+        return instance.declarations
       default:
         return instance.declaration
     }
   }
 
+  /* -------------------------------------------------------------------------- */
+  if (type.includes('Declarator')) {
+    return instance.init.body
+  }
+
+  /* -------------------------------------------------------------------------- */
   if (type.includes('Method')) {
     switch (type) {
       case 'MethodDefinition':
@@ -23,6 +32,7 @@ export const proceedDeeper = instance => {
     }
   }
 
+  /* -------------------------------------------------------------------------- */
   if (type.includes('Statement')) {
     switch (type) {
       case 'ExpressionStatement':
@@ -31,6 +41,7 @@ export const proceedDeeper = instance => {
     return instance.body
   }
 
+  /* -------------------------------------------------------------------------- */
   if (type.includes('Expression')) {
     switch (type) {
       case 'CallExpression':
@@ -44,14 +55,17 @@ export const proceedDeeper = instance => {
     return instance.body
   }
 
+  /* -------------------------------------------------------------------------- */
   if (type.includes('Body')) {
     return instance.body
   }
 
+  /* -------------------------------------------------------------------------- */
   if (type.includes('Identifier')) {
     return
   }
 
+  // !
   console.error(
     '[HyperLog Dev] unsupported ast instance',
     instance,

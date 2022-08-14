@@ -58,11 +58,13 @@ export default class TimelineExpandSideDragger extends Component {
 
         // ! snap
         const { indentationPx, declarationPx } = timelineSideDragLevelWidth
-        for (let snappingOffset of [
-          0,
-          indentationPx,
-          indentationPx + declarationPx,
-        ]) {
+
+        const possibleLevels = [0]
+        if (expandLevels.indentation) possibleLevels.push(indentationPx)
+        if (expandLevels.declaration)
+          possibleLevels.push(indentationPx + declarationPx)
+
+        for (let snappingOffset of possibleLevels) {
           if (
             Math.abs(newOffset - snappingOffset) <
             timelineSideDraggerSnapThresholdPx
@@ -90,14 +92,20 @@ export default class TimelineExpandSideDragger extends Component {
   }
 
   handleClick(e) {
-    const { timelineOffsetBudget, setTimelineOffsetBudget } = this.props
+    const { expandLevels, timelineOffsetBudget, setTimelineOffsetBudget } =
+      this.props
 
     preventEventWrapper(e, () => {
       // this.setState({ active: true })
 
       let targetBudget
       const { indentationPx, declarationPx } = timelineSideDragLevelWidth
-      const budgetCutoffs = [indentationPx, indentationPx + declarationPx]
+
+      const budgetCutoffs = [0]
+      if (expandLevels.indentation) budgetCutoffs.push(indentationPx)
+      if (expandLevels.declaration)
+        budgetCutoffs.push(indentationPx + declarationPx)
+
       for (const c of budgetCutoffs)
         if (c > timelineOffsetBudget) {
           targetBudget = c
