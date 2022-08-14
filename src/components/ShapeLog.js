@@ -12,6 +12,7 @@ import {
 } from '../constants.js'
 import {
   assertNumber,
+  constrain,
   hexAndOpacityToRGBA,
   parseCenterStagedValueFromId,
 } from '../methods/utils.js'
@@ -55,6 +56,13 @@ export default class ShapeLog extends Log {
           }
         : {}
 
+    const opacity = constrain(
+      _rootStyles.opacityDefault -
+        _config.logStreamHistoryRenderOpacityUnitDecrease * orderReversed,
+      0.5,
+      1
+    )
+
     return (
       (expandedLog || orderReversed < history + 1) && (
         <div
@@ -65,11 +73,8 @@ export default class ShapeLog extends Log {
             ...logBaseStyles(orderReversed, expandedLog),
             background:
               color === _DEF
-                ? hexAndOpacityToRGBA(
-                    _rootStyles.darkGrey,
-                    _rootStyles.opacityDefault
-                  )
-                : hexAndOpacityToRGBA(color, _rootStyles.opacityDefault),
+                ? hexAndOpacityToRGBA(_rootStyles.darkGrey, opacity)
+                : hexAndOpacityToRGBA(color, opacity),
             width: isHorizontal ? value : _config.shapeRectWidth,
             height: isHorizontal ? _config.shapeRectWidth : value,
           }}

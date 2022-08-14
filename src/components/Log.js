@@ -101,7 +101,7 @@ export default class Log extends Component {
           opacity={constrain(
             1 -
               _config.logStreamHistoryRenderOpacityUnitDecrease * orderReversed,
-            0,
+            0.5,
             1
           )}
           orderReversed={orderReversed}

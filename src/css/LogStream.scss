@@ -64,9 +64,9 @@
 
     border-top: 2px solid $grey;
     border-bottom: 2px solid $grey;
-    background: $light;
+    background: $light-grey;
 
-    @include scrollbar($scrollbar-width, $light, $grey, $dark-grey);
+    @include scrollbar($scrollbar-width, $light-grey, $grey, $dark-grey);
   }
 
   &.stream-expand:not(.shape-stream) .logs-wrapper {

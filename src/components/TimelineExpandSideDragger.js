@@ -61,7 +61,7 @@ export default class TimelineExpandSideDragger extends Component {
 
         const possibleLevels = [0]
         if (expandLevels.indentation) possibleLevels.push(indentationPx)
-        if (expandLevels.declaration)
+        if (expandLevels.declarations)
           possibleLevels.push(indentationPx + declarationPx)
 
         for (let snappingOffset of possibleLevels) {
@@ -103,7 +103,7 @@ export default class TimelineExpandSideDragger extends Component {
 
       const budgetCutoffs = [0]
       if (expandLevels.indentation) budgetCutoffs.push(indentationPx)
-      if (expandLevels.declaration)
+      if (expandLevels.declarations)
         budgetCutoffs.push(indentationPx + declarationPx)
 
       for (const c of budgetCutoffs)

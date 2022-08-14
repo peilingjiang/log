@@ -14,7 +14,9 @@
   overflow: hidden;
   pointer-events: initial;
 
-  background: rgba($white, $opacity-high);
+  &:not(.hyper-shape-log) {
+    background: rgba($white, $opacity-high);
+  }
   backdrop-filter: blur($blur-high);
 
   * {

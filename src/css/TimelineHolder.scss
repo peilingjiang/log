@@ -176,7 +176,7 @@
       margin: 0 0 0 $padding-xs;
       // margin: 0;
 
-      .hyper-log {
+      .hyper-log:not(.hyper-shape-log) {
         background: $white !important;
         backdrop-filter: none;
       }

@@ -107,7 +107,7 @@ export default class LogBody extends Component {
         ref={this.bodyRef}
         className="hyper-log-body"
         style={{
-          opacity: opacity,
+          opacity: expandedLog ? 1 : opacity,
           background:
             color === _DEF
               ? undefined
