@@ -402,10 +402,13 @@ export const getTimelineOffsets = (
   budget,
   expandLevels
 ) => {
-  if (budget === 0 || getMaxExpandOffset(expandLevels) === 0) return 0
-
   const { indentationPx, declarationPx, filePx } = timelineSideDragLevelWidth
   const offsets = {}
+  let indentationOffsets = {}
+  let declarationOffsets = {}
+
+  if (budget === 0 || getMaxExpandOffset(expandLevels) === 0)
+    return { offsets, indentationOffsets, declarationOffsets }
 
   // ! indentation
 
@@ -430,6 +433,7 @@ export const getTimelineOffsets = (
 
       offsets[logGroup.groupId] +=
         eachLevelOffset * (logGroupRegistry.depth - extremeDepthsOfAll.min)
+      indentationOffsets = { ...offsets }
     }
   }
 
@@ -447,13 +451,15 @@ export const getTimelineOffsets = (
       budgetForDeclarations / (allDeclarations.length - 1)
 
     for (const logGroupId in logGroups) {
-      offsets[logGroupId] +=
+      const ind =
         eachDeclarationOffset *
         _getDeclarationByGroupId(allDeclarations, logGroupId).index
+      offsets[logGroupId] += ind
+      declarationOffsets[logGroupId] = ind
     }
   }
 
-  return offsets
+  return { offsets, indentationOffsets, declarationOffsets }
 }
 
 /* -------------------------------------------------------------------------- */

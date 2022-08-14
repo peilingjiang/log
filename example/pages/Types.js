@@ -10,24 +10,24 @@ export default class Types extends Component {
   componentDidMount() {
     // console.log('Start logging...')
 
-    // log(undefined, null)
+    log(undefined, null)
 
-    // log(['a', ['b', ['c', ['d', ['e']]]]])
+    log(['a', ['b', ['c', ['d', ['e']]]]])
 
-    // log(
-    //   1,
-    //   'log',
-    //   [1, 'log'],
-    //   [
-    //     1,
-    //     'log',
-    //     [
-    //       "My name is James. What's your name? How are you feeling today?",
-    //       true,
-    //       234,
-    //     ],
-    //   ]
-    // )
+    log(
+      1,
+      'log',
+      [1, 'log'],
+      [
+        1,
+        'log',
+        [
+          "My name is James. What's your name? How are you feeling today?",
+          true,
+          234,
+        ],
+      ]
+    )
 
     testAnotherTopLevelDeclaration()
 
@@ -40,10 +40,10 @@ export default class Types extends Component {
       }
     }
 
-    // for (let i = 0; i < 20; i++)
-    //   log(Math.round(Math.random() * 200)).e(
-    //     document.getElementById('home-link')
-    //   )
+    for (let i = 0; i < 20; i++)
+      log(Math.round(Math.random() * 200)).e(
+        document.getElementById('home-link')
+      )
   }
 
   render() {

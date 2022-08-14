@@ -10,6 +10,7 @@ export const g = Object.seal({
   useSourceMaps: true,
   directionDown: true,
   defaultOrganization: _Time,
+  vsLogPort: 2022,
 })
 
 // ! setLog
@@ -21,6 +22,7 @@ export const g = Object.seal({
     g.useSourceMaps = options.useSourceMaps
     g.directionDown = options.directionDown
     g.defaultOrganization = options.defaultOrganization
+    g.vsLogPort = options.vsLogPort
   }
 })()
 
@@ -31,7 +33,7 @@ export const g = Object.seal({
 // const host = window.location.hostname
 const host = 'localhost'
 
-export const socket = io.connect(`http://${host}:2022/`, {
+export const socket = io.connect(`http://${host}:${g.vsLogPort}/`, {
   reconnection: true,
   reconnectionDelay: 1000,
   reconnectionDelayMax: 5000,

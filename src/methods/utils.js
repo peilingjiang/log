@@ -330,8 +330,8 @@ export const randomColor = () => {
   return c.toHex8String()
 }
 
-export const applyHighOpacityTo = rgbaHex => {
-  return tinycolor(rgbaHex).setAlpha(0.15).toRgbString()
+export const applyOpacityTo = (rgbaHex, opacity) => {
+  return tinycolor(rgbaHex).setAlpha(opacity).toRgbString()
 }
 
 /* -------------------------------------------------------------------------- */

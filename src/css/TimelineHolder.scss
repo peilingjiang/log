@@ -160,7 +160,7 @@
     flex-wrap: nowrap;
 
     // overflow-y: scroll;
-    padding: 0 0 $padding-xs 0;
+    padding: $padding-large 0 $padding-xs 0;
   }
 
   .timeline-log-item-wrapper {
@@ -175,6 +175,10 @@
       flex-shrink: 0;
       padding: $padding-xxs 0 $padding-xxs $padding-xs;
       margin: 0 0 0 $padding-xs;
+
+      .hyper-log {
+        background: $white;
+      }
     }
 
     .pseudo-expander {
@@ -192,6 +196,23 @@
       // flex-grow: 1;
       flex-shrink: 0;
       text-align: right;
+    }
+  }
+
+  /* -------------------------------------------------------------------------- */
+
+  .timeline-alignment-box {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    z-index: -1;
+
+    &.indentation-box {
+      border-left: $padding-xxs solid $light;
+    }
+
+    &.declaration-box {
+      border-left: $padding-xs solid $light-grey;
     }
   }
 }

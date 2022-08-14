@@ -160,8 +160,8 @@ export const timelineEachExpandLevelSliderWidthPx = 20
 export const timelineSideDraggerSnapThresholdPx = 20
 
 export const timelineSideDragLevelWidth = {
-  indentationPx: 80,
-  declarationPx: 300,
+  indentationPx: 50,
+  declarationPx: 600,
   filePx: 250,
 }
 

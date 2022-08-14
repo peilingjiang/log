@@ -11,6 +11,7 @@ import {
   logViewInterface,
   _config,
   _rootStyles,
+  _T,
 } from '../constants.js'
 import tinycolor from 'tinycolor2'
 
@@ -114,7 +115,6 @@ export const logBaseStyles = (orderReversed, expanded) => ({
   // zIndex: 1000 - orderReversed,
   opacity: expanded
     ? undefined
-    : _rootStyles.opacityDefault -
-      _config.logStreamHistoryRenderOpacityUnitDecrease * orderReversed,
+    : 1 - _config.logStreamHistoryRenderOpacityUnitDecrease * orderReversed,
   zIndex: 99999 - orderReversed,
 })

@@ -33,7 +33,6 @@ export default class LogStreamWrapperInTimeline extends LogStream {
       log,
       organization,
       hostFunctions,
-      timelineOffset,
     } = this.props
 
     const isShape = format === 'shape'

@@ -7,7 +7,7 @@ import LogStreamWrapperInTimeline from './LogStreamWrapperInTimeline.js'
 // import TimelineExpandSlider from '../components/TimelineExpandSlider.js'
 
 import {
-  applyHighOpacityTo,
+  applyOpacityTo,
   bindableElement,
   constrain,
   getElementBounding,
@@ -23,6 +23,7 @@ import {
   timelineDisableAutoScrollThresholdPx,
   timelineGroupWiseOffsetPx,
   timelineSelectionAreaOffsetButterPx,
+  timelineSideDragLevelWidth,
   _Time,
 } from '../constants.js'
 import { getLog } from '../methods/getLog.js'
@@ -280,6 +281,14 @@ export default class TimelineHolder extends Component {
       }
     }
 
+    const { offsets, indentationOffsets, declarationOffsets } =
+      getTimelineOffsets(
+        logGroups,
+        registriesByFileName,
+        offsetBudget,
+        expandLevels
+      )
+
     return (
       <>
         {enableFilterArea && (
@@ -344,9 +353,16 @@ export default class TimelineHolder extends Component {
                     ////
                     filteredOutElements={filteredOutElements}
                     ////
-                    registriesByFileName={registriesByFileName}
-                    expandLevels={expandLevels}
-                    timelineOffsetBudget={offsetBudget}
+                    offsets={offsets}
+                    // registriesByFileName={registriesByFileName}
+                    // expandLevels={expandLevels}
+                    // timelineOffsetBudget={offsetBudget}
+                  />
+                  <AlignmentBoxes
+                    indentationOffsets={indentationOffsets}
+                    declarationOffsets={declarationOffsets}
+                    budget={offsetBudget}
+                    scrollTop={this.scrollWrapperRef}
                   />
                 </div>
               </div>
@@ -357,6 +373,8 @@ export default class TimelineHolder extends Component {
     )
   }
 }
+
+/* -------------------------------------------------------------------------- */
 
 const TimelineLogItemsMemo = ({
   logGroups,
@@ -369,9 +387,10 @@ const TimelineLogItemsMemo = ({
   handleStreamDragAround,
   filteredOutElements,
   ////
-  registriesByFileName,
-  expandLevels,
-  timelineOffsetBudget,
+  offsets,
+  // registriesByFileName,
+  // expandLevels,
+  // timelineOffsetBudget,
 }) => {
   // Object.keys(logGroups)
   //   .map(key => {
@@ -477,12 +496,6 @@ const TimelineLogItemsMemo = ({
   //     expandLevels
   //   )
   // })
-  const offsets = getTimelineOffsets(
-    logGroups,
-    registriesByFileName,
-    timelineOffsetBudget,
-    expandLevels
-  )
 
   // ! map
   return logTimeline.map((logIdentifier, ind) => {
@@ -509,7 +522,7 @@ const TimelineLogItemsMemo = ({
         style={{
           borderLeft: `${pxWrap(
             offsets[logIdentifier.groupId]
-          )} solid ${applyHighOpacityTo(logGroup.groupColor)}`,
+          )} solid ${applyOpacityTo(logGroup.groupColor, 0.25)}`,
         }}
         // data-id={logObj.id}
       >
@@ -525,7 +538,7 @@ const TimelineLogItemsMemo = ({
           organization={_Time}
           hostFunctions={hostFunctions}
           ////
-          timelineOffset={offsets[logIdentifier.groupId]}
+          // timelineOffset={offsets[logIdentifier.groupId]}
         />
 
         {/* <div
@@ -562,9 +575,71 @@ TimelineLogItemsMemo.propTypes = {
   filteredOutElements: PropTypes.arrayOf(PropTypes.instanceOf(Element))
     .isRequired,
   ////
-  registriesByFileName: PropTypes.object.isRequired,
-  expandLevels: PropTypes.object.isRequired,
-  timelineOffsetBudget: PropTypes.number.isRequired,
+  offsets: PropTypes.object.isRequired,
+  // registriesByFileName: PropTypes.object.isRequired,
+  // expandLevels: PropTypes.object.isRequired,
+  // timelineOffsetBudget: PropTypes.number.isRequired,
 }
 
 const TimelineLogItems = memo(TimelineLogItemsMemo, isEqual)
+
+/* -------------------------------------------------------------------------- */
+
+const AlignmentBoxes = ({
+  indentationOffsets,
+  declarationOffsets,
+  budget,
+  scrollRef,
+}) => {
+  const { indentationPx, declarationPx } = timelineSideDragLevelWidth
+
+  const indentationBoxes = Object.keys(indentationOffsets).map(
+    (groupId, ind) => {
+      const offset =
+        indentationOffsets[groupId] +
+        (declarationOffsets[groupId] ? declarationOffsets[groupId] : 0)
+
+      return (
+        <div
+          key={`indentation-${ind}`}
+          className="timeline-alignment-box indentation-box"
+          style={{
+            // top: pxWrap(scrollTop),
+            left: pxWrap(offset),
+            opacity: constrain(budget / indentationPx, 0, 1),
+          }}
+        ></div>
+      )
+    }
+  )
+
+  const declarationBoxes = [...new Set(Object.values(declarationOffsets))].map(
+    (offset, ind) => {
+      return (
+        <div
+          key={`declaration-${ind}`}
+          className="timeline-alignment-box declaration-box"
+          style={{
+            // top: pxWrap(scrollTop),
+            left: pxWrap(offset),
+            opacity: constrain((budget - indentationPx) / declarationPx, 0, 1),
+          }}
+        ></div>
+      )
+    }
+  )
+
+  return (
+    <>
+      {indentationBoxes}
+      {declarationBoxes}
+    </>
+  )
+}
+
+AlignmentBoxes.propTypes = {
+  indentationOffsets: PropTypes.object.isRequired,
+  declarationOffsets: PropTypes.object.isRequired,
+  budget: PropTypes.number.isRequired,
+  scrollRef: PropTypes.object.isRequired,
+}

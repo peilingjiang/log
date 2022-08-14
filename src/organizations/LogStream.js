@@ -60,7 +60,7 @@ export default class LogStream extends Component {
       hostFunctions: PropTypes.object.isRequired,
       ////
       // for timeline single-log streams
-      timelineOffset: PropTypes.number,
+      // timelineOffset: PropTypes.number,
       // registriesByFileName: PropTypes.object,
       // expandedLevels: PropTypes.object,
       // timelineOffsetBudget: PropTypes.number,
