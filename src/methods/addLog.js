@@ -26,10 +26,8 @@ import {
   getObjectIds,
   getTimestamp,
   idFromString,
-  parseStack,
   randomColor,
   stringifyDOMElement,
-  _getStacks,
 } from './utils.js'
 
 export const newLog = (
@@ -85,7 +83,13 @@ export const newLog = (
 \___/____/\________/\________/\________/\________/\________/  
 */
 
-export const addLog = (logHost, args, element = null, requests = {}) => {
+export const addLog = (
+  logHost,
+  stackParser,
+  args,
+  element = null,
+  requests = {}
+) => {
   // ! do not do anything when paused
   if (logHost.state.logPaused) return
 
@@ -95,7 +99,7 @@ export const addLog = (logHost, args, element = null, requests = {}) => {
   if (g.preserveConsole) window.console.log(...args)
 
   // HyperLog
-  parseStack(_getStacks(logHost.state.logGroups), parsedStack => {
+  stackParser.push(args, new Error(), parsedStack => {
     // add log to logHost
     logHost.setState(prevState => {
       // ! Access requests in setState only

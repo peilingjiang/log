@@ -25,6 +25,7 @@ export default class LogBody extends Component {
       color: PropTypes.string.isRequired,
       unit: PropTypes.string,
       ////
+      opacity: PropTypes.number.isRequired,
       orderReversed: PropTypes.number.isRequired,
       expandedLog: PropTypes.bool.isRequired,
       ////
@@ -87,6 +88,7 @@ export default class LogBody extends Component {
       stack: { file, line },
       color,
       unit,
+      opacity,
       // orderReversed,
       expandedLog,
       hostFunctions,
@@ -105,6 +107,7 @@ export default class LogBody extends Component {
         ref={this.bodyRef}
         className="hyper-log-body"
         style={{
+          opacity: opacity,
           background:
             color === _DEF
               ? undefined

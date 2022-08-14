@@ -14,6 +14,9 @@
   overflow: hidden;
   pointer-events: initial;
 
+  background: rgba($white, $opacity-high);
+  backdrop-filter: blur($blur-high);
+
   * {
     pointer-events: initial;
   }
@@ -31,7 +34,6 @@
     overflow: visible;
 
     .hyper-log-body {
-      // background: rgba($purple, $opacity-mid);
       padding: $padding-small !important;
       overflow: hidden !important;
       scrollbar-width: none !important;
@@ -45,10 +47,6 @@
         width: 0 !important;
       }
     }
-  }
-
-  &.hyper-log-in-timeline {
-    background: $white;
   }
 
   // &.log-expand {
@@ -112,8 +110,8 @@
   padding: $padding-small;
   overflow-wrap: break-word;
 
-  background: rgba($light-grey, $opacity-default);
-  // backdrop-filter: blur(5px);
+  background: $light;
+  // background: rgba($light-grey, $opacity-default);
 
   // user-select: all;
   // &:focus {

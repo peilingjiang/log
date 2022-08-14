@@ -8,6 +8,8 @@
   gap: $padding-xs;
 
   background: rgba($white, $opacity-mid);
+  backdrop-filter: blur($blur-xh);
+
   color: $black;
   font-size: $font-size-small;
   margin: 0;

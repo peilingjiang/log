@@ -10,6 +10,7 @@ import { _Aug, _Time } from './constants.js'
 import { g } from './global.js'
 import { clearAllOutlines } from './methods/attachElements.js'
 import { highlightElement } from './methods/highlight.js'
+import { StackParser } from './methods/stackParser.js'
 
 export default class LogHost extends Component {
   constructor(props) {
@@ -42,6 +43,8 @@ export default class LogHost extends Component {
     }
 
     this.loggedCounter = 0
+
+    this.stackParser = new StackParser()
   }
 
   componentDidMount() {
@@ -77,6 +80,10 @@ export default class LogHost extends Component {
 
   componentWillUnmount() {
     window.removeEventListener('resize', this._resizeHandler)
+    this.setState({
+      logGroups: {},
+      logTimeline: [],
+    })
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -119,7 +126,7 @@ export default class LogHost extends Component {
     // window.log
     window.log = (...args) => {
       return new HyperLog(this, args, requests => {
-        addLog(this, args, null, requests)
+        addLog(this, this.stackParser, args, null, requests)
       })
     }
 

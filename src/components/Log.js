@@ -14,6 +14,7 @@ import {
   _T,
 } from '../constants.js'
 import tinycolor from 'tinycolor2'
+import { constrain } from '../methods/utils.js'
 
 export default class Log extends Component {
   static get propTypes() {
@@ -97,6 +98,12 @@ export default class Log extends Component {
           color={color}
           unit={unit}
           ////
+          opacity={constrain(
+            1 -
+              _config.logStreamHistoryRenderOpacityUnitDecrease * orderReversed,
+            0,
+            1
+          )}
           orderReversed={orderReversed}
           expandedLog={expandedLog}
           hostFunctions={hostFunctions}
@@ -113,8 +120,8 @@ export default class Log extends Component {
 
 export const logBaseStyles = (orderReversed, expanded) => ({
   // zIndex: 1000 - orderReversed,
-  opacity: expanded
-    ? undefined
-    : 1 - _config.logStreamHistoryRenderOpacityUnitDecrease * orderReversed,
+  // opacity: expanded
+  //   ? undefined
+  //   : 1 - _config.logStreamHistoryRenderOpacityUnitDecrease * orderReversed,
   zIndex: 99999 - orderReversed,
 })

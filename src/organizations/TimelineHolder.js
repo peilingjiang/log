@@ -585,12 +585,7 @@ const TimelineLogItems = memo(TimelineLogItemsMemo, isEqual)
 
 /* -------------------------------------------------------------------------- */
 
-const AlignmentBoxes = ({
-  indentationOffsets,
-  declarationOffsets,
-  budget,
-  scrollRef,
-}) => {
+const AlignmentBoxes = ({ indentationOffsets, declarationOffsets, budget }) => {
   const { indentationPx, declarationPx } = timelineSideDragLevelWidth
 
   const indentationBoxes = Object.keys(indentationOffsets).map(
@@ -641,5 +636,4 @@ AlignmentBoxes.propTypes = {
   indentationOffsets: PropTypes.object.isRequired,
   declarationOffsets: PropTypes.object.isRequired,
   budget: PropTypes.number.isRequired,
-  scrollRef: PropTypes.object.isRequired,
 }
