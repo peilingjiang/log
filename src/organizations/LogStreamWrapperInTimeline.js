@@ -5,7 +5,7 @@ import LogStream from './LogStream.js'
 import Log from '../components/Log.js'
 import ShapeLog from '../components/ShapeLog.js'
 import { canUseShape, getLogStats } from '../methods/utils.js'
-import { _H } from '../constants.js'
+import { _H, _rootStyles } from '../constants.js'
 import { pxWrap } from '../methods/findPosition.js'
 // import LogStreamMenu from './LogStreamMenu.js'
 // import LogStreamName from '../components/LogStreamName.js'
@@ -39,7 +39,7 @@ export default class LogStreamWrapperInTimeline extends LogStream {
   render() {
     const { expand, hovered, grabbing, current } = this.state
     const {
-      logGroup: { groupId, groupColor, format, view, logs },
+      logGroup: { level, groupId, groupColor, format, view, logs },
       log,
       organization,
       hostFunctions,
@@ -47,6 +47,13 @@ export default class LogStreamWrapperInTimeline extends LogStream {
 
     const isShape = format === 'shape'
     const logStats = getLogStats(logs, view.centerStagedId)
+
+    const rulerColor =
+      level === 'log'
+        ? groupColor
+        : level === 'error'
+        ? _rootStyles.errorRed
+        : _rootStyles.warnYellow
 
     return (
       <div
@@ -59,7 +66,7 @@ export default class LogStreamWrapperInTimeline extends LogStream {
         ////
         style={{
           // marginLeft: pxWrap(timelineOffset),
-          boxShadow: `-0.25rem 0 0 0 ${groupColor}`,
+          boxShadow: `-0.25rem 0 0 0 ${rulerColor}`,
         }}
         ////
         onMouseEnter={this.handleMouseEnter}
@@ -101,6 +108,7 @@ export default class LogStreamWrapperInTimeline extends LogStream {
               highlightChanged={false}
               ////
               logStats={logStats}
+              useStats={false}
             />
           ) : (
             <ShapeLog

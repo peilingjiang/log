@@ -4,7 +4,7 @@ import isEqual from 'react-fast-compare'
 
 import LogStream from './LogStream.js'
 import { assertExistence, cloneLogGroup } from '../methods/utils.js'
-import { findPosition, pxTrim, pxWrap } from '../methods/findPosition.js'
+import { findPosition, pxWrap } from '../methods/findPosition.js'
 import { logStreamGapToAnchorPx, _Aug, _L, _R, _T } from '../constants.js'
 import { getSnapPosition } from '../methods/snap.js'
 

@@ -182,7 +182,7 @@ export default class LogStream extends Component {
         sudoPointerElement => {
           hostRef.current.appendChild(sudoPointerElement)
         },
-        // _rootStyles.elementOutlineBound
+        // _rootStyles.brightOrange
         _rootStyles.darkGrey
       )
 
@@ -197,7 +197,7 @@ export default class LogStream extends Component {
         leaderLine.color =
           dist(...startMouse, ...moveMouse) >=
           _config.attachLineLengthThresholdPx
-            ? _rootStyles.elementOutlineBound
+            ? _rootStyles.brightOrange
             : _rootStyles.darkGrey
 
         // ! highlight the element
@@ -702,6 +702,7 @@ export default class LogStream extends Component {
       logGroup: {
         name,
         logs,
+        level,
         groupId,
         element,
         bounding,
@@ -861,7 +862,7 @@ export default class LogStream extends Component {
           isShape ? ' shape-stream' : ''
         }${orientation === _H ? ' stream-horizontal' : ' stream-vertical'}${
           hovered ? ' stream-hovered up-front' : ''
-        }${current ? ' stream-current' : ''}`}
+        }${current ? ' stream-current' : ''} level-${level}`}
         style={{
           alignItems: alignItemsValue,
           // transform: snap
@@ -877,6 +878,7 @@ export default class LogStream extends Component {
       >
         <LogStreamName
           name={name}
+          level={level}
           logGroupElement={element}
           logGroupId={groupId}
           paused={paused}

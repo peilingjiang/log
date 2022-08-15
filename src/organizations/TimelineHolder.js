@@ -24,6 +24,7 @@ import {
   timelineGroupWiseOffsetPx,
   timelineSelectionAreaOffsetButterPx,
   timelineSideDragLevelWidth,
+  _rootStyles,
   _Time,
 } from '../constants.js'
 import { getLog } from '../methods/getLog.js'
@@ -515,16 +516,24 @@ const TimelineLogItemsMemo = ({
 
     const logObj = getLog(logGroup, logIdentifier)
 
+    const level = logObj.level
+    const offsetBackgroundColor =
+      level === 'log'
+        ? logGroup.groupColor
+        : level === 'error'
+        ? _rootStyles.errorRedLight
+        : _rootStyles.warnYellowLight
+
     return (
       <div
         key={`${ind}-time`}
-        className="timeline-log-item-wrapper"
+        className={`timeline-log-item-wrapper level-${logObj.level}`}
         style={{
           borderLeft: `${pxWrap(
             logIdentifier.groupId in offsets
               ? offsets[logIdentifier.groupId]
               : 0
-          )} solid ${applyOpacityTo(logGroup.groupColor, 0.25)}`,
+          )} solid ${applyOpacityTo(offsetBackgroundColor, 0.25)}`,
         }}
         // data-id={logObj.id}
       >

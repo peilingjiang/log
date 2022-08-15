@@ -121,7 +121,8 @@
   .timeline-scroll-wrapper {
     height: 100%;
     overflow-y: scroll;
-    padding: 0 $padding-xs 0 0;
+    // padding: 0 $padding-xs 0 0;
+    padding: 0;
 
     // scroll-behavior: smooth;
 
@@ -169,6 +170,7 @@
     gap: $padding-mid;
 
     // z-index: 1;
+    padding: 0 $padding-small 0 0;
 
     .hyper-log-stream-in-time {
       flex-shrink: 0;

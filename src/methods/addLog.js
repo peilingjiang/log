@@ -9,6 +9,7 @@ import {
   _config,
   _DEF,
   _H,
+  _rootStyles,
 } from '../constants.js'
 
 import { g } from '../global.js'
@@ -26,13 +27,13 @@ import {
   getObjectIds,
   getTimestamp,
   idFromString,
-  randomColor,
   stringifyDOMElement,
 } from './utils.js'
 
 export const newLog = (
   args,
   element,
+  level,
   groupId,
   timestamp,
   parsedStack,
@@ -60,6 +61,7 @@ export const newLog = (
     id: uuid(),
     groupId: groupId,
     element: element,
+    level: level,
     args: [...args],
     timestamps: [timestamp],
     stack: parsedStack,
@@ -130,7 +132,6 @@ export const addLog = (
         `${parsedStack.file}?line=${parsedStack.line}&char=${parsedStack.char}`,
         uuidv5.URL
       )
-
       let hereThereColor = tinycolor(idFromLocation.slice(0, 6))
         .lighten(20)
         .toHexString()
@@ -142,6 +143,13 @@ export const addLog = (
       // if to use this color
       // const isHereThereLog = args.length === 0
 
+      // ! color for error/warning
+      if (requests.level === 'error') {
+        requests.color = _rootStyles.errorRedXLight
+      } else if (requests.level === 'warn') {
+        requests.color = _rootStyles.warnYellowXLight
+      }
+
       // ! first log of its group
       // can't find id among current groups
       if (prevIds.length === 0 || !prevIds.includes(groupId))
@@ -149,6 +157,7 @@ export const addLog = (
           name: requests.name || `${parsedStack.file}:${parsedStack.line}`,
           ////
           logs: [],
+          level: requests.level || 'log',
           ////
           groupId: groupId,
           groupElementId: groupElementId,
@@ -242,6 +251,7 @@ export const addLog = (
       const aFreshNewLog = newLog(
         args,
         element,
+        requests.level || 'log',
         groupId,
         timestamp,
         parsedStack,

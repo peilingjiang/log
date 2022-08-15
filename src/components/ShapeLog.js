@@ -25,7 +25,7 @@ import { pxTrim } from '../methods/findPosition.js'
 export default class ShapeLog extends Log {
   render() {
     const {
-      log: { id, args, unit, history, color, timestamps },
+      log: { id, level, args, unit, history, color, timestamps },
       orderReversed,
       expandedLog,
       snap,
@@ -79,7 +79,7 @@ export default class ShapeLog extends Log {
         <div
           className={`hyper-log${orderReversed === 0 ? '' : ' log-in-history'}${
             expandedLog ? ' log-expand' : ' log-not-expand'
-          } hyper-shape-log`}
+          } hyper-shape-log level-${level}`}
           style={{
             ...logBaseStyles(orderReversed, expandedLog),
             background:

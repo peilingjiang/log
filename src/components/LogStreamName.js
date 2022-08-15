@@ -14,6 +14,7 @@ export default class LogStreamName extends Component {
   static get propTypes() {
     return {
       name: PropTypes.string.isRequired,
+      level: PropTypes.string.isRequired,
       ////
       logGroupElement: PropTypes.instanceOf(HTMLElement),
       logGroupId: PropTypes.string.isRequired,
@@ -64,6 +65,7 @@ export default class LogStreamName extends Component {
   render() {
     const {
       name,
+      level,
       logGroupElement,
       logGroupId,
       canSnap,
@@ -81,7 +83,7 @@ export default class LogStreamName extends Component {
       <div
         className={`hyper-log-stream-name${
           streamGrabbing ? ' cursor-grabbing' : ' cursor-grab'
-        }`}
+        } level-${level}`}
         ref={this.ref}
         style={{
           writingMode: snap && orientation === _V ? 'vertical-lr' : undefined,
@@ -176,7 +178,7 @@ class CenterStageNav extends PureComponent {
           className="center-stage-id-copy name-icon"
           onClick={() => {
             // this.copyIconRef.current.style.background =
-            //   _rootStyles.elementOutlineBound
+            //   _rootStyles.brightOrange
             // setTimeout(() => {
             //   this.copyIconRef.current.style.background = ''
             // }, 300)

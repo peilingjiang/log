@@ -67,6 +67,7 @@ export const logInterface = PropTypes.exact({
   id: PropTypes.string,
   groupId: PropTypes.string,
   element: PropTypes.instanceOf(Element),
+  level: PropTypes.string.isRequired,
   args: PropTypes.array,
   timestamps: PropTypes.arrayOf(timestampItemInterface).isRequired,
   stack: stackInterface,
@@ -83,6 +84,7 @@ export const logGroupInterface = PropTypes.exact({
   name: PropTypes.string,
   ////
   logs: PropTypes.arrayOf(logInterface).isRequired,
+  level: PropTypes.string.isRequired,
   ////
   groupId: PropTypes.string.isRequired,
   element: PropTypes.instanceOf(Element),
@@ -216,7 +218,15 @@ export const _rootStyles = Object.seal({
 
   elegantRed: '#e23e57',
 
-  elementOutlineBound: '#fba300',
+  brightOrange: '#fba300',
+
+  errorRedXLight: '#ffd8d8',
+  errorRedLight: '#ef7373',
+  errorRed: '#f70f0f',
+
+  warnYellowXLight: '#ffe8bb',
+  warnYellowLight: '#eec77a',
+  warnYellow: '#ffaa00',
 
   opacityDefault: 0.95,
 

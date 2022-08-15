@@ -11,7 +11,6 @@ import Restart from '../icons/restart.svg'
 import Area from '../icons/area.svg'
 import Expand from '../icons/expand.svg'
 import Fold from '../icons/fold.svg'
-import { pxWrap } from '../methods/findPosition.js'
 
 export const TimelineName = ({
   logPaused,
@@ -23,7 +22,6 @@ export const TimelineName = ({
   handleTimelineArea,
   handleTimelineFold,
   hostFunctions,
-  timelineOffsetBudget,
 }) => {
   return (
     <div
@@ -113,5 +111,4 @@ TimelineName.propTypes = {
   handleTimelineArea: PropTypes.func.isRequired,
   handleTimelineFold: PropTypes.func.isRequired,
   hostFunctions: PropTypes.object.isRequired,
-  timelineOffsetBudget: PropTypes.number.isRequired,
 }

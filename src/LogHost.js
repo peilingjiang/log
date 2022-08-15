@@ -130,6 +130,14 @@ export default class LogHost extends Component {
       })
     }
 
+    window.errorBoundary = func => {
+      try {
+        func()
+      } catch (e) {
+        log(e).level('error')
+      }
+    }
+
     // element.log
     // ! functional approach
     // HTMLElement.prototype.log = function (...args) {

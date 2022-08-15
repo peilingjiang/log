@@ -13,6 +13,13 @@ export class HyperLog {
     return this
   }
 
+  level(level = 'log') {
+    // log, error, warn
+    this.requests.level = level
+    return this
+  }
+
+  /* -------------------------------------------------------------------------- */
   el(element = null) {
     if (assertString(element)) {
       console.log(element)
@@ -22,15 +29,19 @@ export class HyperLog {
     this.requests.element = element
     return this
   }
+
   e(e = null) {
     return this.el(e)
   }
+
   ele(e = null) {
     return this.el(e)
   }
+
   element(e = null) {
     return this.el(e)
   }
+  /* -------------------------------------------------------------------------- */
 
   id(id) {
     this.requests.id = id

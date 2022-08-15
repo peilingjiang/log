@@ -74,7 +74,7 @@ export default class Log extends Component {
       highlightChanged,
     } = this.props
     const {
-      log: { args, id, count, timestamps, stack, color, unit },
+      log: { level, args, id, count, timestamps, stack, color, unit },
     } = this.props
 
     const hasNoArgs = args.length === 0
@@ -86,7 +86,7 @@ export default class Log extends Component {
           orderReversed === 0 ? ' log-current' : ' log-in-history'
         }${expandedLog ? ' log-expand' : ' log-not-expand'}${
           hasNoArgs ? ' here-there-log' : ''
-        }`}
+        } level-${level}`}
         style={logBaseStyles(orderReversed, expandedLog)}
         data-id={id}
       >

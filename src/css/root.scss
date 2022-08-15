@@ -7,13 +7,13 @@ $light: #efefef;
 $white: #fff;
 
 $elegant-red: #e23e57;
-$elegant-yellow: #f07b3f;
+$elegant-yellow: #f0a33f;
 $elegant-green: #00b8a9;
 $elegant-blue: #008ddf;
 
 $bright-green: #3ec70b;
 $bright-yellow: #fcd900;
-$bright-orange: #f77e21; // !
+$bright-orange: #f79021; // !
 
 $undefined: #ff06b7;
 $number: #008be8;
@@ -21,8 +21,17 @@ $string: #ff4d00;
 $boolean: #00aeaa;
 $function: #13a600;
 
-$element-outline-bound: #fba300;
 $purple: #57068c;
+
+$error-red-x-light: #ffd8d8;
+$error-red-light: #ef7373;
+$error-red: #f70f0f;
+$error-red-dark: #9b0000;
+
+$warn-yellow-x-light: #ffe8bb;
+$warn-yellow-light: #eec77a;
+$warn-yellow: #ffaa00;
+$warn-yellow-dark: #c08000;
 
 $opacity-default: 0.9;
 $opacity-mid: 0.75;
