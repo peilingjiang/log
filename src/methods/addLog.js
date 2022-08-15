@@ -122,6 +122,7 @@ export const addLog = (
         idFromString(
           `${parsedStack.file}:${parsedStack.line}:${parsedStack.char}`
         )
+      // ! groupElementId
       const groupElementId = idFromString(stringifyDOMElement(element))
 
       // ! color from location in CODE
