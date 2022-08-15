@@ -10,6 +10,7 @@ export const Here = () => {
   }
 
   log().color('#00d1ff')
+  log()
 
   const test = () => {
     log()
