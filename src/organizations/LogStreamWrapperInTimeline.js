@@ -11,6 +11,7 @@ import {
 } from '../methods/utils.js'
 import { _H, _rootStyles } from '../constants.js'
 import { pxWrap } from '../methods/findPosition.js'
+import { logColor } from '../methods/levels.js'
 // import LogStreamMenu from './LogStreamMenu.js'
 // import LogStreamName from '../components/LogStreamName.js'
 
@@ -53,12 +54,7 @@ export default class LogStreamWrapperInTimeline extends LogStream {
     const isShape = format === 'shape'
     const logStats = getLogStats(logs, view.centerStagedId)
 
-    const rulerColor =
-      level === 'log'
-        ? parseDefaultColor(color, groupColor, false)
-        : level === 'error'
-        ? _rootStyles.errorRed
-        : _rootStyles.warnYellow
+    const rulerColor = logColor(level, color, groupColor)
 
     return (
       <div
@@ -70,7 +66,6 @@ export default class LogStreamWrapperInTimeline extends LogStream {
         }${current ? ' stream-current' : ''}`}
         ////
         style={{
-          // marginLeft: pxWrap(timelineOffset),
           boxShadow: `-0.25rem 0 0 0 ${rulerColor}`,
         }}
         ////

@@ -22,9 +22,7 @@ export class HyperLog {
   /* -------------------------------------------------------------------------- */
   el(element = null) {
     if (assertString(element)) {
-      console.log(element)
       element = document.querySelector(element)
-      console.log(element)
     }
     this.requests.element = element
     return this

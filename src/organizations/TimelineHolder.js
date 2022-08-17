@@ -41,6 +41,7 @@ import {
   sumRegistries,
 } from '../methods/ast.js'
 import TimelineExpandSideDragger from '../components/TimelineExpandSideDragger.js'
+import { darkLogColor, lightLogColor, logColor } from '../methods/levels.js'
 
 export default class TimelineHolder extends Component {
   static get propTypes() {
@@ -102,7 +103,7 @@ export default class TimelineHolder extends Component {
 
   componentDidMount() {
     socket.on('ast', data => {
-      console.log('%cReceived AST', 'color: #ff42a1')
+      window.console.log('%cReceived AST', 'color: #ff42a1')
 
       const newRegistries = preprocessASTsToGetRegistries(
         this.props.logGroups,
@@ -507,6 +508,7 @@ const TimelineLogItemsMemo = ({
   // })
 
   // ! map
+  let lastItem = null
   return logTimeline.map((logIdentifier, ind) => {
     const logGroup = logGroups[logIdentifier.groupId]
 
@@ -526,42 +528,78 @@ const TimelineLogItemsMemo = ({
     if (!logObj) return null
 
     const level = logObj.level // ! always look at the log level here in timeline
-    const offsetBackgroundColor =
-      level === 'log'
-        ? parseDefaultColor(logObj.color, logGroup.groupColor, false)
-        : level === 'error'
-        ? _rootStyles.errorRedLight
-        : _rootStyles.warnYellowLight
+
+    const offsetBackgroundColor = lightLogColor(
+      level,
+      logObj.color,
+      logGroup.groupColor
+    )
+    const rulerColor = logColor(level, logObj.color, logGroup.groupColor)
+    const darkColor = darkLogColor(level, logObj.color, logGroup.groupColor)
+
+    const thisItem = {
+      offsetPx: pxWrap(
+        logIdentifier.groupId in offsets ? offsets[logIdentifier.groupId] : 0
+      ),
+      groupName: logGroup.name,
+      stack: logObj.stack,
+    }
+
+    const pseudoBorderLeft = `${thisItem.offsetPx} solid ${applyOpacityTo(
+      offsetBackgroundColor,
+      0.25
+    )}`
 
     return (
-      <div
-        key={`${ind}-time`}
-        className={`timeline-log-item-wrapper level-${logObj.level}`}
-        style={{
-          borderLeft: `${pxWrap(
-            logIdentifier.groupId in offsets
-              ? offsets[logIdentifier.groupId]
-              : 0
-          )} solid ${applyOpacityTo(offsetBackgroundColor, 0.25)}`,
-        }}
-        // data-id={logObj.id}
-      >
-        <LogStreamWrapperInTimeline
-          key={`${ind}-time-stream`}
-          logGroup={logGroup}
-          log={logObj}
-          updateLogGroup={updateLogGroup}
-          updateLog={updateLog}
-          hostRef={hostRef}
-          handleStreamHover={handleStreamHover}
-          handleStreamDragAround={handleStreamDragAround}
-          organization={_Time}
-          hostFunctions={hostFunctions}
-          ////
-          // timelineOffset={offsets[logIdentifier.groupId]}
-        />
+      <>
+        {!isEqual(lastItem, thisItem) &&
+          (() => {
+            lastItem = thisItem
+            return (
+              <div
+                className="timeline-stream-item-wrappers-header"
+                style={{
+                  borderLeft:
+                    level === 'log'
+                      ? pseudoBorderLeft
+                      : `${thisItem.offsetPx} solid ${rulerColor}`,
+                }}
+              >
+                <span
+                  style={{
+                    boxShadow: `-0.25rem 0 0 0 ${rulerColor}`,
+                    color: level === 'log' ? undefined : darkColor,
+                  }}
+                >
+                  {thisItem.groupName}
+                </span>
+              </div>
+            )
+          })()}
+        <div
+          key={`${ind}-time`}
+          className={`timeline-log-item-wrapper level-${logObj.level}`}
+          style={{
+            borderLeft: pseudoBorderLeft,
+          }}
+          // data-id={logObj.id}
+        >
+          <LogStreamWrapperInTimeline
+            key={`${ind}-time-stream`}
+            logGroup={logGroup}
+            log={logObj}
+            updateLogGroup={updateLogGroup}
+            updateLog={updateLog}
+            hostRef={hostRef}
+            handleStreamHover={handleStreamHover}
+            handleStreamDragAround={handleStreamDragAround}
+            organization={_Time}
+            hostFunctions={hostFunctions}
+            ////
+            // timelineOffset={offsets[logIdentifier.groupId]}
+          />
 
-        {/* <div
+          {/* <div
           className="pseudo-expander"
           style={{
             paddingLeft: pxWrap(
@@ -570,20 +608,16 @@ const TimelineLogItemsMemo = ({
           }}
         ></div> */}
 
-        <span
-          className="timeline-timestamp"
-          style={{
-            color:
-              level === 'error'
-                ? _rootStyles.errorRedDark
-                : level === 'warn'
-                ? _rootStyles.warnYellowDark
-                : undefined,
-          }}
-        >
-          {Math.round(logObj.timestamps[0].now)}
-        </span>
-      </div>
+          <span
+            className="timeline-timestamp"
+            style={{
+              color: darkColor,
+            }}
+          >
+            {Math.round(logObj.timestamps[0].now)}
+          </span>
+        </div>
+      </>
     )
   })
 }

@@ -9,7 +9,7 @@ export const g = Object.seal({
   preserveConsole: false,
   useSourceMaps: true,
   directionDown: true,
-  defaultOrganization: _Aug,
+  defaultOrganization: _Time,
   vsLogPort: 2022,
 })
 
@@ -42,7 +42,7 @@ export const socket = io.connect(`http://${host}:${g.vsLogPort}/`, {
 
 // ? is it the best practice to open the socket here?
 socket.on('connect', () => {
-  console.log(
+  window.console.log(
     '%cConnected to VS Log Server',
     'color: #ff42a1; font-weight: bold'
   )

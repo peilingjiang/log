@@ -160,7 +160,18 @@
     flex-wrap: nowrap;
 
     // overflow-y: scroll;
-    padding: $padding-large 0 $padding-xs 0;
+    padding: $padding-small 0 $padding-xs 0;
+  }
+
+  .timeline-stream-item-wrappers-header {
+    span {
+      display: inline-block;
+      margin: 0 0 0 $padding-xs;
+      padding: $padding-xs 0 $padding-xxs $padding-xs;
+
+      color: $grey;
+      font-size: $font-size-small;
+    }
   }
 
   .timeline-log-item-wrapper {
