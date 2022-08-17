@@ -557,6 +557,7 @@ const TimelineLogItemsMemo = ({
             lastItem = thisItem
             return (
               <div
+                key={`header-${ind}-time`}
                 className="timeline-stream-item-wrappers-header"
                 style={{
                   borderLeft:
