@@ -52,6 +52,7 @@ export default class Button extends Component {
                   // .el(e.target)
                   .name('submit')
                   .color('#c999ff')
+                  .id('buttons')
               }
             )
           }}
@@ -69,7 +70,11 @@ export default class Button extends Component {
               },
               () => {
                 /////
-                log(this.state.clearClickedTimes).name('clear').e(e.target)
+                log(this.state.clearClickedTimes)
+                  .name('clear')
+                  .e(e.target)
+                  .id('buttons')
+                  .level('warn')
                 ////
                 // log().el(e.target)
               }

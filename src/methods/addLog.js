@@ -150,6 +150,10 @@ export const addLog = (
         requests.color = _rootStyles.warnYellowXLight
       }
 
+      // ! level, format, etc.
+      const newLogLevel = requests.level || 'log'
+      const newLogFormat = requests.format || 'text'
+
       // ! first log of its group
       // can't find id among current groups
       if (prevIds.length === 0 || !prevIds.includes(groupId))
@@ -157,13 +161,13 @@ export const addLog = (
           name: requests.name || `${parsedStack.file}:${parsedStack.line}`,
           ////
           logs: [],
-          level: requests.level || 'log',
+          level: newLogLevel,
           ////
           groupId: groupId,
           groupElementId: groupElementId,
           element: element,
           ////
-          format: requests.format || 'text',
+          format: newLogFormat,
           ////
           orientation: _H,
           snap: false,
@@ -215,9 +219,39 @@ export const addLog = (
       // check if got exactly the same as the last log
       // if so, just increment count
       const logs = newState.logGroups[groupId].logs
+
+      // create a new log, may not to use it in the end
+      const aFreshNewLog = newLog(
+        args,
+        element,
+        newLogLevel,
+        groupId,
+        timestamp,
+        parsedStack,
+        hereThereColor,
+        requests
+      )
+
       if (logs.length) {
         const lastLog = logs[logs.length - 1]
-        if (isEqual(lastLog.args, args)) {
+        if (
+          isEqual(
+            {
+              args: lastLog.args,
+              level: lastLog.level,
+              element: lastLog.element,
+              stack: lastLog.stack,
+              color: lastLog.color,
+            },
+            {
+              args: args,
+              level: aFreshNewLog.level,
+              element: aFreshNewLog.element,
+              stack: aFreshNewLog.stack,
+              color: aFreshNewLog.color,
+            }
+          )
+        ) {
           return {
             ...newState,
             logGroups: {
@@ -248,19 +282,6 @@ export const addLog = (
       }
 
       // ! actually add a log here
-      const aFreshNewLog = newLog(
-        args,
-        element,
-        requests.level || 'log',
-        groupId,
-        timestamp,
-        parsedStack,
-        hereThereColor,
-        requests
-      )
-      // newState.logGroups[groupId].logs.push(aFreshNewLog)
-      // return newState
-
       return {
         ...newState,
         logGroups: {

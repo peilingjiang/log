@@ -12,6 +12,7 @@ import {
   constrain,
   getElementBounding,
   idFromString,
+  parseDefaultColor,
   preventEventWrapper,
   stringifyDOMElement,
 } from '../methods/utils.js'
@@ -83,6 +84,7 @@ export default class TimelineHolder extends Component {
     this.ref = createRef()
     this.scrollWrapperRef = createRef()
 
+    this.handleTimelineHover = this.handleTimelineHover.bind(this)
     this.handleStreamHover = this.handleStreamHover.bind(this)
     this.handleStreamDragAround = this.handleStreamDragAround.bind(this) // placeholder
 
@@ -140,8 +142,12 @@ export default class TimelineHolder extends Component {
 
   /* -------------------------------------------------------------------------- */
 
+  handleTimelineHover(newState = true) {
+    if (newState !== this.state.hovered) this.setState({ hovered: newState })
+  }
+
   handleStreamHover(newState = true) {
-    this.setState({ hovered: newState })
+    // this.setState({ hovered: newState })
   }
 
   // placeholder
@@ -307,6 +313,8 @@ export default class TimelineHolder extends Component {
           style={{
             right: right,
           }}
+          onMouseEnter={() => this.handleTimelineHover(true)}
+          onMouseOut={() => this.handleTimelineHover(false)}
         >
           <TimelineName
             key={'timeline-name'}
@@ -515,11 +523,12 @@ const TimelineLogItemsMemo = ({
     }
 
     const logObj = getLog(logGroup, logIdentifier)
+    if (!logObj) return null
 
-    const level = logObj.level
+    const level = logObj.level // ! always look at the log level here in timeline
     const offsetBackgroundColor =
       level === 'log'
-        ? logGroup.groupColor
+        ? parseDefaultColor(logObj.color, logGroup.groupColor, false)
         : level === 'error'
         ? _rootStyles.errorRedLight
         : _rootStyles.warnYellowLight
@@ -563,9 +572,14 @@ const TimelineLogItemsMemo = ({
 
         <span
           className="timeline-timestamp"
-          // style={{
-          //   paddingLeft: pxWrap(offsets[logIdentifier.groupId]),
-          // }}
+          style={{
+            color:
+              level === 'error'
+                ? _rootStyles.errorRedDark
+                : level === 'warn'
+                ? _rootStyles.warnYellowDark
+                : undefined,
+          }}
         >
           {Math.round(logObj.timestamps[0].now)}
         </span>

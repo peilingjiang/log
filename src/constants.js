@@ -223,10 +223,12 @@ export const _rootStyles = Object.seal({
   errorRedXLight: '#ffd8d8',
   errorRedLight: '#ef7373',
   errorRed: '#f70f0f',
+  errorRedDark: '#9b0000',
 
   warnYellowXLight: '#ffe8bb',
   warnYellowLight: '#eec77a',
   warnYellow: '#ffaa00',
+  warnYellowDark: '#c08000',
 
   opacityDefault: 0.95,
 

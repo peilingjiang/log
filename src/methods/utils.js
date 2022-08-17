@@ -4,7 +4,11 @@ import ErrorStackParser from 'error-stack-parser'
 import tinycolor from 'tinycolor2'
 import { v5 as uuidv5 } from 'uuid'
 
-import { stackActualCallerDepth, validUnits } from '../constants.js'
+import {
+  stackActualCallerDepth,
+  validUnits,
+  _rootStyles,
+} from '../constants.js'
 import { g } from '../global.js'
 
 export const pseudoFunc = () => {}
@@ -341,6 +345,12 @@ export const randomColor = () => {
 
 export const applyOpacityTo = (rgbaHex, opacity) => {
   return tinycolor(rgbaHex).setAlpha(opacity).toRgbString()
+}
+
+export const parseDefaultColor = (color, groupColor, useDefaultGrey = true) => {
+  if (color === 'default')
+    return useDefaultGrey ? _rootStyles.darkGrey : groupColor
+  return color
 }
 
 /* -------------------------------------------------------------------------- */

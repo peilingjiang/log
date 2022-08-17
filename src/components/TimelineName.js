@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import PropTypes from 'prop-types'
 
 import { preventEventWrapper } from '../methods/utils.js'
@@ -12,7 +12,7 @@ import Area from '../icons/area.svg'
 import Expand from '../icons/expand.svg'
 import Fold from '../icons/fold.svg'
 
-export const TimelineName = ({
+const TimelineNameMemo = ({
   logPaused,
   timelineFolded,
   timelineGrabbing,
@@ -101,7 +101,7 @@ export const TimelineName = ({
   )
 }
 
-TimelineName.propTypes = {
+TimelineNameMemo.propTypes = {
   logPaused: PropTypes.bool.isRequired,
   timelineFolded: PropTypes.bool.isRequired,
   timelineGrabbing: PropTypes.bool.isRequired,
@@ -112,3 +112,5 @@ TimelineName.propTypes = {
   handleTimelineFold: PropTypes.func.isRequired,
   hostFunctions: PropTypes.object.isRequired,
 }
+
+export const TimelineName = memo(TimelineNameMemo)

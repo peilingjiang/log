@@ -4,7 +4,11 @@ import isEqual from 'react-fast-compare'
 import LogStream from './LogStream.js'
 import Log from '../components/Log.js'
 import ShapeLog from '../components/ShapeLog.js'
-import { canUseShape, getLogStats } from '../methods/utils.js'
+import {
+  canUseShape,
+  getLogStats,
+  parseDefaultColor,
+} from '../methods/utils.js'
 import { _H, _rootStyles } from '../constants.js'
 import { pxWrap } from '../methods/findPosition.js'
 // import LogStreamMenu from './LogStreamMenu.js'
@@ -37,10 +41,11 @@ export default class LogStreamWrapperInTimeline extends LogStream {
   }
 
   render() {
-    const { expand, hovered, grabbing, current } = this.state
+    const { expand, hovered, current } = this.state
     const {
-      logGroup: { level, groupId, groupColor, format, view, logs },
+      logGroup: { groupId, groupColor, format, view, logs },
       log,
+      log: { level, color },
       organization,
       hostFunctions,
     } = this.props
@@ -50,7 +55,7 @@ export default class LogStreamWrapperInTimeline extends LogStream {
 
     const rulerColor =
       level === 'log'
-        ? groupColor
+        ? parseDefaultColor(color, groupColor, false)
         : level === 'error'
         ? _rootStyles.errorRed
         : _rootStyles.warnYellow
