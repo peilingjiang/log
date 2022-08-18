@@ -44,6 +44,7 @@ export default env => {
         minimize: false,
       },
       plugins: [
+        // ! development mode
         new webpack.DefinePlugin({
           'process.env.NODE_ENV': JSON.stringify('development'),
         }),
@@ -64,6 +65,7 @@ export default env => {
         minimize: true,
       },
       plugins: [
+        // ! production mode
         new webpack.DefinePlugin({
           'process.env.NODE_ENV': JSON.stringify('production'),
         }),

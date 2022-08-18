@@ -1,4 +1,4 @@
-import React, { Component, createRef, memo, useRef } from 'react'
+import React, { Component, createRef, memo, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import isEqual from 'react-fast-compare'
 
@@ -551,32 +551,28 @@ const TimelineLogItemsMemo = ({
     )}`
 
     return (
-      <>
-        {!isEqual(lastItem, thisItem) &&
-          (() => {
-            lastItem = thisItem
-            return (
-              <div
-                key={`header-${ind}-time`}
-                className="timeline-stream-item-wrappers-header"
-                style={{
-                  borderLeft:
-                    level === 'log'
-                      ? pseudoBorderLeft
-                      : `${thisItem.offsetPx} solid ${rulerColor}`,
-                }}
-              >
-                <span
-                  style={{
-                    boxShadow: `-0.25rem 0 0 0 ${rulerColor}`,
-                    color: level === 'log' ? undefined : darkColor,
-                  }}
-                >
-                  {thisItem.groupName}
-                </span>
-              </div>
-            )
-          })()}
+      <Fragment key={`timeline-${ind}`}>
+        {!isEqual(lastItem, thisItem) && (lastItem = thisItem) && (
+          <div
+            key={`header-${ind}-time`}
+            className="timeline-stream-item-wrappers-header"
+            style={{
+              borderLeft:
+                level === 'log'
+                  ? pseudoBorderLeft
+                  : `${thisItem.offsetPx} solid ${rulerColor}`,
+            }}
+          >
+            <span
+              style={{
+                boxShadow: `-0.25rem 0 0 0 ${rulerColor}`,
+                color: level === 'log' ? undefined : darkColor,
+              }}
+            >
+              {thisItem.groupName}
+            </span>
+          </div>
+        )}
         <div
           key={`${ind}-time`}
           className={`timeline-log-item-wrapper level-${logObj.level}`}
@@ -618,7 +614,7 @@ const TimelineLogItemsMemo = ({
             {Math.round(logObj.timestamps[0].now)}
           </span>
         </div>
-      </>
+      </Fragment>
     )
   })
 }

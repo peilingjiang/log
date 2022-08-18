@@ -11,6 +11,7 @@ const development = process.env.NODE_ENV === 'development'
 export const g = Object.seal({
   ////
   access: development,
+  // access: true, // ! to be ENABLE after review process
   ////
   preserveConsole: false,
   useSourceMaps: true,
@@ -25,7 +26,7 @@ export const g = Object.seal({
     if (!assertObject(g)) return
     options = Object.assign(g, options)
 
-    g.access = options.access
+    g.access = options.access // ! to be REMOVED after review process
     g.preserveConsole = options.preserveConsole
     g.useSourceMaps = options.useSourceMaps
     g.directionDown = options.directionDown

@@ -132,10 +132,12 @@ export default class LogHost extends Component {
     }
 
     window.errorBoundary = func => {
-      try {
-        func()
-      } catch (e) {
-        log(e).level('error')
+      if (g.access) {
+        try {
+          func()
+        } catch (e) {
+          log(e).level('error')
+        }
       }
     }
 
