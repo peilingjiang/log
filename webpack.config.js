@@ -1,5 +1,6 @@
 // PROD
 
+import webpack from 'webpack'
 // import MiniCssExtractPlugin from "mini-css-extract-plugin"
 
 import { __dirname, config, output } from './webpack.common.js'
@@ -17,6 +18,11 @@ export default env => {
       optimization: {
         minimize: true,
       },
+      plugins: [
+        new webpack.DefinePlugin({
+          'process.env.NODE_ENV': JSON.stringify('production'),
+        }),
+      ],
     }
   }
 }

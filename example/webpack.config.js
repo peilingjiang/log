@@ -1,5 +1,7 @@
 // DEV
 
+import webpack from 'webpack'
+
 import { __dirname, config } from '../webpack.common.js'
 import path from 'path'
 
@@ -41,6 +43,11 @@ export default env => {
       optimization: {
         minimize: false,
       },
+      plugins: [
+        new webpack.DefinePlugin({
+          'process.env.NODE_ENV': JSON.stringify('development'),
+        }),
+      ],
     }
   } else {
     console.log('[PROD] Producing production build...')
@@ -56,6 +63,11 @@ export default env => {
       optimization: {
         minimize: true,
       },
+      plugins: [
+        new webpack.DefinePlugin({
+          'process.env.NODE_ENV': JSON.stringify('production'),
+        }),
+      ],
     }
   }
 }
