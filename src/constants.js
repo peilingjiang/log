@@ -146,7 +146,7 @@ export const stackActualCallerDepth = 4
 export const stackFilePathCompareDepth = 3
 
 // out of 8 possible positions around the anchor element, we only allow the first N best ones
-export const positionFindingWorstAllowed = 3
+export const positionFindingWorstAllowed = 4
 export const switchPositionRegistrationDifferenceThresholdPx2 = 2500
 
 export const minimalStringShowLength = 7

@@ -1,0 +1,37 @@
+@keyframes blinker-warn {
+  25% {
+    box-shadow: inset 0 0 0 max(100vw, 100vh) rgba($warn-yellow, $opacity-high);
+  }
+
+  50% {
+    box-shadow: inset 0 0 0 max(100vw, 100vh) rgba($warn-yellow, 0);
+  }
+
+  75% {
+    box-shadow: inset 0 0 0 max(100vw, 100vh) rgba($warn-yellow, $opacity-high);
+  }
+}
+
+.log-warn-element {
+  animation: blinker-warn $transition-normal-slow linear;
+}
+
+/* -------------------------------------------------------------------------- */
+
+@keyframes blinker-error {
+  25% {
+    box-shadow: inset 0 0 0 max(100vw, 100vh) rgba($error-red, $opacity-high);
+  }
+
+  50% {
+    box-shadow: inset 0 0 0 max(100vw, 100vh) rgba($error-red, 0);
+  }
+
+  75% {
+    box-shadow: inset 0 0 0 max(100vw, 100vh) rgba($error-red, $opacity-high);
+  }
+}
+
+.log-error-element {
+  animation: blinker-error $transition-normal-slow linear;
+}

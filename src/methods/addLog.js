@@ -13,6 +13,7 @@ import {
 } from '../constants.js'
 
 import { g } from '../global.js'
+import { sanitizeFormat, sanitizeLevel } from './sanitize.js'
 import {
   assertArguments,
   assertArray,
@@ -151,8 +152,8 @@ export const addLog = (
       }
 
       // ! level, format, etc.
-      const newLogLevel = requests.level || 'log'
-      const newLogFormat = requests.format || 'text'
+      const newLogLevel = sanitizeLevel(requests.level)
+      const newLogFormat = sanitizeFormat(requests.format)
 
       // ! first log of its group
       // can't find id among current groups
@@ -198,6 +199,20 @@ export const addLog = (
           prevState.logGroups[groupId].deleted
         )
           return prevState
+      }
+
+      // ! color the element
+      // only when the log stream is not paused or deleted
+      if (newLogLevel === 'error') {
+        element?.classList.remove('log-error-element')
+        setTimeout(() => {
+          element?.classList.add('log-error-element')
+        }, 5)
+      } else if (newLogLevel === 'warn') {
+        element?.classList.remove('log-warn-element')
+        setTimeout(() => {
+          element?.classList.add('log-warn-element')
+        }, 5)
       }
 
       // ! snap

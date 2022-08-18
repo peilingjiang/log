@@ -35,7 +35,7 @@
   }
 
   &.timeline-log-item-wrapper {
-    background: rgba($error-red-light, $opacity-xh);
+    background: rgba($error-red-light, $opacity-xxh);
   }
 }
 
@@ -78,6 +78,6 @@
   }
 
   &.timeline-log-item-wrapper {
-    background: rgba($warn-yellow-light, $opacity-xh);
+    background: rgba($warn-yellow-light, $opacity-xxh);
   }
 }

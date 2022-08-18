@@ -11,14 +11,14 @@ $all-way-dot-size: $padding-x-large;
   //   width: 100vw;
   //   height: 100vh;
   //   background-color: $dark-grey;
-  //   opacity: $opacity-xh;
+  //   opacity: $opacity-xxh;
   // }
 
   .hyper-selection-rect-area {
     position: fixed;
-    // background: rgba($elegant-blue, $opacity-xh);
+    // background: rgba($elegant-blue, $opacity-xxh);
     pointer-events: none;
-    box-shadow: 0 0 0 max(100vh, 100vw) rgba($dark-grey, $opacity-xh);
+    box-shadow: 0 0 0 max(100vh, 100vw) rgba($dark-grey, $opacity-xxh);
   }
 
   .hyper-selection-dot {
