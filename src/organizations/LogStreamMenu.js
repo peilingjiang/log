@@ -251,7 +251,7 @@ export default class LogStreamMenu extends Component {
           </p>
         )}
 
-        {isAugmented && (
+        {isAugmented && paused && (
           <p
             key={'menu-delete'}
             className="stream-menu-item menu-delete-item"

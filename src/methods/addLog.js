@@ -14,7 +14,9 @@ import {
 
 import { g } from '../global.js'
 import { sanitizeFormat, sanitizeLevel } from './sanitize.js'
+import { checkForSpecialIdentifiers } from './specialHubUtils.js'
 import {
+  areArgsEqual,
   assertArguments,
   assertArray,
   assertElement,
@@ -41,22 +43,22 @@ export const newLog = (
   hereThereColor,
   requests
 ) => {
-  assertArguments([
-    {
-      value: args,
-      assertion: assertArray,
-    },
-    {
-      value: groupId,
-      assertion: assertString,
-    },
-    {
-      value: timestamp,
-      assertion: assertObject,
-      // shape: ['now', 'date'],
-      shape: ['now'],
-    },
-  ])
+  // assertArguments([
+  //   {
+  //     value: args,
+  //     assertion: assertArray,
+  //   },
+  //   {
+  //     value: groupId,
+  //     assertion: assertString,
+  //   },
+  //   {
+  //     value: timestamp,
+  //     assertion: assertObject,
+  //     // shape: ['now', 'date'],
+  //     shape: ['now'],
+  //   },
+  // ])
 
   return {
     id: uuid(),
@@ -74,6 +76,8 @@ export const newLog = (
     history: assertNumber(requests.history)
       ? requests.history
       : _config.logStreamHistoryRenderDepth - 1,
+    ////
+    specialIdentifier: checkForSpecialIdentifiers(args),
   }
 }
 
@@ -249,17 +253,17 @@ export const addLog = (
 
       if (logs.length) {
         const lastLog = logs[logs.length - 1]
+
         if (
+          areArgsEqual(lastLog.args, args) &&
           isEqual(
             {
-              args: lastLog.args,
               level: lastLog.level,
               element: lastLog.element,
               stack: lastLog.stack,
               color: lastLog.color,
             },
             {
-              args: args,
               level: aFreshNewLog.level,
               element: aFreshNewLog.element,
               stack: aFreshNewLog.stack,

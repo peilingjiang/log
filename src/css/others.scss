@@ -1,14 +1,14 @@
 .forced-outline-bound {
-  outline: 6px solid rgba($bright-orange, $opacity-high);
+  outline: 6px solid rgba($bright-orange, $opacity-default);
 }
 
 .forced-outline-bound-mid {
-  outline: 6px solid rgba($bright-orange, $opacity-high);
+  outline: 6px solid rgba($bright-orange, $opacity-default);
   outline-offset: -3px;
 }
 
 .forced-outline-bound-inside {
-  outline: 6px solid rgba($bright-orange, $opacity-high);
+  outline: 6px solid rgba($bright-orange, $opacity-default);
   outline-offset: -6px;
 }
 

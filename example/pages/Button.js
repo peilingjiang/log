@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, createRef } from 'react'
 
 import '../css/pages/Button.scss'
 
@@ -11,6 +11,8 @@ export default class Button extends Component {
       submitClickedTimes: 0,
       clearClickedTimes: 0,
     }
+
+    this.submitRef = createRef()
   }
 
   componentDidMount() {
@@ -22,6 +24,7 @@ export default class Button extends Component {
   render() {
     return (
       <div className="button-example">
+        {/* -------------------------------------------------------------------------- */}
         <textarea
           id="text-input"
           value={this.state.text}
@@ -30,11 +33,14 @@ export default class Button extends Component {
             this.setState({
               text: e.target.value,
             })
-            log(e.target.value).e(e.target).level('error')
+
+            // log(e.target.value).e(e.target).level('error')
+            log(e)
           }}
         />
         {/* -------------------------------------------------------------------------- */}
         <button
+          ref={this.submitRef}
           id="submit-button"
           onClick={e => {
             this.setState(
@@ -47,12 +53,9 @@ export default class Button extends Component {
                 // log(this.state.submitClickedTimes)
                 //   .name('submit')
                 //   .color('#c999ff')
-
-                log(this.state.submitClickedTimes)
-                  // .el(e.target)
-                  .name('submit')
-                  .color('#c999ff')
-                  .id('buttons')
+                log(e).el(e.target).name('submit')
+                // .color('#c999ff')
+                // .id('buttons')
               }
             )
           }}
@@ -83,6 +86,7 @@ export default class Button extends Component {
         >
           Clear
         </button>
+        {/* -------------------------------------------------------------------------- */}
       </div>
     )
   }

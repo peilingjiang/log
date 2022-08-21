@@ -13,6 +13,7 @@ import {
 import { isEmptyObject, objectFromKeys } from './utils.js'
 import { ObjectKey, FoldedDisplay, FolderIcon } from './components.js'
 import { FormatterFoldedDisplay } from './baseObjectTypes.js'
+import { assertInteractionEvent } from '../methods/specialHubUtils.js'
 
 const FormatterObject = ({
   obj,
@@ -36,11 +37,17 @@ const FormatterObject = ({
     ? removeLogId(inheritId)
     : inheritId
 
-  const isElement = assertElement(obj)
-  const elementLabel = isElement ? (
-    <span className="element-label">E</span>
+  // const isElement = assertElement(obj)
+  // const elementLabel = isElement ? (
+  //   <span className="element-label">E</span>
+  // ) : null
+
+  const isEvent = assertInteractionEvent(obj)
+  const eventLabel = isEvent ? (
+    <span className="object-event-label">E</span>
   ) : null
 
+  const foldedShowItemCountNotEvent = isEvent ? 0 : foldedObjectShowItemCount
   let content
 
   if (minimal) {
@@ -74,18 +81,21 @@ const FormatterObject = ({
         }`}
         data-key={`${inheritId}[obj]`}
       >
-        {elementLabel}
+        {eventLabel}
         {content}
       </div>
     )
   }
 
-  const objKeys = Object.keys(obj)
+  // const objKeys = Object.keys(obj)
+  const objKeys = []
+  for (const key in obj) objKeys.push(key)
+
   if (folded) {
     // folded
     const innerItems = []
 
-    for (const keyInd in arrayFirst(objKeys, foldedObjectShowItemCount)) {
+    for (const keyInd in arrayFirst(objKeys, foldedShowItemCountNotEvent)) {
       const keyValue = objKeys[keyInd]
       innerItems.push(
         <ObjectKey
@@ -138,12 +148,15 @@ const FormatterObject = ({
           />
         )}
         <span className="obj-length info-dimmed">{`(${objKeys.length})`}</span>
-        {elementLabel}
+        {eventLabel}
         {'{'}
         {innerItems}
-        {objKeys.length > foldedObjectShowItemCount ? (
+        {objKeys.length > foldedShowItemCountNotEvent ? (
           <FormatterFoldedDisplay
-            arg={objectFromKeys(obj, objKeys.slice(foldedObjectShowItemCount))}
+            arg={objectFromKeys(
+              obj,
+              objKeys.slice(foldedShowItemCountNotEvent)
+            )}
             inheritId={inheritId}
             choosing={choosing}
             highlightChanged={highlightChanged}
@@ -163,7 +176,7 @@ const FormatterObject = ({
             id={inheritId}
             setUnfoldedIds={streamFunctions.setUnfoldedIds}
           />
-          {elementLabel}
+          {eventLabel}
           {'{'}
         </div>
 

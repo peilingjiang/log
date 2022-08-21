@@ -7,6 +7,7 @@ import { v5 as uuidv5 } from 'uuid'
 import {
   stackActualCallerDepth,
   validUnits,
+  _DEF,
   _rootStyles,
 } from '../constants.js'
 import { g } from '../global.js'
@@ -44,6 +45,34 @@ export const preventEventWrapper = (e, callback) => {
     e.stopPropagation()
   }
   callback()
+}
+
+/* -------------------------------------------------------------------------- */
+
+// compare args
+
+export const areArgsEqual = (args1, args2) => {
+  if (args1.length !== args2.length) return false
+
+  for (let i = 0; i < args1.length; i++) {
+    if (!isArgEqual(args1[i], args2[i])) {
+      return false
+    }
+  }
+
+  return true
+}
+
+const isArgEqual = (arg1, arg2) => {
+  if (typeof arg1 === 'object' && typeof arg2 === 'object') {
+    for (const key in arg1) {
+      if (!isEqual(arg1[key], arg2[key])) {
+        return false
+      }
+    }
+  } else {
+    return isEqual(arg1, arg2)
+  }
 }
 
 /* -------------------------------------------------------------------------- */
@@ -296,7 +325,9 @@ export const assertObject = (a, shape = null) => {
 }
 
 export const assertElement = a => {
-  return assertExistence(a) && a instanceof Element
+  return (
+    assertExistence(a) && (a instanceof Element || a instanceof HTMLElement)
+  )
 }
 
 export const assertArguments = argsAndAssertions => {
@@ -348,8 +379,7 @@ export const applyOpacityTo = (rgbaHex, opacity) => {
 }
 
 export const parseDefaultColor = (color, groupColor, useDefaultGrey = true) => {
-  if (color === 'default')
-    return useDefaultGrey ? _rootStyles.darkGrey : groupColor
+  if (color === _DEF) return useDefaultGrey ? _rootStyles.darkGrey : groupColor
   return color
 }
 

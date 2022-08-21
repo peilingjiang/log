@@ -608,7 +608,13 @@ const TimelineLogItemsMemo = ({
           <span
             className="timeline-timestamp"
             style={{
-              color: darkColor,
+              color:
+                // variation of darkColor module
+                level === 'log'
+                  ? parseDefaultColor(logObj.color, logGroup.groupColor, true)
+                  : level === 'error'
+                  ? _rootStyles.errorRedDark
+                  : _rootStyles.warnYellowDark,
             }}
           >
             {Math.round(logObj.timestamps[0].now)}

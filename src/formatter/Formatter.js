@@ -5,6 +5,7 @@ import isEqual from 'react-fast-compare'
 import FormatterArray from './FormatterArray.js'
 import FormatterObject from './FormatterObject.js'
 import {
+  assertElement,
   assertTypeOfArg,
   parseCenterStagedValueFromId,
   removeLogId,
@@ -16,6 +17,9 @@ import {
   FormatterNumber,
   FormatterString,
 } from './baseObjectTypes.js'
+import { assertInteractionEvent } from '../methods/specialHubUtils.js'
+import FormatterInteractionEvent from './FormatterInteractionEvent.js'
+import FormatterElement from './FormatterElement.js'
 
 export class Formatter extends Component {
   static get propTypes() {
@@ -119,7 +123,7 @@ export class Formatter extends Component {
   }
 }
 
-const formatArg = (
+export const formatArg = (
   arg,
   groupId,
   inheritId,
@@ -223,6 +227,37 @@ const formatArg = (
       )
 
     case 'object':
+      if (assertElement(arg))
+        return (
+          <FormatterElement
+            key={`${standardInheritId}[ele]`}
+            element={arg}
+            groupId={groupId}
+            inheritId={inheritId}
+            idViews={idViews}
+            streamFunctions={streamFunctions}
+            formatArg={formatArg}
+            minimal={minimal}
+            choosing={choosing}
+            highlightChanged={highlightChanged}
+          />
+        )
+      if (assertInteractionEvent(arg))
+        return (
+          <FormatterInteractionEvent
+            key={`${standardInheritId}[event]`}
+            event={arg}
+            groupId={groupId}
+            inheritId={inheritId}
+            idViews={idViews}
+            streamFunctions={streamFunctions}
+            formatArg={formatArg}
+            minimal={minimal}
+            choosing={choosing}
+            highlightChanged={highlightChanged}
+          />
+        )
+
       return (
         <FormatterObject
           key={`${standardInheritId}[obj]`}

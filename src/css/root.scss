@@ -20,6 +20,7 @@ $number: #008be8;
 $string: #ff4d00;
 $boolean: #00aeaa;
 $function: #13a600;
+$event: $boolean;
 
 $purple: #57068c;
 
@@ -154,7 +155,11 @@ $rem-to-px: 16;
 }
 
 .font-bold {
-  font-weight: 700;
+  font-weight: 700 !important;
+}
+
+.font-thin {
+  font-weight: 400 !important;
 }
 
 /* -------------------------------------------------------------------------- */

@@ -61,7 +61,7 @@ export class HyperLog {
     return this
   }
 
-  history(history = 2) {
+  history(history = 1) {
     this.requests.history = history
     return this
   }

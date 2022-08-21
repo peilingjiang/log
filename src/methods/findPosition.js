@@ -12,6 +12,7 @@ import {
   assertExistence,
   getElementBounding,
   keyWithSmallestValue,
+  mergeBoundingRects,
 } from './utils.js'
 
 export const findPosition = (
@@ -25,6 +26,7 @@ export const findPosition = (
   const existingPageRects = []
   const existingPageElements = document.querySelectorAll(pageElementsQuery)
 
+  // let pageElements = []
   for (let e of existingPageElements) {
     if (
       !e.isSameNode(anchorElement) &&
@@ -33,12 +35,18 @@ export const findPosition = (
       (!assertExistence(e.dataset.id) || e.dataset.id !== logElement.dataset.id)
     ) {
       existingPageRects.push(getElementBounding(e))
+      // pageElements.push(e)
     }
   }
 
   const anchorBounding = getElementBounding(anchorElement)
 
-  let boundingRectForLog = getElementBounding(logElement)
+  let boundingRectForLog = mergeBoundingRects(
+    [...logElement.children].map(el => {
+      return getElementBounding(el)
+    })
+  )
+
   const logBounding = {
     left: boundingRectForLog.left,
     right: boundingRectForLog.right,
@@ -84,6 +92,8 @@ export const findPosition = (
       ? pseudoOffscreenOverlap(testPseudoRect)
       : 0
 
+    // weighted sum
+    // offscreen is bad
     overlapByPosId[posId] =
       overlapWithExistingPageElements + overlapWithOffscreenArea
   }
@@ -170,6 +180,13 @@ export const registeredPositions = (posId, anchorBounding) => {
 
   const gap = logStreamGapToAnchorPx
 
+  /**
+   *    5 7
+   *  6     2
+   *  8     4
+   *    1 3
+   */
+
   switch (Number(posId)) {
     case 1:
       return _getPos(left, bottom + gap, undefined, undefined, _L, _T, 1)
@@ -179,16 +196,38 @@ export const registeredPositions = (posId, anchorBounding) => {
 
     case 3:
       return _getPos(
-        left,
         undefined,
+        bottom + gap,
+        innerWidth - right,
         undefined,
-        innerWidth - top + gap,
-        _L,
-        _B,
+        _R,
+        _T,
         3
       )
 
     case 4:
+      return _getPos(
+        right + gap,
+        undefined,
+        undefined,
+        innerHeight - bottom,
+        _L,
+        _B,
+        4
+      )
+
+    case 5:
+      return _getPos(
+        left,
+        undefined,
+        undefined,
+        innerHeight - top + gap,
+        _L,
+        _B,
+        5
+      )
+
+    case 6:
       return _getPos(
         undefined,
         top,
@@ -196,28 +235,6 @@ export const registeredPositions = (posId, anchorBounding) => {
         undefined,
         _R,
         _T,
-        4
-      )
-
-    case 5:
-      return _getPos(
-        undefined,
-        bottom + gap,
-        innerWidth - right,
-        undefined,
-        _R,
-        _T,
-        5
-      )
-
-    case 6:
-      return _getPos(
-        right + gap,
-        undefined,
-        undefined,
-        innerHeight - bottom,
-        _R,
-        _B,
         6
       )
 

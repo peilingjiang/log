@@ -77,6 +77,8 @@ export const logInterface = PropTypes.exact({
   color: PropTypes.string,
   unit: PropTypes.string,
   history: PropTypes.number,
+  ////
+  specialIdentifier: PropTypes.array.isRequired,
 })
 
 // ! logGroup
@@ -146,7 +148,7 @@ export const stackActualCallerDepth = 4
 export const stackFilePathCompareDepth = 3
 
 // out of 8 possible positions around the anchor element, we only allow the first N best ones
-export const positionFindingWorstAllowed = 4
+export const positionFindingWorstAllowed = 6
 export const switchPositionRegistrationDifferenceThresholdPx2 = 2500
 
 export const minimalStringShowLength = 7
@@ -184,7 +186,10 @@ export const _V = 'vertical'
 
 export const _DEF = 'default'
 
+export const _ID_INT = '__id__interaction__'
+
 export const validUnits = ['px', '%', 'em', 'rem', 'vh', 'vw', 'vmin', 'vmax']
+export const extraKeys = ['ctrlKey', 'shiftKey', 'altKey', 'metaKey']
 
 // organization
 export const _Aug = 'augmented'
@@ -201,7 +206,7 @@ export const logStreamGapToAnchorPx = 10
 /* -------------------------------------------------------------------------- */
 
 export const _config = Object.seal({
-  logStreamHistoryRenderDepth: 3,
+  logStreamHistoryRenderDepth: 2,
   logStreamHistoryRenderUnitOffsetPx: 2,
   logStreamHistoryRenderOpacityUnitDecrease: 0.25,
   ////

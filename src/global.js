@@ -2,6 +2,7 @@
 
 import { io } from 'socket.io-client'
 
+// eslint-disable-next-line no-unused-vars
 import { timelineWaitConnectionTimeout, _Aug, _Time } from './constants.js'
 import { assertObject } from './methods/utils.js'
 
@@ -16,7 +17,7 @@ export const g = Object.seal({
   preserveConsole: false,
   useSourceMaps: true,
   directionDown: true,
-  defaultOrganization: _Time,
+  defaultOrganization: _Aug,
   vsLogPort: 2022,
 })
 
