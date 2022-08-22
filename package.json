@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/peilingjiang/log#readme",
   "devDependencies": {
-    "@babel/core": "^7.18.10",
+    "@babel/core": "^7.18.13",
     "@babel/preset-env": "^7.18.10",
     "@babel/preset-react": "^7.18.6",
     "@babel/preset-typescript": "^7.18.6",
@@ -43,7 +43,7 @@
     "prettier": "^2.7.1",
     "react-router-dom": "^6.3.0",
     "remote-calibrator": "^0.6.3-beta.2",
-    "sass": "^1.54.4",
+    "sass": "^1.54.5",
     "sass-loader": "^13.0.2",
     "style-loader": "^3.3.1",
     "ts-loader": "^9.3.1",
