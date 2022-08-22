@@ -10,7 +10,7 @@ import {
   matchLocInObjectByRemovingLogId,
   removeLogId,
 } from '../methods/utils.js'
-import { isEmptyObject, objectFromKeys } from './utils.js'
+import { isEmptyObject, objectFromKeys, getObjectKeys } from './utils.js'
 import { ObjectKey, FoldedDisplay, FolderIcon } from './components.js'
 import { FormatterFoldedDisplay } from './baseObjectTypes.js'
 import { assertInteractionEvent } from '../methods/specialHubUtils.js'
@@ -52,12 +52,13 @@ const FormatterObject = ({
 
   if (minimal) {
     if (!isEmptyObject(obj)) {
+      const keys = getObjectKeys(obj)
       content = (
         <>
           {'{'}
-          {Object.keys(obj).length === 1 ? (
+          {keys.length === 1 ? (
             <ObjectKey
-              value={Object.keys(obj)[0]}
+              value={keys[0]}
               inheritId={`${inheritId}[0]`}
               bold={true}
               choosing={choosing}
@@ -88,8 +89,7 @@ const FormatterObject = ({
   }
 
   // const objKeys = Object.keys(obj)
-  const objKeys = []
-  for (const key in obj) objKeys.push(key)
+  const objKeys = getObjectKeys(obj)
 
   if (folded) {
     // folded

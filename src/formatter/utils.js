@@ -21,7 +21,18 @@ export const isEmptyArray = arr => {
 }
 
 export const isEmptyObject = obj => {
-  return Object.keys(obj).length === 0
+  for (const key in obj) {
+    return false
+  }
+  return true
+}
+
+export const getObjectKeys = obj => {
+  const keys = []
+  for (const key in obj) {
+    keys.push(key)
+  }
+  return keys
 }
 
 export const objectFromKeys = (originalObj, keys) => {

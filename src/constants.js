@@ -149,7 +149,7 @@ export const stackFilePathCompareDepth = 3
 
 // out of 8 possible positions around the anchor element, we only allow the first N best ones
 export const positionFindingWorstAllowed = 6
-export const switchPositionRegistrationDifferenceThresholdPx2 = 2500
+export const switchPositionRegistrationDifferenceThresholdPx2 = 10000
 
 export const minimalStringShowLength = 7
 export const foldedArrayShowItemCount = 3

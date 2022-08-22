@@ -95,7 +95,7 @@ export const findPosition = (
     // weighted sum
     // offscreen is bad
     overlapByPosId[posId] =
-      overlapWithExistingPageElements + overlapWithOffscreenArea
+      overlapWithExistingPageElements + overlapWithOffscreenArea * 3 // offscreen is bad
   }
 
   const smallestKey = keyWithSmallestValue(overlapByPosId)
@@ -105,11 +105,10 @@ export const findPosition = (
     existingRegistration !== undefined &&
     overlapByPosId[existingRegistration] - smallestOverlap <
       switchPositionRegistrationDifferenceThresholdPx2
-  ) {
-    return registeredPositions(existingRegistration, anchorBounding)
-  }
+  )
+    return cssify(registeredPositions(existingRegistration, anchorBounding))
 
-  return registeredPositions(smallestKey, anchorBounding)
+  return cssify(registeredPositions(smallestKey, anchorBounding))
 }
 
 export const overlappingArea = (rect1, rect2) => {
@@ -152,6 +151,39 @@ export const isAnyOffscreen = rect => {
   )
 }
 
+export const moveInsideWindow = rect => {
+  let { left, top, right, bottom } = rect
+
+  if (bottom.length && pxTrim(bottom) > window.innerHeight)
+    bottom = pxWrap(window.innerHeight)
+  if (top.length && pxTrim(top) < 0) top = pxWrap(0)
+
+  if (right.length && pxTrim(right) > window.innerWidth)
+    right = pxWrap(window.innerWidth)
+  if (left.length && pxTrim(left) < 0) left = pxWrap(0)
+
+  return {
+    ...rect,
+    left,
+    top,
+    right,
+    bottom,
+  }
+}
+
+export const cssify = rect => {
+  // convert bounding rect measure to css bottom and right
+  return {
+    ...rect,
+    right: rect.right.length
+      ? pxWrap(window.innerWidth - pxTrim(rect.right))
+      : '',
+    bottom: rect.bottom.length
+      ? pxWrap(window.innerHeight - pxTrim(rect.bottom))
+      : '',
+  }
+}
+
 /* -------------------------------------------------------------------------- */
 
 export const _getPos = (
@@ -176,7 +208,6 @@ export const _getPos = (
 
 export const registeredPositions = (posId, anchorBounding) => {
   const { left, right, top, bottom } = anchorBounding
-  const { innerWidth, innerHeight } = window
 
   const gap = logStreamGapToAnchorPx
 
@@ -195,75 +226,29 @@ export const registeredPositions = (posId, anchorBounding) => {
       return _getPos(right + gap, top, undefined, undefined, _L, _T, 2)
 
     case 3:
-      return _getPos(
-        undefined,
-        bottom + gap,
-        innerWidth - right,
-        undefined,
-        _R,
-        _T,
-        3
-      )
+      return _getPos(undefined, bottom + gap, right, undefined, _R, _T, 3)
 
     case 4:
-      return _getPos(
-        right + gap,
-        undefined,
-        undefined,
-        innerHeight - bottom,
-        _L,
-        _B,
-        4
-      )
+      return _getPos(right + gap, undefined, undefined, bottom, _L, _B, 4)
 
     case 5:
-      return _getPos(
-        left,
-        undefined,
-        undefined,
-        innerHeight - top + gap,
-        _L,
-        _B,
-        5
-      )
+      return _getPos(left, undefined, undefined, top - gap, _L, _B, 5)
 
     case 6:
-      return _getPos(
-        undefined,
-        top,
-        innerWidth - left + gap,
-        undefined,
-        _R,
-        _T,
-        6
-      )
+      return _getPos(undefined, top, left - gap, undefined, _R, _T, 6)
 
     case 7:
-      return _getPos(
-        undefined,
-        undefined,
-        innerWidth - right,
-        innerHeight - top + gap,
-        _R,
-        _B,
-        7
-      )
+      return _getPos(undefined, undefined, right, top - gap, _R, _B, 7)
 
     case 8:
-      return _getPos(
-        undefined,
-        undefined,
-        innerWidth - left + gap,
-        innerHeight - bottom,
-        _R,
-        _B,
-        8
-      )
+      return _getPos(undefined, undefined, left - gap, bottom, _R, _B, 8)
 
     default:
       break
   }
 }
+
+/* -------------------------------------------------------------------------- */
 
 export const pxWrap = value => {
   if (value === 0) return '0px'
@@ -273,6 +258,8 @@ export const pxWrap = value => {
 export const pxTrim = value => {
   return Number(value.replace(/px/, ''))
 }
+
+/* -------------------------------------------------------------------------- */
 
 export const getTestValue = (accessor, testPosition) => {
   if (testPosition[accessor].length) return pxTrim(testPosition[accessor])
