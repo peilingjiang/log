@@ -55,6 +55,9 @@ export default class TimelineHolder extends Component {
       hostRef: PropTypes.object.isRequired,
       ////
       hostFunctions: PropTypes.object.isRequired,
+      ////
+      asts: PropTypes.object.isRequired,
+      registries: PropTypes.object.isRequired,
     }
   }
 
@@ -76,8 +79,8 @@ export default class TimelineHolder extends Component {
       pinnedGroupId: null, // TODO
       /* -------------------------------------------------------------------------- */
       // ! AST
-      asts: {},
-      registries: {},
+      // asts: {},
+      // registries: {},
       /* -------------------------------------------------------------------------- */
       offsetBudget: 0,
     }
@@ -101,25 +104,7 @@ export default class TimelineHolder extends Component {
     this.setTimelineOffsetBudget = this.setTimelineOffsetBudget.bind(this)
   }
 
-  componentDidMount() {
-    socket.on('ast', data => {
-      window.console.log('%cReceived AST', 'color: #ff42a1')
-
-      const newRegistries = preprocessASTsToGetRegistries(
-        this.props.logGroups,
-        this.props.logTimeline,
-        data,
-        this.state.registries
-      )
-
-      if (Object.keys(data).length > 0)
-        this.setState({
-          asts: data,
-          registries: newRegistries,
-        })
-    })
-    socket.emit('request:ast')
-  }
+  // componentDidMount() {}
 
   componentDidUpdate(prevProps) {
     // check if left overflow the screen
@@ -238,6 +223,8 @@ export default class TimelineHolder extends Component {
       updateLog,
       hostRef,
       hostFunctions,
+      asts,
+      registries,
     } = this.props
 
     const {
@@ -247,8 +234,6 @@ export default class TimelineHolder extends Component {
       right,
       filterArea,
       enableFilterArea,
-      asts,
-      registries,
       offsetBudget,
     } = this.state
 

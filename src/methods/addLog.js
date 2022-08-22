@@ -13,6 +13,7 @@ import {
 } from '../constants.js'
 
 import { g } from '../global.js'
+import { preprocessASTsToGetRegistries } from './ast.js'
 import { sanitizeFormat, sanitizeLevel } from './sanitize.js'
 import { checkForSpecialIdentifiers } from './specialHubUtils.js'
 import {
@@ -271,7 +272,7 @@ export const addLog = (
             }
           )
         ) {
-          return {
+          const returnedState = {
             ...newState,
             logGroups: {
               ...cloneLogGroups(newState.logGroups),
@@ -297,11 +298,19 @@ export const addLog = (
               },
             ],
           }
+
+          // ! update ast registries
+          _updateRegistries(returnedState)
+
+          return returnedState
         }
       }
 
+      /* -------------------------------------------------------------------------- */
       // ! actually add a log here
-      return {
+      /* -------------------------------------------------------------------------- */
+
+      const returnedState = {
         ...newState,
         logGroups: {
           ...cloneLogGroups(newState.logGroups),
@@ -320,6 +329,25 @@ export const addLog = (
           },
         ],
       }
+
+      // ! update ast registries
+      _updateRegistries(returnedState)
+
+      return returnedState
     })
   })
+}
+
+const _updateRegistries = returnedState => {
+  const newRegistries = preprocessASTsToGetRegistries(
+    returnedState.logGroups,
+    returnedState.logTimeline,
+    returnedState.asts,
+    returnedState.registries
+  )
+  if (
+    Object.keys(newRegistries).length > 0 &&
+    !isEqual(newRegistries, returnedState.registries)
+  )
+    returnedState.registries = newRegistries
 }

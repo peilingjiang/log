@@ -7,10 +7,11 @@ import TimelineHolder from './organizations/TimelineHolder.js'
 import { HyperLog } from './globalLogObject.js'
 import { deepCopyArrayOfLogs } from './methods/utils.js'
 import { _Aug, _Time } from './constants.js'
-import { g } from './global.js'
+import { g, socket } from './global.js'
 import { clearAllOutlines } from './methods/attachElements.js'
 import { highlightElement } from './methods/highlight.js'
 import { StackParser } from './methods/stackParser.js'
+import { preprocessASTsToGetRegistries } from './methods/ast.js'
 
 export default class LogHost extends Component {
   constructor(props) {
@@ -23,6 +24,10 @@ export default class LogHost extends Component {
       organization: g.defaultOrganization, // timeline, augmented, list?, grid?
       ////
       timelineHighlightedLogId: null,
+      ////
+      // ! AST
+      asts: {},
+      registries: {},
     }
 
     this.ref = createRef()
@@ -56,6 +61,18 @@ export default class LogHost extends Component {
     // add event listeners
     window.addEventListener('resize', this._resizeHandler)
     window.addEventListener('keypress', this._shortcutHandler)
+
+    // asts
+    socket.on('ast', data => {
+      window.console.log('%cReceived AST', 'color: #ff42a1')
+      this._updateRegistries(
+        data,
+        this.state.registries,
+        this.state.logGroups,
+        this.state.logTimeline
+      )
+    })
+    socket.emit('request:ast')
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -88,6 +105,28 @@ export default class LogHost extends Component {
 
   shouldComponentUpdate(nextProps, nextState) {
     return !isEqual(nextProps, this.props) || !isEqual(nextState, this.state)
+  }
+
+  _updateRegistries(asts, registries, logGroups, logTimeline) {
+    const newRegistries = preprocessASTsToGetRegistries(
+      logGroups,
+      logTimeline,
+      asts,
+      registries
+    )
+
+    if (Object.keys(asts).length > 0 && !isEqual(asts, this.state.asts))
+      this.setState({
+        asts: asts,
+      })
+
+    if (
+      Object.keys(newRegistries).length > 0 &&
+      !isEqual(newRegistries, this.state.registries)
+    )
+      this.setState({
+        registries: newRegistries,
+      })
   }
 
   _resizeHandler() {
@@ -331,7 +370,7 @@ export default class LogHost extends Component {
     return streamsHolders
   }
 
-  renderTimelineLogs(logGroups, logTimeline, logPaused) {
+  renderTimelineLogs(logGroups, logTimeline, logPaused, asts, registries) {
     // calculate the total number of logs
     let totalLogs = 0
     for (const logGroupId in logGroups) {
@@ -350,6 +389,8 @@ export default class LogHost extends Component {
           updateLog={this.updateLog}
           hostRef={this.ref}
           hostFunctions={this.hostFunctions}
+          asts={asts}
+          registries={registries}
         />
       )
     )
@@ -358,7 +399,14 @@ export default class LogHost extends Component {
   /* -------------------------------------------------------------------------- */
 
   render() {
-    const { logPaused, logGroups, logTimeline, organization } = this.state
+    const {
+      logPaused,
+      logGroups,
+      logTimeline,
+      organization,
+      asts,
+      registries,
+    } = this.state
 
     let renderedLogElements
     switch (organization) {
@@ -369,7 +417,9 @@ export default class LogHost extends Component {
         renderedLogElements = this.renderTimelineLogs(
           logGroups,
           logTimeline,
-          logPaused
+          logPaused,
+          asts,
+          registries
         )
         break
       default:
