@@ -29,6 +29,7 @@ export function activate(context) {
   context.subscriptions.push(disposable)
 
   /* -------------------------------------------------------------------------- */
+  // ! LISTENERS
 
   // ! decorate the current document
   window.onDidChangeActiveTextEditor(editor => {
@@ -50,6 +51,8 @@ export function activate(context) {
     console.log('VS Code                | file saving')
     parseAllCodeFilesAndEmit(false)
   })
+
+  /* -------------------------------------------------------------------------- */
 
   // ! status bar
   // add a label to the status bar

@@ -43,11 +43,6 @@ export const parseAllCodeFilesAndEmit = async (emitEverything = false) => {
       )
     }
   }
-
-  // workspace.textDocuments.forEach(document => {
-  //   if (!isValidDocument(document.languageId())) return
-  //   parseCodeFile(document)
-  // })
 }
 
 export const parseCodeFile = (document, newCache) => {

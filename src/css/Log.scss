@@ -175,7 +175,7 @@
   .hyper-log-count {
     @include font-fixed;
     color: $white;
-    background: $grey;
+    background: rgba($black, $opacity-high);
     font-size: $font-size-xs;
     line-height: 100%;
     white-space: nowrap;

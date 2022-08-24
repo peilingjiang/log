@@ -119,6 +119,25 @@ export const logGroupInterface = PropTypes.exact({
   // customization
 })
 
+// ! logStreamsHolder
+export const logStreamsHolderInterface = {
+  element: PropTypes.instanceOf(Element),
+  elementId: PropTypes.string,
+  logGroups: PropTypes.array.isRequired,
+  updateLogGroup: PropTypes.func.isRequired,
+  updateLog: PropTypes.func.isRequired,
+  hostRef: PropTypes.object.isRequired,
+  ////
+  snap: PropTypes.bool.isRequired,
+  snapElement: PropTypes.instanceOf(Element),
+  snapElementId: PropTypes.string,
+  snapAnchorSide: PropTypes.string,
+  ////
+  hostFunctions: PropTypes.object.isRequired,
+  ////
+  registries: PropTypes.object.isRequired,
+}
+
 // ! logTimelineItem
 export const logTimelineItemInterface = PropTypes.exact({
   timestamp: timestampItemInterface.isRequired,
@@ -129,6 +148,7 @@ export const logTimelineItemInterface = PropTypes.exact({
 
 export const registryInterface = PropTypes.exact({
   identifier: PropTypes.string.isRequired,
+  rawCodeObject: PropTypes.object.isRequired,
   filePath: PropTypes.string.isRequired,
   stackPath: PropTypes.string.isRequired,
   stackFile: PropTypes.string.isRequired,

@@ -31,6 +31,8 @@ export class Formatter extends Component {
       streamFunctions: PropTypes.object.isRequired,
       choosingCenterStaged: PropTypes.bool.isRequired,
       highlightChanged: PropTypes.bool.isRequired,
+      ////
+      registries: PropTypes.object.isRequired,
     }
   }
 
@@ -67,9 +69,12 @@ export class Formatter extends Component {
       streamFunctions,
       choosingCenterStaged,
       highlightChanged,
+      registries,
     } = this.props
 
     let formattedArgs
+
+    // ! center staged
     if (view.centerStagedId.length) {
       const [argsForFormatter, idForFormatter] = parseCenterStagedValueFromId(
         args,
@@ -91,6 +96,7 @@ export class Formatter extends Component {
         highlightChanged
       )
     } else {
+      // ! normal
       formattedArgs = args.map((arg, i) => {
         return formatArg(
           arg,

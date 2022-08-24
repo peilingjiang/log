@@ -2,6 +2,22 @@ export const proceedDeeper = instance => {
   const type = instance.type
 
   /* -------------------------------------------------------------------------- */
+  if (type.includes('JSX')) {
+    switch (type) {
+      case 'JSXElement':
+        return [...instance.children, ...instance.openingElement.attributes]
+
+      case 'JSXAttribute':
+        return instance.value
+
+      case 'JSXExpressionContainer':
+        return instance.expression
+    }
+
+    return
+  }
+
+  /* -------------------------------------------------------------------------- */
   if (type.includes('Declaration')) {
     switch (type) {
       case 'ImportDeclaration':
@@ -37,6 +53,8 @@ export const proceedDeeper = instance => {
     switch (type) {
       case 'ExpressionStatement':
         return instance.expression
+      case 'ReturnStatement':
+        return instance.argument
     }
     return instance.body
   }

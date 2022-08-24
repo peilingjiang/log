@@ -25,6 +25,17 @@ export const getObjectIds = obj => {
   return Object.keys(obj)
 }
 
+export const diffObjects = (obj1, obj2) => {
+  // return how obj2 is different from obj1
+  const diff = {}
+  for (const key in obj1) {
+    if (obj1[key] !== obj2[key]) {
+      diff[key] = obj2[key]
+    }
+  }
+  return diff
+}
+
 export const idFromString = str =>
   uuidv5(
     str,

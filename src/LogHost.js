@@ -65,6 +65,7 @@ export default class LogHost extends Component {
     // asts
     socket.on('ast', data => {
       window.console.log('%cReceived AST', 'color: #ff42a1')
+
       this._updateRegistries(
         data,
         this.state.registries,
@@ -286,7 +287,7 @@ export default class LogHost extends Component {
     })
   }
 
-  renderAugmentedLogs(logGroups) {
+  renderAugmentedLogs(logGroups, registries) {
     // we remove old streamsHoldersRefs if corresponding holder has gone
     const currentlyExistingLogGroupHolderIds = []
     const streamsHolders = []
@@ -319,6 +320,7 @@ export default class LogHost extends Component {
         <LogStreamsHolder
           key={snapElementId}
           ref={this.streamsHoldersRefs[snapElementId]}
+          ////
           element={null}
           elementId={null}
           logGroups={streamsHolderSnapByElement[snapElementId]}
@@ -335,6 +337,8 @@ export default class LogHost extends Component {
             snapElementId
           )}
           hostFunctions={this.hostFunctions}
+          ////
+          registries={registries}
         />
       )
     }
@@ -348,6 +352,7 @@ export default class LogHost extends Component {
         <LogStreamsHolder
           key={groupElementId}
           ref={this.streamsHoldersRefs[groupElementId]}
+          ////
           element={this._getElementFromLogGroups(logGroups, groupElementId)}
           elementId={groupElementId}
           logGroups={streamsHoldersByElement[groupElementId]}
@@ -356,6 +361,8 @@ export default class LogHost extends Component {
           hostRef={this.ref}
           snap={false}
           hostFunctions={this.hostFunctions}
+          ////
+          registries={registries}
         />
       )
     }
@@ -411,7 +418,7 @@ export default class LogHost extends Component {
     let renderedLogElements
     switch (organization) {
       case _Aug:
-        renderedLogElements = this.renderAugmentedLogs(logGroups)
+        renderedLogElements = this.renderAugmentedLogs(logGroups, registries)
         break
       case _Time:
         renderedLogElements = this.renderTimelineLogs(

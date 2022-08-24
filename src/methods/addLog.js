@@ -28,6 +28,7 @@ import {
   cloneLogGroups,
   cloneLogTimeline,
   deepCopyArrayOfLogs,
+  diffObjects,
   getObjectIds,
   getTimestamp,
   idFromString,
@@ -300,7 +301,7 @@ export const addLog = (
           }
 
           // ! update ast registries
-          _updateRegistries(returnedState)
+          _updateRegistries(logHost, returnedState)
 
           return returnedState
         }
@@ -331,14 +332,14 @@ export const addLog = (
       }
 
       // ! update ast registries
-      _updateRegistries(returnedState)
+      _updateRegistries(logHost, returnedState)
 
       return returnedState
     })
   })
 }
 
-const _updateRegistries = returnedState => {
+const _updateRegistries = (logHost, returnedState) => {
   const newRegistries = preprocessASTsToGetRegistries(
     returnedState.logGroups,
     returnedState.logTimeline,

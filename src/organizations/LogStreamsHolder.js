@@ -5,26 +5,19 @@ import isEqual from 'react-fast-compare'
 import LogStream from './LogStream.js'
 import { assertExistence, cloneLogGroup } from '../methods/utils.js'
 import { findPosition, pxWrap } from '../methods/findPosition.js'
-import { logStreamGapToAnchorPx, _Aug, _L, _R, _T } from '../constants.js'
+import {
+  logStreamGapToAnchorPx,
+  logStreamsHolderInterface,
+  _Aug,
+  _L,
+  _R,
+  _T,
+} from '../constants.js'
 import { getSnapPosition } from '../methods/snap.js'
 
 export default class LogStreamsHolder extends Component {
   static get propTypes() {
-    return {
-      element: PropTypes.instanceOf(Element),
-      elementId: PropTypes.string,
-      logGroups: PropTypes.array.isRequired,
-      updateLogGroup: PropTypes.func.isRequired,
-      updateLog: PropTypes.func.isRequired,
-      hostRef: PropTypes.object.isRequired,
-      ////
-      snap: PropTypes.bool.isRequired,
-      snapElement: PropTypes.instanceOf(Element),
-      snapElementId: PropTypes.string,
-      snapAnchorSide: PropTypes.string,
-      ////
-      hostFunctions: PropTypes.object.isRequired,
-    }
+    return logStreamsHolderInterface
   }
 
   constructor(props) {
@@ -174,6 +167,7 @@ export default class LogStreamsHolder extends Component {
       hostRef,
       hostFunctions,
       snap,
+      registries,
     } = this.props
     const { hovered, grabbing, bounding } = this.state
 
@@ -209,6 +203,8 @@ export default class LogStreamsHolder extends Component {
               handleStreamDragAround={this.handleStreamDragAround}
               organization={_Aug}
               hostFunctions={hostFunctions}
+              ////
+              registries={registries}
             />
           ))}
       </div>

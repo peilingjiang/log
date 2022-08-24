@@ -60,11 +60,7 @@ export default class LogStream extends Component {
       ////
       hostFunctions: PropTypes.object.isRequired,
       ////
-      // for timeline single-log streams
-      // timelineOffset: PropTypes.number,
-      // registriesByFileName: PropTypes.object,
-      // expandedLevels: PropTypes.object,
-      // timelineOffsetBudget: PropTypes.number,
+      registries: PropTypes.object.isRequired,
     }
   }
 
@@ -721,6 +717,8 @@ export default class LogStream extends Component {
       },
       hostFunctions,
       organization,
+      ////
+      registries,
     } = this.props
 
     // the format definition of the thread
@@ -758,6 +756,8 @@ export default class LogStream extends Component {
             ////
             logStats={logStats}
             useStats={useStats}
+            ////
+            registries={registries}
           />
         ) : (
           <ShapeLog
@@ -780,6 +780,8 @@ export default class LogStream extends Component {
             ////
             logStats={logStats}
             useStats={useStats}
+            ////
+            registries={registries}
           />
         )
       })
@@ -809,6 +811,8 @@ export default class LogStream extends Component {
             ////
             logStats={logStats}
             useStats={useStats}
+            ////
+            registries={registries}
           />
         ) : (
           <ShapeLog
@@ -831,6 +835,8 @@ export default class LogStream extends Component {
             ////
             logStats={logStats}
             useStats={useStats}
+            ////
+            registries={registries}
           />
         )
     }

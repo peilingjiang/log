@@ -8,3 +8,4 @@ export const configurations = {
 }
 
 export const parsingCache = {}
+export const codeCache = {}

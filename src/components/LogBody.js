@@ -35,6 +35,8 @@ export default class LogBody extends Component {
       view: logViewInterface.isRequired,
       choosingCenterStaged: PropTypes.bool.isRequired,
       highlightChanged: PropTypes.bool.isRequired,
+      ////
+      registries: PropTypes.object.isRequired,
     }
   }
 
@@ -97,6 +99,7 @@ export default class LogBody extends Component {
       view,
       choosingCenterStaged,
       highlightChanged,
+      registries,
     } = this.props
 
     const isAugmented = organization === _Aug
@@ -164,6 +167,8 @@ export default class LogBody extends Component {
               streamFunctions={streamFunctions}
               choosingCenterStaged={choosingCenterStaged}
               highlightChanged={highlightChanged}
+              ////
+              registries={registries}
             />
           )}
           {unit ? <span className="hyper-log-unit">{unit}</span> : null}

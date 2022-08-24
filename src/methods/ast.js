@@ -30,7 +30,6 @@ export const preprocessASTsToGetRegistries = (
 
   // delete all related registries for a new (or changed) file
   const newFilePaths = Object.keys(newASTs)
-
   for (const registryGroupId in prevRegistries) {
     if (!newFilePaths.includes(prevRegistries[registryGroupId].filePath)) {
       newRegistries[registryGroupId] = { ...prevRegistries[registryGroupId] }
@@ -46,22 +45,34 @@ export const preprocessASTsToGetRegistries = (
 
       for (const astFilePath in newASTs) {
         if (matchWebPathAndFilePath(repLog.stack.path, astFilePath)) {
+          const rawCodeFile = newASTs[astFilePath].text
+
           const astTree = newASTs[astFilePath].result.program.body
           const logLine = repLog.stack.line
           const logChar = repLog.stack.char
 
           // const depthStack = parseAST(astTree, logLine, logChar)
-          let depthStack
+          let depthStack, rawCodeObject
           try {
-            depthStack = parseAST(astTree, logLine, logChar)
+            // eslint-disable-next-line no-extra-semi
+            ;[depthStack, rawCodeObject] = parseAST(astTree, logLine, logChar)
+            rawCodeObject.rawCodeContent = getRawLogContent(
+              rawCodeFile,
+              rawCodeObject
+            )
           } catch (e) {
+            console.error(e)
             depthStack = ['Unknown']
+            rawCodeObject = {
+              rawCodeContent: '',
+            }
           }
 
           depthStack = depthStack || ['Unknown']
 
           newRegistries[logGroupId] = {
             identifier: getIdentifier(repLog.stack.path, logLine, logChar),
+            rawCodeObject,
             filePath: astFilePath,
             stackPath: repLog.stack.path,
             stackFile: repLog.stack.file,
@@ -86,14 +97,14 @@ const parseAST = (astProgramBody, targetLine, targetChar) => {
 const parseASTPart = (bodyArray, targetLine, targetChar, prevDepthStack) => {
   // when final body is the single only child, they will not be placed in an array
   if (assertObject(bodyArray) && reachedTheLogStatement(bodyArray))
-    return prevDepthStack
+    return [prevDepthStack, bodyArray]
 
   for (const bodyInd in bodyArray) {
     const body = bodyArray[bodyInd]
 
     if (targetPositionWithinBody(body, targetLine, targetChar)) {
       // stop proceed when reaching the log statement
-      if (reachedTheLogStatement(body)) return prevDepthStack
+      if (reachedTheLogStatement(body)) return [prevDepthStack, body]
       // proceed deeper
       const [increasedStack, next] = proceed(body, bodyInd)
 
@@ -146,18 +157,32 @@ const targetPositionWithinBody = (body, targetLine, targetChar) => {
 
 const proceed = (instance, bodyInd) => {
   let result = instance
-  const increasedStack = [`[${bodyInd}]${instance.type}`]
+  const increasedStack = isIgnoredStackType(instance.type)
+    ? []
+    : [`[${bodyInd}]${instance.type}`]
 
   while (result && !assertArray(result) && !reachedTheLogStatement(result)) {
     result = proceedDeeper(result)
-    if (result && result.type && !ignoredStackTypes.includes(result.type))
+    if (result && result.type && !isIgnoredStackType(result.type))
       increasedStack.push(result.type)
   }
 
   return [increasedStack, result]
 }
 
-const ignoredStackTypes = ['BlockStatement']
+const ignoredStackTypesPatterns = [
+  'BlockStatement',
+  'JSXExpressionContainer',
+  'ExpressionStatement',
+  'MemberExpression',
+]
+
+const isIgnoredStackType = type => {
+  for (const pattern of ignoredStackTypesPatterns)
+    if (type.includes(pattern)) return true
+
+  return false
+}
 
 const reachedTheLogStatement = expression => {
   return (
@@ -165,6 +190,18 @@ const reachedTheLogStatement = expression => {
       expression.callee.name === 'log') ||
     (expression.type === 'Identifier' && expression.name === 'log')
   )
+}
+
+const getRawLogContent = (rawCodeText, rawCodeObject) => {
+  const subString = rawCodeText.substring(
+    rawCodeObject.start,
+    rawCodeObject.end + 1
+  )
+  // use regex to get content inside log( * )
+  // s is for matching multiple lines
+  const regex = /log\((.*)\)/s
+  const match = regex.exec(subString)
+  return match[1]
 }
 
 /* -------------------------------------------------------------------------- */
