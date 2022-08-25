@@ -897,6 +897,7 @@ export default class LogStream extends Component {
           logGroupId={groupId}
           paused={paused}
           orientation={orientation}
+          alignment={alignItemsValue}
           canSnap={canSnap}
           snap={snap}
           streamGrabbing={grabbing}

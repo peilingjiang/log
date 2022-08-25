@@ -21,6 +21,7 @@ export default class LogStreamName extends Component {
       ////
       paused: PropTypes.bool.isRequired,
       orientation: PropTypes.string.isRequired,
+      alignment: PropTypes.string.isRequired,
       canSnap: PropTypes.bool.isRequired,
       snap: PropTypes.bool.isRequired,
       streamGrabbing: PropTypes.bool.isRequired,
@@ -72,6 +73,7 @@ export default class LogStreamName extends Component {
       snap,
       streamGrabbing,
       orientation,
+      alignment,
       paused,
       centerStagedId,
       menuFunctions: { startSnap, setCenterStagedId },
@@ -86,6 +88,7 @@ export default class LogStreamName extends Component {
         } level-${level}`}
         ref={this.ref}
         style={{
+          alignItems: alignment,
           writingMode: snap && orientation === _V ? 'vertical-lr' : undefined,
         }}
       >

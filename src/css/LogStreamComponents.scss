@@ -3,18 +3,20 @@
 .hyper-log-stream-name {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
+  // align-items: flex-start;
+  justify-content: center;
   gap: $padding-xs;
 
-  background: rgba($white, $opacity-mid);
+  background: rgba($light, $opacity-high);
   backdrop-filter: blur($blur-xh);
   box-shadow: 0 1px 0 0 $white;
+
+  width: 100%;
 
   color: $black;
   font-size: $font-size-small;
   margin: 0;
-  padding: $padding-xs $padding-xxs;
+  padding: $padding-xs 0;
   white-space: nowrap;
   user-select: none;
 
