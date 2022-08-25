@@ -76,15 +76,9 @@
 
       @include scrollbar($scrollbar-width, transparent, $grey, $dark-grey);
 
-      &:has(.unfolded-inner) {
-        // width: $max-log-width !important;
-      }
-    }
-  }
-
-  .stream-expand {
-    .hyper-log-body {
-      // overflow: scroll;
+      // &:has(.unfolded-inner) {
+      //   // width: $max-log-width !important;
+      // }
     }
   }
 }

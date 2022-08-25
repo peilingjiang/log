@@ -1,5 +1,9 @@
 .level-error {
   &.hyper-log-stream {
+    .hyper-log-stream-name {
+      background: rgba($error-red-light, $opacity-xxh);
+    }
+
     &.stream-expand .logs-wrapper {
       border-top: 2px solid $error-red;
       border-bottom: 2px solid $error-red;
@@ -41,6 +45,10 @@
 
 .level-warn {
   &.hyper-log-stream {
+    .hyper-log-stream-name {
+      background: rgba($warn-yellow-light, $opacity-xxh);
+    }
+
     &.stream-expand .logs-wrapper {
       border-top: 2px solid $warn-yellow;
       border-bottom: 2px solid $warn-yellow;
