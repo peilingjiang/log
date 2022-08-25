@@ -58,6 +58,9 @@ export default class TimelineHolder extends Component {
       ////
       asts: PropTypes.object.isRequired,
       registries: PropTypes.object.isRequired,
+      ////
+      ////
+      clearance: PropTypes.bool.isRequired,
     }
   }
 
@@ -214,6 +217,17 @@ export default class TimelineHolder extends Component {
 
   /* -------------------------------------------------------------------------- */
 
+  getClearanceTransform(clearance, right) {
+    return {
+      opacity: clearance ? 0 : 1,
+      transform: clearance
+        ? `translateX(${
+            pxTrim(right) > window.innerWidth / 2 ? '-100vw' : '100vw'
+          })`
+        : `translateX(0)`,
+    }
+  }
+
   render() {
     const {
       logPaused,
@@ -225,6 +239,7 @@ export default class TimelineHolder extends Component {
       hostFunctions,
       asts,
       registries,
+      clearance,
     } = this.props
 
     const {
@@ -298,6 +313,7 @@ export default class TimelineHolder extends Component {
           }`}
           style={{
             right: right,
+            ...this.getClearanceTransform(clearance, right),
           }}
           onMouseEnter={() => this.handleTimelineHover(true)}
           onMouseOut={() => this.handleTimelineHover(false)}

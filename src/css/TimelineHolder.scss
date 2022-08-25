@@ -10,6 +10,9 @@
   margin: 0;
   padding: 0;
 
+  transition: transform $transition-normal ease-in-out,
+    opacity $transition-slow ease-in-out;
+
   .timeline-name {
     flex-direction: row !important;
     align-items: center !important;

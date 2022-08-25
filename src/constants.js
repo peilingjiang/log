@@ -136,6 +136,8 @@ export const logStreamsHolderInterface = {
   hostFunctions: PropTypes.object.isRequired,
   ////
   registries: PropTypes.object.isRequired,
+  ////
+  clearance: PropTypes.bool.isRequired,
 }
 
 // ! logTimelineItem

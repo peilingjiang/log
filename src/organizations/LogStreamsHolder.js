@@ -146,6 +146,18 @@ export default class LogStreamsHolder extends Component {
     })
   }
 
+  getClearanceTransform(clearance, bounding) {
+    return {
+      opacity: clearance ? 0 : 1,
+      transform: clearance
+        ? `translate(${bounding.left.length ? '-100vw' : '100vw'}, ${
+            // bounding.top.length ? '-100vh' : '100vh'
+            bounding.top.length ? '0' : '0'
+          })`
+        : `translate(0, 0)`,
+    }
+  }
+
   /* -------------------------------------------------------------------------- */
 
   handleStreamHover(newState = true) {
@@ -168,6 +180,7 @@ export default class LogStreamsHolder extends Component {
       hostFunctions,
       snap,
       registries,
+      clearance,
     } = this.props
     const { hovered, grabbing, bounding } = this.state
 
@@ -187,6 +200,7 @@ export default class LogStreamsHolder extends Component {
           // alignItems: 'flex-start',
           justifyContent:
             bounding.verticalAlign === _T ? 'flex-start' : 'flex-end',
+          ...this.getClearanceTransform(clearance, bounding),
         }}
         data-element-id={elementId}
       >

@@ -738,7 +738,7 @@ export default class LogStream extends Component {
         const useShapeLog = isShape && canUseShape(log, view.centerStagedId)
         return !useShapeLog ? (
           <Log
-            key={`${log.id} ${log.timestamps.at(-1).now}`}
+            key={`${log.id}-${log.timestamps.at(-1).now}`}
             groupId={groupId}
             log={log}
             orderReversed={--orderReversed} // !
@@ -762,7 +762,7 @@ export default class LogStream extends Component {
           />
         ) : (
           <ShapeLog
-            key={`${log.id} ${log.timestamps.at(-1).now}-shape`}
+            key={`${log.id}-${log.timestamps.at(-1).now}-shape`}
             groupId={groupId}
             log={log}
             orderReversed={--orderReversed} // !

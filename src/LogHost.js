@@ -28,6 +28,9 @@ export default class LogHost extends Component {
       // ! AST
       asts: {},
       registries: {},
+      ////
+      // ! adjust for page elements
+      clearance: false,
     }
 
     this.ref = createRef()
@@ -98,6 +101,8 @@ export default class LogHost extends Component {
 
   componentWillUnmount() {
     window.removeEventListener('resize', this._resizeHandler)
+    window.addEventListener('keypress', this._shortcutHandler)
+
     this.setState({
       logGroups: {},
       logTimeline: [],
@@ -146,12 +151,15 @@ export default class LogHost extends Component {
   }
 
   _shortcutHandler(e) {
-    if (e.ctrlKey) {
-      if (e.key === 's') {
+    if (e.altKey) {
+      if (e.code === 'KeyC') {
         e.preventDefault()
         e.stopPropagation()
 
-        // add new smart stream here
+        // clear the whole log system
+        this.setState({
+          clearance: !this.state.clearance,
+        })
       }
     }
   }
@@ -288,6 +296,8 @@ export default class LogHost extends Component {
   }
 
   renderAugmentedLogs(logGroups, registries) {
+    const { clearance } = this.state
+
     // we remove old streamsHoldersRefs if corresponding holder has gone
     const currentlyExistingLogGroupHolderIds = []
     const streamsHolders = []
@@ -339,6 +349,8 @@ export default class LogHost extends Component {
           hostFunctions={this.hostFunctions}
           ////
           registries={registries}
+          ////
+          clearance={clearance}
         />
       )
     }
@@ -363,6 +375,8 @@ export default class LogHost extends Component {
           hostFunctions={this.hostFunctions}
           ////
           registries={registries}
+          ////
+          clearance={clearance}
         />
       )
     }
@@ -378,6 +392,8 @@ export default class LogHost extends Component {
   }
 
   renderTimelineLogs(logGroups, logTimeline, logPaused, asts, registries) {
+    const { clearance } = this.state
+
     // calculate the total number of logs
     let totalLogs = 0
     for (const logGroupId in logGroups) {
@@ -398,6 +414,8 @@ export default class LogHost extends Component {
           hostFunctions={this.hostFunctions}
           asts={asts}
           registries={registries}
+          ////
+          clearance={clearance}
         />
       )
     )
