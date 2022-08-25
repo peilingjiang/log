@@ -109,7 +109,7 @@ export default class LogStreamMenu extends Component {
             title="view the stream with a timeline slider"
           >
             <TimelineSlider />
-            <span>timeline</span>
+            <span>slider</span>
           </p>
         )
       )
@@ -186,6 +186,7 @@ export default class LogStreamMenu extends Component {
           }
         >
           <CenterStage />
+          <span>{choosingCenterStaged ? 'un-stage' : 'stage'}</span>
         </p>
       )
       // if (centerStagedId.length) {

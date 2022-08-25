@@ -137,7 +137,7 @@ $menu-height-text: calc(
 
   opacity: 0;
   height: 0;
-  overflow: hidden;
+  // overflow: hidden;
   pointer-events: none;
 
   transition-property: height, margin, opacity;
@@ -176,10 +176,12 @@ $menu-height-text: calc(
 
   .stream-menu-item {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: $padding-xxs;
     justify-content: center;
     align-items: center;
+
+    position: relative;
 
     color: $dark-grey;
     background: $light-grey;
@@ -194,10 +196,30 @@ $menu-height-text: calc(
 
     // tip
     span {
-      display: none;
-      color: $dark-grey;
-      font-size: $font-size-xs;
       // display: none;
+      position: absolute;
+      left: 50%;
+      top: calc(100% + $padding-xs);
+      transform: translateX(-50%);
+      padding: $padding-xs $padding-small;
+      border-radius: $radius-small;
+
+      font-size: $font-size-small;
+      font-weight: $font-weight-bold;
+      white-space: nowrap;
+      color: $grey;
+
+      background: rgba($white, $opacity-mid);
+      backdrop-filter: blur($blur-xh);
+
+      opacity: 0;
+      transition: opacity $transition-fast;
+    }
+
+    &:hover {
+      span {
+        opacity: 1;
+      }
     }
 
     * {

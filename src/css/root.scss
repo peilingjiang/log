@@ -71,6 +71,10 @@ $font-size-small: 0.675rem;
 $font-size-default: 0.75rem;
 $font-size-large: 1rem;
 
+$font-weight-thin: 400;
+$font-weight-default: 500;
+$font-weight-bold: 700;
+
 $transition-fast: 100ms;
 $transition-normal: 300ms;
 $transition-normal-slow: 500ms;
@@ -156,11 +160,11 @@ $rem-to-px: 16;
 }
 
 .font-bold {
-  font-weight: 700 !important;
+  font-weight: $font-weight-bold !important;
 }
 
 .font-thin {
-  font-weight: 400 !important;
+  font-weight: $font-weight-thin !important;
 }
 
 /* -------------------------------------------------------------------------- */
