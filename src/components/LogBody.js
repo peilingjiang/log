@@ -172,9 +172,10 @@ export default class LogBody extends Component {
               ////
               registries={registries}
               showRegistries={showRegistries}
+              ////
+              unit={unit}
             />
           )}
-          {unit ? <span className="hyper-log-unit">{unit}</span> : null}
         </div>
       </div>
     )

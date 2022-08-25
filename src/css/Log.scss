@@ -105,9 +105,9 @@
 .hyper-log-body {
   display: flex;
   flex-direction: column;
-  gap: $padding-xs;
   justify-content: flex-start;
   align-items: flex-start;
+  // gap: $padding-xs;
 
   padding: $padding-small;
   overflow-wrap: break-word;

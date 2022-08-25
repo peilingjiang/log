@@ -16,7 +16,7 @@ export const setupLeaderLine = (event, renderSudoElement, color) => {
     {
       path: 'straight',
       startPlug: 'disc',
-      endPlug: 'arrow2',
+      endPlug: 'disc',
     }
   )
   leaderLine.size = 2.5

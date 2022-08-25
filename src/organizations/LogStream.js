@@ -868,6 +868,7 @@ export default class LogStream extends Component {
 
     return (
       <div
+        ref={this.ref}
         className={`hyper-log-stream${
           expand ? ' stream-expand' : ' stream-not-expand'
         }${isShape ? ' shape-stream' : ''}${
@@ -886,7 +887,6 @@ export default class LogStream extends Component {
           position: this._offsetFromAutoAttach() ? 'absolute' : 'relative',
         }}
         data-id={groupId}
-        ref={this.ref}
         onMouseEnter={this.handleMouseEnter}
         onMouseLeave={this.handleMouseOut}
       >
@@ -936,6 +936,7 @@ export default class LogStream extends Component {
           paused={paused}
           format={format}
           orientation={orientation}
+          alignment={alignItemsValue}
           streamState={this.state}
           menuFunctions={this.menuFunctions}
           snap={snap}

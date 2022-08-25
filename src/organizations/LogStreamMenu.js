@@ -27,6 +27,7 @@ export default class LogStreamMenu extends Component {
     paused: PropTypes.bool.isRequired,
     format: PropTypes.string.isRequired,
     orientation: PropTypes.string.isRequired,
+    alignment: PropTypes.string.isRequired,
     streamState: PropTypes.object.isRequired,
     menuFunctions: PropTypes.object.isRequired,
     ////
@@ -55,6 +56,7 @@ export default class LogStreamMenu extends Component {
       paused,
       format,
       orientation,
+      alignment,
       useShape,
       organization,
       allowingCenterStaged,
@@ -204,7 +206,12 @@ export default class LogStreamMenu extends Component {
     }
 
     return (
-      <div className={`hyper-log-stream-menu stream-menu-${orientation}`}>
+      <div
+        className={`hyper-log-stream-menu stream-menu-${orientation}`}
+        style={{
+          justifyContent: alignment,
+        }}
+      >
         {!useTimeline && (
           <p
             className={`stream-menu-item menu-expand-item${

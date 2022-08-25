@@ -130,33 +130,45 @@ $menu-height-text: calc(
   position: relative;
 
   display: flex;
-  // gap: $padding-xxs;
   align-items: center;
-  justify-content: center;
-  // flex-direction: column;
+  gap: $padding-xxs;
 
-  pointer-events: none;
+  opacity: 0;
   height: 0;
-  width: 0;
   overflow: hidden;
-  transition: width $transition-fast, height $transition-fast,
-    margin $transition-fast;
+  pointer-events: none;
 
-  // z-index: 9990;
+  transition-property: height, margin, opacity;
+  transition-delay: 0;
+  transition-duration: $transition-fast;
+  transition-timing-function: ease-in-out;
+
   // margin: 0;
   padding: 0;
-  border-radius: calc($radius-small + $padding-xxs);
-  background: rgba($light-grey, $opacity-high);
+  // z-index: 9990;
+
+  // border-radius: calc($radius-small + $padding-xxs);
+  // background: rgba($light-grey, $opacity-high);
 
   user-select: none;
 
+  &.menu-start {
+    justify-content: flex-start;
+  }
+
+  &.menu-end {
+    justify-content: flex-end;
+  }
+
   &.stream-menu-horizontal {
-    margin: 0 0 $padding-xs 0;
+    width: 100%;
+    margin: 0 0 $padding-small 0;
     flex-direction: row;
   }
 
   &.stream-menu-vertical {
-    margin: 0 $padding-xs 0 0;
+    height: 100%;
+    margin: 0 $padding-small 0 0;
     flex-direction: column;
   }
 
@@ -170,7 +182,7 @@ $menu-height-text: calc(
     color: $dark-grey;
     background: $light-grey;
 
-    margin: $padding-xxs;
+    // margin: $padding-xxs;
     // padding: $padding-xs $padding-small;
     padding: $padding-small;
     border-radius: $radius-small;
@@ -269,16 +281,17 @@ $menu-height-text: calc(
   &:not(.in-grabbing) .hyper-log-stream-menu {
     // .hyper-log-stream-menu {
     pointer-events: initial !important;
+    opacity: 1 !important;
 
     &.stream-menu-horizontal {
       height: $menu-height !important;
-      width: fit-content !important;
+      // width: 100% !important;
       margin: $padding-xs 0;
     }
 
     &.stream-menu-vertical {
       width: $menu-height !important;
-      height: fit-content !important;
+      // height: 100% !important;
       margin: 0 $padding-xs;
     }
   }

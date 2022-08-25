@@ -16,7 +16,7 @@
   // overflow-x: visible;
 
   transition: transform $transition-normal ease-in-out,
-    opacity $transition-slow ease-in-out;
+    opacity $transition-normal ease-in-out;
   pointer-events: none;
 
   &.snap-holder {

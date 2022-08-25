@@ -21,6 +21,14 @@
         border-bottom: 1px solid rgba($grey, $opacity-xxh);
       }
 
+      .arg {
+        display: flex;
+        gap: $padding-xs;
+
+        margin: 0;
+        padding: 0;
+      }
+
       .raw-content {
         @include font-fixed;
         font-size: $font-size-small;

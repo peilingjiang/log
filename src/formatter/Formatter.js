@@ -35,6 +35,8 @@ export class Formatter extends Component {
       ////
       registries: PropTypes.object.isRequired,
       showRegistries: PropTypes.bool.isRequired,
+      ////
+      unit: PropTypes.string,
     }
   }
 
@@ -73,6 +75,7 @@ export class Formatter extends Component {
       highlightChanged,
       registries,
       showRegistries,
+      unit,
     } = this.props
 
     /* -------------------------------------------------------------------------- */
@@ -118,20 +121,23 @@ export class Formatter extends Component {
             {showRegistries && rawContent && rawContent[i] ? (
               <span className="raw-content">{rawContent[i]}</span>
             ) : null}
-            {formatArg(
-              arg,
-              groupId,
-              `(${logId}-)${i}`, // !
-              {
-                centerStagedId: view.centerStagedId,
-                unfoldedIds: view.unfoldedIds,
-                highlightedIds: view.highlightedIds,
-              },
-              streamFunctions,
-              false,
-              choosingCenterStaged,
-              highlightChanged
-            )}
+            <div key={`${groupId}-${i}-arg`} className="arg">
+              {formatArg(
+                arg,
+                groupId,
+                `(${logId}-)${i}`, // !
+                {
+                  centerStagedId: view.centerStagedId,
+                  unfoldedIds: view.unfoldedIds,
+                  highlightedIds: view.highlightedIds,
+                },
+                streamFunctions,
+                false,
+                choosingCenterStaged,
+                highlightChanged
+              )}
+              {unit ? <span className="hyper-log-unit">{unit}</span> : null}
+            </div>
           </div>
         )
         // return (
