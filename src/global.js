@@ -17,7 +17,10 @@ const development = process.env.NODE_ENV === 'development'
 const defaultFromLocalStorage = localStorage.getItem(localStorageKeys.DEFAULT)
 export const g = Object.seal(
   defaultFromLocalStorage
-    ? JSON.parse(defaultFromLocalStorage)
+    ? {
+        ...JSON.parse(defaultFromLocalStorage),
+        access: development,
+      }
     : {
         ////
         access: development,
