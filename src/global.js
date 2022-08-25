@@ -3,23 +3,33 @@
 import { io } from 'socket.io-client'
 
 // eslint-disable-next-line no-unused-vars
-import { timelineWaitConnectionTimeout, _Aug, _Time } from './constants.js'
+import {
+  localStorageKeys,
+  timelineWaitConnectionTimeout,
+  _Aug,
+  _Time,
+} from './constants.js'
 import { assertObject } from './methods/utils.js'
 
 // eslint-disable-next-line no-undef
 const development = process.env.NODE_ENV === 'development'
 
-export const g = Object.seal({
-  ////
-  access: development,
-  // access: true, // ! to be ENABLE after review process
-  ////
-  preserveConsole: false,
-  useSourceMaps: true,
-  directionDown: true,
-  defaultOrganization: _Aug,
-  vsLogPort: 2022,
-})
+const defaultFromLocalStorage = localStorage.getItem(localStorageKeys.DEFAULT)
+export const g = Object.seal(
+  defaultFromLocalStorage
+    ? JSON.parse(defaultFromLocalStorage)
+    : {
+        ////
+        access: development,
+        // access: true, // ! to be ENABLE after review process
+        ////
+        preserveConsole: false,
+        useSourceMaps: true,
+        directionDown: true,
+        defaultOrganization: _Aug,
+        vsLogPort: 2022,
+      }
+)
 
 // ! setLog
 ;(() => {
@@ -33,6 +43,9 @@ export const g = Object.seal({
     g.directionDown = options.directionDown
     g.defaultOrganization = options.defaultOrganization
     g.vsLogPort = options.vsLogPort
+
+    // save to localStorage
+    localStorage.setItem(localStorageKeys.DEFAULT, JSON.stringify(options))
   }
 })()
 

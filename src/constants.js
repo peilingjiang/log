@@ -210,6 +210,11 @@ export const _DEF = 'default'
 
 export const _ID_INT = '__id__interaction__'
 
+// localStorage keys
+export const localStorageKeys = {
+  DEFAULT: 'HYPER_LOG_DEFAULT',
+}
+
 export const validUnits = ['px', '%', 'em', 'rem', 'vh', 'vw', 'vmin', 'vmax']
 export const extraKeys = ['ctrlKey', 'shiftKey', 'altKey', 'metaKey']
 

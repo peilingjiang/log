@@ -5,7 +5,7 @@ import { addLog } from './methods/addLog.js'
 import LogStreamsHolder from './organizations/LogStreamsHolder.js'
 import TimelineHolder from './organizations/TimelineHolder.js'
 import { HyperLog } from './globalLogObject.js'
-import { deepCopyArrayOfLogs } from './methods/utils.js'
+import { deepCopyArrayOfLogs, preventEventWrapper } from './methods/utils.js'
 import { _Aug, _Time } from './constants.js'
 import { g, socket } from './global.js'
 import { clearAllOutlines } from './methods/attachElements.js'
@@ -153,12 +153,29 @@ export default class LogHost extends Component {
   _shortcutHandler(e) {
     if (e.altKey) {
       if (e.code === 'KeyC') {
-        e.preventDefault()
-        e.stopPropagation()
+        // ! clearance
+        preventEventWrapper(e, () => {
+          // clear the whole log system
+          this.setState({
+            clearance: !this.state.clearance,
+          })
+        })
+      } else if (e.code === 'KeyT') {
+        // ! organization
+        preventEventWrapper(e, () => {
+          // clear all element highlighting
+          clearAllOutlines()
 
-        // clear the whole log system
-        this.setState({
-          clearance: !this.state.clearance,
+          this.setState(
+            {
+              organization: this.state.organization === _Aug ? _Time : _Aug,
+            },
+            () => {
+              window.setLog({
+                defaultOrganization: this.state.organization,
+              })
+            }
+          )
         })
       }
     }
@@ -289,10 +306,17 @@ export default class LogHost extends Component {
     // clear all element highlighting
     clearAllOutlines()
 
-    this.setState({
-      organization: newOrganization,
-      timelineHighlightedLogId: logId,
-    })
+    this.setState(
+      {
+        organization: newOrganization,
+        timelineHighlightedLogId: logId,
+      },
+      () => {
+        window.setLog({
+          defaultOrganization: newOrganization,
+        })
+      }
+    )
   }
 
   renderAugmentedLogs(logGroups, registries) {
