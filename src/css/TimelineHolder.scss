@@ -167,13 +167,26 @@
   }
 
   .timeline-stream-item-wrappers-header {
+    cursor: pointer;
+    transition: background-color $transition-normal ease-in-out;
+
+    &.filtered-out-group-header {
+      // background: $dark-grey;
+
+      span {
+        color: $dark-grey !important;
+      }
+    }
+
     span {
       display: inline-block;
       margin: 0 0 0 $padding-xs;
-      padding: $padding-xs 0 $padding-xxs $padding-xs;
+      padding: $padding-small $padding-xs $padding-xs $padding-xs;
 
       color: $grey;
       font-size: $font-size-small;
+
+      transition: color $transition-normal ease-in-out;
     }
   }
 
@@ -185,6 +198,10 @@
 
     // z-index: 1;
     padding: 0 $padding-small 0 0;
+
+    transform-origin: center;
+    transition: max-height $transition-normal ease-in-out;
+    overflow: hidden;
 
     .hyper-log-stream-in-time {
       flex-shrink: 0;

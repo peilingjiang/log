@@ -395,7 +395,8 @@ export const containsOnlyString = str => {
   const lastChar = str.charAt(str.length - 1)
   return (
     (firstChar === '"' && lastChar === '"') ||
-    (firstChar === "'" && lastChar === "'")
+    (firstChar === "'" && lastChar === "'") ||
+    (firstChar === '`' && lastChar === '`' && !str.includes('$'))
   )
 }
 

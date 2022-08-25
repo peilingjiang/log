@@ -86,6 +86,8 @@ export default class TimelineHolder extends Component {
       // registries: {},
       /* -------------------------------------------------------------------------- */
       offsetBudget: 0,
+      /* -------------------------------------------------------------------------- */
+      filteredOutGroupIds: new Set(),
     }
 
     this.ref = createRef()
@@ -105,6 +107,11 @@ export default class TimelineHolder extends Component {
     this.handleTimelineFold = this.handleTimelineFold.bind(this)
 
     this.setTimelineOffsetBudget = this.setTimelineOffsetBudget.bind(this)
+
+    this.filterGroupIdsFunctions = {
+      add: this.addFilteredGroupId.bind(this),
+      remove: this.removeFilteredGroupId.bind(this),
+    }
   }
 
   // componentDidMount() {}
@@ -228,6 +235,27 @@ export default class TimelineHolder extends Component {
     }
   }
 
+  /* -------------------------------------------------------------------------- */
+
+  addFilteredGroupId(groupId) {
+    this.setState({
+      filteredOutGroupIds: new Set([
+        ...this.state.filteredOutGroupIds,
+        groupId,
+      ]),
+    })
+  }
+
+  removeFilteredGroupId(groupId) {
+    this.setState({
+      filteredOutGroupIds: new Set(
+        [...this.state.filteredOutGroupIds].filter(id => id !== groupId)
+      ),
+    })
+  }
+
+  /* -------------------------------------------------------------------------- */
+
   render() {
     const {
       logPaused,
@@ -250,6 +278,7 @@ export default class TimelineHolder extends Component {
       filterArea,
       enableFilterArea,
       offsetBudget,
+      filteredOutGroupIds,
     } = this.state
 
     const hasSomeAST = asts === null ? false : Object.keys(asts).length > 0
@@ -367,6 +396,9 @@ export default class TimelineHolder extends Component {
                     offsets={offsets}
                     ////
                     registries={registries}
+                    ////
+                    filteredOutGroupIds={filteredOutGroupIds}
+                    filterGroupIdsFunctions={this.filterGroupIdsFunctions}
                   />
                   <AlignmentBoxes
                     indentationOffsets={indentationOffsets}
@@ -400,6 +432,9 @@ const TimelineLogItemsMemo = ({
   offsets,
   ////
   registries,
+  ////
+  filteredOutGroupIds,
+  filterGroupIdsFunctions,
 }) => {
   // Object.keys(logGroups)
   //   .map(key => {
@@ -493,20 +528,16 @@ const TimelineLogItemsMemo = ({
   //     )
   //   })
 
+  const handleFilterGroupIds = id => {
+    if (filteredOutGroupIds.has(id)) filterGroupIdsFunctions.remove(id)
+    else filterGroupIdsFunctions.add(id)
+  }
+
   const toFilterOutElements = filteredOutElements.length > 0
 
-  // ! get offsets for each log group
-  // let offsets = {}
-  // Object.keys(logGroups).forEach(key => {
-  //   offsets[key] = getTimelineOffset(
-  //     logGroups[key],
-  //     registriesByFileName,
-  //     timelineOffsetBudget,
-  //     expandLevels
-  //   )
-  // })
-
-  // ! map
+  /* -------------------------------------------------------------------------- */
+  // ! MAP MAP MAP
+  /* -------------------------------------------------------------------------- */
   let lastItem = null
   return logTimeline.map((logIdentifier, ind) => {
     const logGroup = logGroups[logIdentifier.groupId]
@@ -557,12 +588,22 @@ const TimelineLogItemsMemo = ({
         {firstOfTheIdentifier && (
           <div
             key={`header-${ind}-time`}
-            className="timeline-stream-item-wrappers-header"
+            className={`timeline-stream-item-wrappers-header${
+              filteredOutGroupIds.has(logGroup.groupId)
+                ? ' filtered-out-group-header'
+                : ''
+            }`}
             style={{
               borderLeft:
                 level === 'log'
                   ? pseudoBorderLeft
                   : `${thisItem.offsetPx} solid ${rulerColor}`,
+              background: filteredOutGroupIds.has(logGroup.groupId)
+                ? applyOpacityTo(_rootStyles.grey, 0.25)
+                : undefined,
+            }}
+            onClick={() => {
+              handleFilterGroupIds(logGroup.groupId)
             }}
           >
             <span
@@ -575,11 +616,15 @@ const TimelineLogItemsMemo = ({
             </span>
           </div>
         )}
+
         <div
           key={`${ind}-time`}
           className={`timeline-log-item-wrapper level-${logObj.level}`}
           style={{
             borderLeft: pseudoBorderLeft,
+            maxHeight: !filteredOutGroupIds.has(logIdentifier.groupId)
+              ? '32rem'
+              : 0,
           }}
           // data-id={logObj.id}
         >
@@ -598,15 +643,6 @@ const TimelineLogItemsMemo = ({
             registries={registries}
             showRegistries={firstOfTheIdentifier}
           />
-
-          {/* <div
-          className="pseudo-expander"
-          style={{
-            paddingLeft: pxWrap(
-              timelineOffsetBudget - offsets[logIdentifier.groupId]
-            ),
-          }}
-        ></div> */}
 
           <span
             className="timeline-timestamp"
@@ -643,6 +679,9 @@ TimelineLogItemsMemo.propTypes = {
   offsets: PropTypes.object.isRequired,
   ////
   registries: PropTypes.object.isRequired,
+  ////
+  filteredOutGroupIds: PropTypes.object.isRequired,
+  filterGroupIdsFunctions: PropTypes.object.isRequired,
 }
 
 const TimelineLogItems = memo(TimelineLogItemsMemo, isEqual)

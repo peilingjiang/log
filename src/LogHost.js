@@ -160,7 +160,7 @@ export default class LogHost extends Component {
             clearance: !this.state.clearance,
           })
         })
-      } else if (e.code === 'KeyT') {
+      } else if (e.code === 'KeyT' || e.code === 'KeyX') {
         // ! organization
         preventEventWrapper(e, () => {
           // clear all element highlighting
