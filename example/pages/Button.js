@@ -49,11 +49,11 @@ export default class Button extends Component {
               },
               () => {
                 // log()
-
                 // log(this.state.submitClickedTimes)
                 //   .name('submit')
                 //   .color('#c999ff')
-                log(e).el(e.target).name('submit')
+
+                log(e, [1, 2, e]).el(e.target).name('submit')
                 // .color('#c999ff')
                 // .id('buttons')
               }
@@ -73,7 +73,7 @@ export default class Button extends Component {
               },
               () => {
                 /////
-                log(this.state.clearClickedTimes)
+                log(e, this.state.clearClickedTimes)
                   .name('clear')
                   .e(e.target)
                   .id('buttons')

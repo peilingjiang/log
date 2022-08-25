@@ -4,13 +4,8 @@ import isEqual from 'react-fast-compare'
 import LogStream from './LogStream.js'
 import Log from '../components/Log.js'
 import ShapeLog from '../components/ShapeLog.js'
-import {
-  canUseShape,
-  getLogStats,
-  parseDefaultColor,
-} from '../methods/utils.js'
-import { _H, _rootStyles } from '../constants.js'
-import { pxWrap } from '../methods/findPosition.js'
+import { canUseShape, getLogStats } from '../methods/utils.js'
+import { _H } from '../constants.js'
 import { logColor } from '../methods/levels.js'
 // import LogStreamMenu from './LogStreamMenu.js'
 // import LogStreamName from '../components/LogStreamName.js'
@@ -49,6 +44,8 @@ export default class LogStreamWrapperInTimeline extends LogStream {
       log: { level, color },
       organization,
       hostFunctions,
+      registries,
+      showRegistries,
     } = this.props
 
     const isShape = format === 'shape'
@@ -109,6 +106,9 @@ export default class LogStreamWrapperInTimeline extends LogStream {
               ////
               logStats={logStats}
               useStats={false}
+              ////
+              registries={registries}
+              showRegistries={showRegistries}
             />
           ) : (
             <ShapeLog
@@ -130,6 +130,9 @@ export default class LogStreamWrapperInTimeline extends LogStream {
               ////
               logStats={logStats}
               useStats={true}
+              ////
+              registries={registries}
+              showRegistries={showRegistries}
             />
           )}
         </div>

@@ -7,6 +7,7 @@ import FormatterObject from './FormatterObject.js'
 import {
   assertElement,
   assertTypeOfArg,
+  getArgsArrayFromRawCodeObject,
   parseCenterStagedValueFromId,
   removeLogId,
 } from '../methods/utils.js'
@@ -33,6 +34,7 @@ export class Formatter extends Component {
       highlightChanged: PropTypes.bool.isRequired,
       ////
       registries: PropTypes.object.isRequired,
+      showRegistries: PropTypes.bool.isRequired,
     }
   }
 
@@ -70,7 +72,20 @@ export class Formatter extends Component {
       choosingCenterStaged,
       highlightChanged,
       registries,
+      showRegistries,
     } = this.props
+
+    /* -------------------------------------------------------------------------- */
+    let rawContent =
+      registries && groupId in registries
+        ? registries[groupId]?.rawCodeObject?.rawCodeContent
+        : undefined
+    if (rawContent)
+      rawContent = getArgsArrayFromRawCodeObject(
+        rawContent,
+        registries[groupId].rawCodeObject
+      )
+    /* -------------------------------------------------------------------------- */
 
     let formattedArgs
 
@@ -98,19 +113,26 @@ export class Formatter extends Component {
     } else {
       // ! normal
       formattedArgs = args.map((arg, i) => {
-        return formatArg(
-          arg,
-          groupId,
-          `(${logId}-)${i}`, // !
-          {
-            centerStagedId: view.centerStagedId,
-            unfoldedIds: view.unfoldedIds,
-            highlightedIds: view.highlightedIds,
-          },
-          streamFunctions,
-          false,
-          choosingCenterStaged,
-          highlightChanged
+        return (
+          <div key={`${groupId}-${i}`} className="raw-content-label-wrapper">
+            {showRegistries && rawContent && rawContent[i] ? (
+              <span className="raw-content">{rawContent[i]}</span>
+            ) : null}
+            {formatArg(
+              arg,
+              groupId,
+              `(${logId}-)${i}`, // !
+              {
+                centerStagedId: view.centerStagedId,
+                unfoldedIds: view.unfoldedIds,
+                highlightedIds: view.highlightedIds,
+              },
+              streamFunctions,
+              false,
+              choosingCenterStaged,
+              highlightChanged
+            )}
+          </div>
         )
         // return (
         //   <>

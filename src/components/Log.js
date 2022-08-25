@@ -38,9 +38,9 @@ export default class Log extends Component {
       ////
       logStats: PropTypes.object.isRequired,
       useStats: PropTypes.bool.isRequired,
-      // toggleUseStats: PropTypes.func.isRequired, // in streamFunctions
       ////
       registries: PropTypes.object.isRequired,
+      showRegistries: PropTypes.bool.isRequired,
     }
   }
 
@@ -75,6 +75,7 @@ export default class Log extends Component {
       choosingCenterStaged,
       highlightChanged,
       registries,
+      showRegistries,
     } = this.props
     const {
       log: { level, args, id, count, timestamps, stack, color, unit },
@@ -120,6 +121,7 @@ export default class Log extends Component {
           choosingCenterStaged={choosingCenterStaged}
           highlightChanged={highlightChanged}
           registries={registries}
+          showRegistries={showRegistries}
         />
       </div>
     )

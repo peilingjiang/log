@@ -349,9 +349,8 @@ export default class TimelineHolder extends Component {
                     filteredOutElements={filteredOutElements}
                     ////
                     offsets={offsets}
-                    // registriesByFileName={registriesByFileName}
-                    // expandLevels={expandLevels}
-                    // timelineOffsetBudget={offsetBudget}
+                    ////
+                    registries={registries}
                   />
                   <AlignmentBoxes
                     indentationOffsets={indentationOffsets}
@@ -383,9 +382,8 @@ const TimelineLogItemsMemo = ({
   filteredOutElements,
   ////
   offsets,
-  // registriesByFileName,
-  // expandLevels,
-  // timelineOffsetBudget,
+  ////
+  registries,
 }) => {
   // Object.keys(logGroups)
   //   .map(key => {
@@ -535,9 +533,12 @@ const TimelineLogItemsMemo = ({
       0.25
     )}`
 
+    const firstOfTheIdentifier = !isEqual(lastItem, thisItem)
+    if (firstOfTheIdentifier) lastItem = thisItem
+
     return (
       <Fragment key={`timeline-${ind}`}>
-        {!isEqual(lastItem, thisItem) && (lastItem = thisItem) && (
+        {firstOfTheIdentifier && (
           <div
             key={`header-${ind}-time`}
             className="timeline-stream-item-wrappers-header"
@@ -578,7 +579,8 @@ const TimelineLogItemsMemo = ({
             organization={_Time}
             hostFunctions={hostFunctions}
             ////
-            // timelineOffset={offsets[logIdentifier.groupId]}
+            registries={registries}
+            showRegistries={firstOfTheIdentifier}
           />
 
           {/* <div
@@ -623,9 +625,8 @@ TimelineLogItemsMemo.propTypes = {
     .isRequired,
   ////
   offsets: PropTypes.object.isRequired,
-  // registriesByFileName: PropTypes.object.isRequired,
-  // expandLevels: PropTypes.object.isRequired,
-  // timelineOffsetBudget: PropTypes.number.isRequired,
+  ////
+  registries: PropTypes.object.isRequired,
 }
 
 const TimelineLogItems = memo(TimelineLogItemsMemo, isEqual)

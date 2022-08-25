@@ -61,8 +61,9 @@ export class HyperLog {
     return this
   }
 
-  history(history = 1) {
-    this.requests.history = history
+  history(history = 0) {
+    this.requests.history =
+      Math.max(Math.min(Math.round(Number(history)), 3), 0) || 1
     return this
   }
 

@@ -226,7 +226,7 @@ export const logStreamGapToAnchorPx = 10
 /* -------------------------------------------------------------------------- */
 
 export const _config = Object.seal({
-  logStreamHistoryRenderDepth: 2,
+  logStreamHistoryRenderDepth: 1,
   logStreamHistoryRenderUnitOffsetPx: 2,
   logStreamHistoryRenderOpacityUnitDecrease: 0.25,
   ////

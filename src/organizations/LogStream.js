@@ -741,7 +741,7 @@ export default class LogStream extends Component {
             key={`${log.id} ${log.timestamps.at(-1).now}`}
             groupId={groupId}
             log={log}
-            orderReversed={--orderReversed}
+            orderReversed={--orderReversed} // !
             expandedLog={expand}
             // groupBounding={bounding}
             // logsCount={logs.length}
@@ -758,13 +758,14 @@ export default class LogStream extends Component {
             useStats={useStats}
             ////
             registries={registries}
+            showRegistries={orderReversed === 0}
           />
         ) : (
           <ShapeLog
             key={`${log.id} ${log.timestamps.at(-1).now}-shape`}
             groupId={groupId}
             log={log}
-            orderReversed={--orderReversed}
+            orderReversed={--orderReversed} // !
             expandedLog={expand}
             // groupBounding={bounding}
             // logsCount={logs.length}
@@ -782,6 +783,7 @@ export default class LogStream extends Component {
             useStats={useStats}
             ////
             registries={registries}
+            showRegistries={orderReversed === 0}
           />
         )
       })
@@ -813,6 +815,7 @@ export default class LogStream extends Component {
             useStats={useStats}
             ////
             registries={registries}
+            showRegistries={true}
           />
         ) : (
           <ShapeLog
@@ -837,6 +840,7 @@ export default class LogStream extends Component {
             useStats={useStats}
             ////
             registries={registries}
+            showRegistries={true}
           />
         )
     }
@@ -864,11 +868,15 @@ export default class LogStream extends Component {
 
     return (
       <div
-        className={`hyper-log-stream${expand ? ' stream-expand' : ''}${
-          isShape ? ' shape-stream' : ''
-        }${orientation === _H ? ' stream-horizontal' : ' stream-vertical'}${
-          hovered ? ' stream-hovered up-front' : ''
-        }${current ? ' stream-current' : ''} level-${level}`}
+        className={`hyper-log-stream${
+          expand ? ' stream-expand' : ' stream-not-expand'
+        }${isShape ? ' shape-stream' : ''}${
+          orientation === _H ? ' stream-horizontal' : ' stream-vertical'
+        }${hovered ? ' stream-hovered up-front' : ''}${
+          current ? ' stream-current' : ''
+        }${
+          this._offsetFromAutoAttach() ? ' absolute-stream' : ''
+        } level-${level}`}
         style={{
           alignItems: alignItemsValue,
           // transform: snap

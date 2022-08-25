@@ -58,6 +58,31 @@ export const preventEventWrapper = (e, callback) => {
   callback()
 }
 
+export const getArgsArrayFromRawCodeObject = (argsString, rawObject) => {
+  // split a string of args into an array of args, avoid comma inside an array or object
+  const args = []
+
+  if (rawObject.type === 'CallExpression') {
+    const overallStart = rawObject.start + 'log('.length
+    for (const argument of rawObject.arguments) {
+      const rawString = argsString
+        .slice(argument.start - overallStart, argument.end - overallStart)
+        .replace(/\n/g, ' ')
+      args.push(
+        containsOnlyNumber(rawString) ||
+          containsOnlyString(rawString) ||
+          containsOnlyNull(rawString)
+          ? ''
+          : rawString
+      )
+    }
+
+    return args
+  } else {
+    return argsString.split(', ')
+  }
+}
+
 /* -------------------------------------------------------------------------- */
 
 // compare args
@@ -359,6 +384,23 @@ export const assertTypeOfArg = arg => {
   // if (assertElement(arg)) return 'element'
   if (assertObject(arg)) return 'object'
   return 'unknown'
+}
+
+export const containsOnlyNumber = str => {
+  return /^[0-9]+$/.test(str)
+}
+
+export const containsOnlyString = str => {
+  const firstChar = str.charAt(0)
+  const lastChar = str.charAt(str.length - 1)
+  return (
+    (firstChar === '"' && lastChar === '"') ||
+    (firstChar === "'" && lastChar === "'")
+  )
+}
+
+export const containsOnlyNull = str => {
+  return str === 'null' || str === 'undefined'
 }
 
 /* -------------------------------------------------------------------------- */

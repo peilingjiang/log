@@ -5,11 +5,13 @@
 
   display: flex;
   flex-direction: column;
+  // flex-flow: column wrap-reverse;
+  gap: 0 $padding-large;
 
-  width: 100%;
-  // width: max-content;
+  // width: 100%;
+  width: max-content;
   height: min-content;
-  // height: 100vh;
+  max-height: 100vh;
   // overflow-y: scroll;
   // overflow-x: visible;
 
@@ -28,6 +30,22 @@
   block-size: fit-content;
 
   pointer-events: initial;
+
+  ////
+  // not sure if the optimization is needed
+  &.absolute-stream {
+    width: max-content;
+  }
+
+  &.stream-expand {
+    max-width: $absolute-max-log-width !important;
+
+    &:not(.shape-stream) .logs-wrapper {
+      width: max-content;
+      max-width: 80vw;
+    }
+  }
+  ////
 
   &.shape-stream .logs-wrapper {
     padding: 0;

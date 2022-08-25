@@ -157,9 +157,15 @@ const targetPositionWithinBody = (body, targetLine, targetChar) => {
 
 const proceed = (instance, bodyInd) => {
   let result = instance
-  const increasedStack = isIgnoredStackType(instance.type)
-    ? []
-    : [`[${bodyInd}]${instance.type}`]
+  const increasedStack = []
+
+  if (
+    result &&
+    !assertArray(result) &&
+    !reachedTheLogStatement(result) &&
+    !isIgnoredStackType(result.type)
+  )
+    increasedStack.push(`[${bodyInd}]${instance.type}`)
 
   while (result && !assertArray(result) && !reachedTheLogStatement(result)) {
     result = proceedDeeper(result)
@@ -172,9 +178,11 @@ const proceed = (instance, bodyInd) => {
 
 const ignoredStackTypesPatterns = [
   'BlockStatement',
-  'JSXExpressionContainer',
   'ExpressionStatement',
   'MemberExpression',
+  'CallExpression',
+  'ClassBody',
+  'JSXExpressionContainer',
 ]
 
 const isIgnoredStackType = type => {
@@ -200,8 +208,21 @@ const getRawLogContent = (rawCodeText, rawCodeObject) => {
   // use regex to get content inside log( * )
   // s is for matching multiple lines
   const regex = /log\((.*)\)/s
-  const match = regex.exec(subString)
-  return match[1]
+  let match = regex.exec(subString)[1]
+
+  // remove // comments which stop at \n
+  // match = match.replace(/\/\/.*\n/g, '')
+
+  // remove /* comments */
+  // match = match.replace(/\/\*.*\*\//g, '')
+
+  // remove \n
+  // match = match.replace(/\n/g, '')
+
+  // remove multiple spaces into one
+  // match = match.replace(/\s{2,}/g, ' ')
+
+  return match
 }
 
 /* -------------------------------------------------------------------------- */

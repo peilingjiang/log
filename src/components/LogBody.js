@@ -37,6 +37,7 @@ export default class LogBody extends Component {
       highlightChanged: PropTypes.bool.isRequired,
       ////
       registries: PropTypes.object.isRequired,
+      showRegistries: PropTypes.bool.isRequired,
     }
   }
 
@@ -100,6 +101,7 @@ export default class LogBody extends Component {
       choosingCenterStaged,
       highlightChanged,
       registries,
+      showRegistries,
     } = this.props
 
     const isAugmented = organization === _Aug
@@ -169,6 +171,7 @@ export default class LogBody extends Component {
               highlightChanged={highlightChanged}
               ////
               registries={registries}
+              showRegistries={showRegistries}
             />
           )}
           {unit ? <span className="hyper-log-unit">{unit}</span> : null}

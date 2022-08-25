@@ -54,12 +54,6 @@ export function activate(context) {
 
   /* -------------------------------------------------------------------------- */
 
-  // ! status bar
-  // add a label to the status bar
-  statusBarLabel = window.createStatusBarItem(vscode.StatusBarAlignment.Left)
-  statusBarLabel.text = 'HyperLog'
-  statusBarLabel.show()
-
   // ! socket
   io.on('connection', socket => {
     console.log(`HyperLog connected    *| ${socket.id}`)
@@ -84,6 +78,12 @@ export function activate(context) {
   parseAllCodeFilesAndEmit(true)
   // highlight the current document
   doLogHighLight(window.activeTextEditor.document)
+
+  // ! status bar
+  // add a label to the status bar
+  statusBarLabel = window.createStatusBarItem(vscode.StatusBarAlignment.Left)
+  statusBarLabel.text = `$(check) HyperLog:${port}`
+  statusBarLabel.show()
 }
 
 // this method is called when your extension is deactivated
