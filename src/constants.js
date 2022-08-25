@@ -270,6 +270,7 @@ export const _rootStyles = Object.seal({
   transitionHighlightMs: 1500,
 
   maxLogWidthRem: 20,
+  minLogWidthRatioToMax: 0.2, // 4rem
 })
 
 export const _tinyColors = Object.seal({

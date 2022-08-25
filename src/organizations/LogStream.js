@@ -865,6 +865,7 @@ export default class LogStream extends Component {
     }
 
     const canSnap = format === 'shape' && organization === _Aug
+    const canShape = canUseShape(logs[logs.length - 1], view.centerStagedId)
 
     return (
       <div
@@ -941,7 +942,7 @@ export default class LogStream extends Component {
           streamState={this.state}
           menuFunctions={this.menuFunctions}
           snap={snap}
-          useShape={canUseShape(logs[logs.length - 1], view.centerStagedId)}
+          useShape={canShape}
           organization={organization}
           ////
           allowingCenterStaged={this._allowingCenterStaged()}
