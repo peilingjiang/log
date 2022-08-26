@@ -88,7 +88,7 @@ export default class LogStream extends Component {
     this.logsWrapperRef = createRef()
 
     this.handleMouseEnter = this.handleMouseEnter.bind(this)
-    this.handleMouseOut = this.handleMouseOut.bind(this)
+    this.handleMouseLeave = this.handleMouseLeave.bind(this)
     this.handleDragAround = this.handleDragAround.bind(this)
     this.handlePositionReset = this.handlePositionReset.bind(this)
 
@@ -578,7 +578,7 @@ export default class LogStream extends Component {
     this.props.handleStreamHover(true)
   }
 
-  handleMouseOut() {
+  handleMouseLeave() {
     // this.ref.current.classList.remove('stream-hovered')
     // this.ref.current.classList.remove('up-front')
     // if (this.ref.current.parentNode)
@@ -896,7 +896,7 @@ export default class LogStream extends Component {
         }}
         data-id={groupId}
         onMouseEnter={this.handleMouseEnter}
-        onMouseLeave={this.handleMouseOut}
+        onMouseLeave={this.handleMouseLeave}
       >
         <LogStreamName
           name={name}

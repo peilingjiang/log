@@ -342,7 +342,7 @@ export default class TimelineHolder extends Component {
             ...this.getClearanceTransform(clearance, right),
           }}
           onMouseEnter={() => this.handleTimelineHover(true)}
-          onMouseOut={() => this.handleTimelineHover(false)}
+          onMouseLeave={() => this.handleTimelineHover(false)}
         >
           <TimelineName
             key={'timeline-name'}

@@ -39,7 +39,7 @@ export default class LogStreamWrapperInTimeline extends LogStream {
   /* -------------------------------------------------------------------------- */
 
   handleMouseEnter() {}
-  handleMouseOut() {}
+  handleMouseLeave() {}
 
   /* -------------------------------------------------------------------------- */
 
@@ -75,7 +75,7 @@ export default class LogStreamWrapperInTimeline extends LogStream {
         }}
         ////
         // onMouseEnter={this.handleMouseEnter}
-        // onMouseLeave={this.handleMouseOut}
+        // onMouseLeave={this.handleMouseLeave}
       >
         <div
           className="logs-wrapper"
