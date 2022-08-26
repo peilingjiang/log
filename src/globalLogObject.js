@@ -42,12 +42,12 @@ export class HyperLog {
   /* -------------------------------------------------------------------------- */
 
   id(id) {
-    this.requests.id = id
+    this.requests.id = String(id)
     return this
   }
 
   name(name = '') {
-    this.requests.name = name
+    this.requests.name = String(name)
     return this
   }
 

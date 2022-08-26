@@ -21,6 +21,7 @@ import {
   assertArray,
   assertObject,
   bindableElement,
+  brutalFindGroupIdInRegistries,
   canUseShape,
   cloneLogGroup,
   dist,
@@ -727,6 +728,11 @@ export default class LogStream extends Component {
     let logElements = []
     let orderReversed = logs.length
 
+    let showRegistriesCutoff = brutalFindGroupIdInRegistries(
+      groupId,
+      registries
+    )
+
     ////
     const logStats = getLogStats(logs, view.centerStagedId)
     ////
@@ -758,7 +764,7 @@ export default class LogStream extends Component {
             useStats={useStats}
             ////
             registries={registries}
-            showRegistries={orderReversed === 0}
+            showRegistries={orderReversed < showRegistriesCutoff}
           />
         ) : (
           <ShapeLog
@@ -783,7 +789,7 @@ export default class LogStream extends Component {
             useStats={useStats}
             ////
             registries={registries}
-            showRegistries={orderReversed === 0}
+            showRegistries={orderReversed < showRegistriesCutoff}
           />
         )
       })

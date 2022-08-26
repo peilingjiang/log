@@ -12,7 +12,7 @@ import {
   removeLogId,
 } from '../methods/utils.js'
 import { wrapString } from './utils.js'
-import { logViewInterface } from '../constants.js'
+import { groupIdExtendingConnector, logViewInterface } from '../constants.js'
 import {
   FormatterBoolean,
   FormatterNumber,
@@ -28,6 +28,7 @@ export class Formatter extends Component {
       args: PropTypes.array.isRequired,
       groupId: PropTypes.string.isRequired,
       logId: PropTypes.string.isRequired,
+      locationIdentifier: PropTypes.string.isRequired,
       view: logViewInterface.isRequired,
       streamFunctions: PropTypes.object.isRequired,
       choosingCenterStaged: PropTypes.bool.isRequired,
@@ -69,6 +70,7 @@ export class Formatter extends Component {
       args,
       groupId,
       logId,
+      locationIdentifier,
       view,
       streamFunctions,
       choosingCenterStaged,
@@ -78,15 +80,17 @@ export class Formatter extends Component {
       unit,
     } = this.props
 
+    const logGroupIdExtended = `${groupId}${groupIdExtendingConnector}${locationIdentifier}`
+
     /* -------------------------------------------------------------------------- */
     let rawContent =
-      registries && groupId in registries
-        ? registries[groupId]?.rawCodeObject?.rawCodeContent
+      registries && logGroupIdExtended in registries
+        ? registries[logGroupIdExtended]?.rawCodeObject?.rawCodeContent
         : undefined
     if (rawContent)
       rawContent = getArgsArrayFromRawCodeObject(
         rawContent,
-        registries[groupId].rawCodeObject
+        registries[logGroupIdExtended].rawCodeObject
       )
     /* -------------------------------------------------------------------------- */
 

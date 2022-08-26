@@ -1,9 +1,15 @@
 import {
+  groupIdExtendingConnector,
   stackFilePathCompareDepth,
   timelineSideDragLevelWidth,
 } from '../constants.js'
 import { proceedDeeper } from './astTree.js'
-import { assertArray, assertObject, assertString } from './utils.js'
+import {
+  assertArray,
+  assertObject,
+  assertString,
+  getIdentifier,
+} from './utils.js'
 
 export const preprocessASTsToGetRegistries = (
   logGroups,
@@ -30,9 +36,13 @@ export const preprocessASTsToGetRegistries = (
 
   // delete all related registries for a new (or changed) file
   const newFilePaths = Object.keys(newASTs)
-  for (const registryGroupId in prevRegistries) {
-    if (!newFilePaths.includes(prevRegistries[registryGroupId].filePath)) {
-      newRegistries[registryGroupId] = { ...prevRegistries[registryGroupId] }
+  for (const registryGroupIdExtended in prevRegistries) {
+    if (
+      !newFilePaths.includes(prevRegistries[registryGroupIdExtended].filePath)
+    ) {
+      newRegistries[registryGroupIdExtended] = {
+        ...prevRegistries[registryGroupIdExtended],
+      }
     }
   }
 
@@ -40,50 +50,54 @@ export const preprocessASTsToGetRegistries = (
   for (const logIdentifier of logTimeline) {
     const logGroupId = logIdentifier.groupId
 
-    if (!(logGroupId in newRegistries)) {
-      const repLog = logGroups[logGroupId].logs[0]
+    logGroups[logGroupId].logs.map(repLog => {
+      const logLine = repLog.stack.line
+      const logChar = repLog.stack.char
 
-      for (const astFilePath in newASTs) {
-        if (matchWebPathAndFilePath(repLog.stack.path, astFilePath)) {
-          const rawCodeFile = newASTs[astFilePath].text
+      const identifier = getIdentifier(repLog.stack.path, logLine, logChar)
+      const logGroupIdExtended = `${logGroupId}${groupIdExtendingConnector}${identifier}`
 
-          const astTree = newASTs[astFilePath].result.program.body
-          const logLine = repLog.stack.line
-          const logChar = repLog.stack.char
+      if (!(logGroupIdExtended in newRegistries)) {
+        for (const astFilePath in newASTs) {
+          if (matchWebPathAndFilePath(repLog.stack.path, astFilePath)) {
+            const rawCodeFile = newASTs[astFilePath].text
 
-          // const depthStack = parseAST(astTree, logLine, logChar)
-          let depthStack, rawCodeObject
-          try {
-            // eslint-disable-next-line no-extra-semi
-            ;[depthStack, rawCodeObject] = parseAST(astTree, logLine, logChar)
-            rawCodeObject.rawCodeContent = getRawLogContent(
-              rawCodeFile,
-              rawCodeObject
-            )
-          } catch (e) {
-            console.error(e)
-            depthStack = ['Unknown']
-            rawCodeObject = {
-              rawCodeContent: '',
+            const astTree = newASTs[astFilePath].result.program.body
+
+            // const depthStack = parseAST(astTree, logLine, logChar)
+            let depthStack, rawCodeObject
+            try {
+              // eslint-disable-next-line no-extra-semi
+              ;[depthStack, rawCodeObject] = parseAST(astTree, logLine, logChar)
+              rawCodeObject.rawCodeContent = getRawLogContent(
+                rawCodeFile,
+                rawCodeObject
+              )
+            } catch (e) {
+              console.error(e)
+              depthStack = ['Unknown']
+              rawCodeObject = {
+                rawCodeContent: '',
+              }
             }
-          }
 
-          depthStack = depthStack || ['Unknown']
+            depthStack = depthStack || ['Unknown']
 
-          newRegistries[logGroupId] = {
-            identifier: getIdentifier(repLog.stack.path, logLine, logChar),
-            rawCodeObject,
-            filePath: astFilePath,
-            stackPath: repLog.stack.path,
-            stackFile: repLog.stack.file,
-            stackLine: repLog.stack.line,
-            stackChar: repLog.stack.char,
-            depth: depthStack.length,
-            depthStack: depthStack,
+            newRegistries[logGroupIdExtended] = {
+              identifier: identifier,
+              rawCodeObject,
+              filePath: astFilePath,
+              stackPath: repLog.stack.path,
+              stackFile: repLog.stack.file,
+              stackLine: repLog.stack.line,
+              stackChar: repLog.stack.char,
+              depth: depthStack.length,
+              depthStack: depthStack,
+            }
           }
         }
       }
-    }
+    })
   }
 
   return newRegistries
@@ -137,10 +151,6 @@ export const matchWebPathAndFilePath = (webPath, filePath) => {
   }
 
   return true
-}
-
-const getIdentifier = (stackPath, line, char) => {
-  return `${stackPath}:${line}:${char}`
 }
 
 const targetPositionWithinBody = (body, targetLine, targetChar) => {
@@ -227,39 +237,11 @@ const getRawLogContent = (rawCodeText, rawCodeObject) => {
 
 /* -------------------------------------------------------------------------- */
 
-// export const parseRegistries = registries => {
-//   const relationships = {}
-
-//   for (const registryGroupId in registries) {
-//     const registry = registries[registryGroupId]
-
-//     if (!(registry.stackPath in relationships))
-//       relationships[registry.stackPath] = {}
-
-//     let depthTracker = relationships[registry.stackPath]
-//     for (const component of registry.depthStack) {
-//       if (!(component in depthTracker)) {
-//         if (component === 'Unknown' || component === 'CallExpression') {
-//           depthTracker[component] = {
-//             groupId: registryGroupId,
-//             identifier: registry.identifier,
-//           }
-//         } else {
-//           depthTracker[component] = {}
-//           depthTracker = depthTracker[component]
-//         }
-//       }
-//     }
-//   }
-
-//   return relationships
-// }
-
 export const sumRegistries = registries => {
   const files = {}
 
-  for (const registryGroupId in registries) {
-    const registry = registries[registryGroupId]
+  for (const registryGroupIdExtended in registries) {
+    const registry = registries[registryGroupIdExtended]
 
     if (!(registry.stackFile in files))
       files[registry.stackFile] = {
@@ -270,12 +252,12 @@ export const sumRegistries = registries => {
       }
   }
 
-  for (const registryGroupId in registries) {
-    const registry = registries[registryGroupId]
+  for (const registryGroupIdExtended in registries) {
+    const registry = registries[registryGroupIdExtended]
     const recordInFiles = files[registry.stackFile]
 
-    if (!(registryGroupId in recordInFiles.groups)) {
-      recordInFiles.groups[registryGroupId] = {
+    if (!(registryGroupIdExtended in recordInFiles.groups)) {
+      recordInFiles.groups[registryGroupIdExtended] = {
         identifier: registry.identifier,
         topLevelDeclaration: registry.depthStack[0],
         depth: registry.depth,
@@ -321,7 +303,8 @@ export const getExpandLevels = files => {
 
 export const getMaxExpandOffset = expandLevels => {
   const { indentation, declarations, files } = expandLevels
-  const { indentationPx, declarationPx, filePx } = timelineSideDragLevelWidth
+  const { indentationPx, declarationPx /* filePx */ } =
+    timelineSideDragLevelWidth
   return (
     // indentation * indentationPx + declarations * declarationPx + files * filePx
     indentation * indentationPx + declarations * declarationPx + files * 0
@@ -333,81 +316,14 @@ export const hasLeastOneExpandLevel = expandLevels => {
   return indentation || declarations
 }
 
-export const getTimelineOffset = (
-  logGroup,
-  registriesByFileName,
-  budget,
-  expandLevels
-) => {
-  if (budget === 0 || getMaxExpandOffset(expandLevels) === 0) return 0
-
-  let totalOffset = 0
-
-  const { indentationPx, declarationPx, filePx } = timelineSideDragLevelWidth
-
-  const logObj = logGroup.logs[0] // repLog
-  const logFile = logObj.stack.file
-  const fileRegistry = registriesByFileName[logFile] // !
-  const logGroupRegistry = fileRegistry.groups[logGroup.groupId]
-
-  // ! indentation
-  if (expandLevels.indentation) {
-    // const extremeDepthsOfAll = overallExtremeDepths(registriesByFileName)
-    // const extremeDepthsOfAll = {
-    //   max: fileRegistry.maxDepth,
-    //   min: fileRegistry.minDepth,
-    // }
-    const extremeDepthsOfAll = getExtremeDepthsByTopLevelDeclarations(
-      fileRegistry,
-      logGroupRegistry.topLevelDeclaration
-    )
-    const overallLevels = extremeDepthsOfAll.max - extremeDepthsOfAll.min
-
-    const budgetForIndentation = Math.min(budget, indentationPx)
-    const eachLevelOffset = budgetForIndentation / overallLevels
-
-    totalOffset +=
-      eachLevelOffset * (logGroupRegistry.depth - extremeDepthsOfAll.min)
-  }
-
-  budget = Math.max(0, budget - expandLevels.indentation * indentationPx)
-
-  // ! declarations
-  if (expandLevels.declarations && budget > 0) {
-    const budgetForDeclarations = Math.min(budget, declarationPx)
-    const eachDeclarationOffset =
-      budgetForDeclarations / getTopLevelDeclarationsCount(registriesByFileName)
-
-    totalOffset +=
-      eachDeclarationOffset *
-      fileRegistry.topLevelDeclarations.indexOf(
-        logGroupRegistry.topLevelDeclaration
-      )
-    // + Math.min(1, budget / declarationPx) * indentationPx
-  }
-
-  // budget = Math.max(0, budget - expandLevels.declaration * declarationPx)
-
-  // ! files
-  // if (expandLevels.files && budget > 0) {
-  //   const budgetForFiles = Math.min(budget, filePx)
-  //   const eachFileOffset =
-  //     budgetForFiles / Object.keys(registriesByFileName).length
-
-  //   totalOffset +=
-  //     eachFileOffset * Object.keys(registriesByFileName).indexOf(logFile)
-  // }
-
-  return totalOffset
-}
-
 export const getTimelineOffsets = (
   logGroups,
   registriesByFileName,
   budget,
   expandLevels
 ) => {
-  const { indentationPx, declarationPx, filePx } = timelineSideDragLevelWidth
+  const { indentationPx, declarationPx /* filePx */ } =
+    timelineSideDragLevelWidth
   const offsets = {}
   let indentationOffsets = {}
   let declarationOffsets = {}
@@ -418,28 +334,36 @@ export const getTimelineOffsets = (
   // ! indentation
 
   for (const logGroupId in logGroups) {
-    offsets[logGroupId] = 0
+    const logGroup = logGroups[logGroupId]
 
-    if (expandLevels.indentation) {
-      const logGroup = logGroups[logGroupId]
-      const logObj = logGroup.logs[0] // repLog
-      const logFile = logObj.stack.file
-      const fileRegistry = registriesByFileName[logFile] // !
-      const logGroupRegistry = fileRegistry.groups[logGroup.groupId]
+    logGroup.logs.map(logObj => {
+      const groupIdExtended = `${logGroupId}${groupIdExtendingConnector}${getIdentifier(
+        logObj.stack.path,
+        logObj.stack.line,
+        logObj.stack.char
+      )}`
 
-      const extremeDepthsOfAll = getExtremeDepthsByTopLevelDeclarations(
-        fileRegistry,
-        logGroupRegistry.topLevelDeclaration
-      )
-      const overallLevels = extremeDepthsOfAll.max - extremeDepthsOfAll.min
+      offsets[groupIdExtended] = 0
 
-      const budgetForIndentation = Math.min(budget, indentationPx)
-      const eachLevelOffset = budgetForIndentation / overallLevels
+      if (expandLevels.indentation) {
+        const logFile = logObj.stack.file
+        const fileRegistry = registriesByFileName[logFile] // !
+        const logGroupRegistry = fileRegistry.groups[groupIdExtended]
 
-      offsets[logGroup.groupId] +=
-        eachLevelOffset * (logGroupRegistry.depth - extremeDepthsOfAll.min)
-      indentationOffsets = { ...offsets }
-    }
+        const extremeDepthsOfAll = getExtremeDepthsByTopLevelDeclarations(
+          fileRegistry,
+          logGroupRegistry.topLevelDeclaration
+        )
+        const overallLevels = extremeDepthsOfAll.max - extremeDepthsOfAll.min
+
+        const budgetForIndentation = Math.min(budget, indentationPx)
+        const eachLevelOffset = budgetForIndentation / overallLevels
+
+        offsets[groupIdExtended] +=
+          eachLevelOffset * (logGroupRegistry.depth - extremeDepthsOfAll.min)
+        indentationOffsets = { ...offsets }
+      }
+    })
   }
 
   budget = Math.max(0, budget - expandLevels.indentation * indentationPx)
@@ -448,6 +372,7 @@ export const getTimelineOffsets = (
   if (expandLevels.declarations && budget > 0) {
     const allDeclarations = getAllDeclarations(registriesByFileName, offsets)
     allDeclarations.sort((a, b) => a.totalOffset - b.totalOffset)
+
     for (const declarationIndex in allDeclarations)
       allDeclarations[declarationIndex].index = declarationIndex
 
@@ -456,11 +381,28 @@ export const getTimelineOffsets = (
       budgetForDeclarations / (allDeclarations.length - 1)
 
     for (const logGroupId in logGroups) {
-      const ind =
-        eachDeclarationOffset *
-        _getDeclarationByGroupId(allDeclarations, logGroupId).index
-      offsets[logGroupId] += ind
-      declarationOffsets[logGroupId] = ind
+      const logGroup = logGroups[logGroupId]
+
+      const visitedGroupIdExtended = new Set()
+
+      logGroup.logs.map(logObj => {
+        const groupIdExtended = `${logGroupId}${groupIdExtendingConnector}${getIdentifier(
+          logObj.stack.path,
+          logObj.stack.line,
+          logObj.stack.char
+        )}`
+
+        if (!visitedGroupIdExtended.has(groupIdExtended)) {
+          visitedGroupIdExtended.add(groupIdExtended)
+
+          const ind =
+            eachDeclarationOffset *
+            _getDeclarationByGroupId(allDeclarations, groupIdExtended).index
+
+          offsets[groupIdExtended] += ind
+          declarationOffsets[groupIdExtended] = ind
+        }
+      })
     }
   }
 
@@ -488,8 +430,9 @@ export const getExtremeDepthsByTopLevelDeclarations = (
 ) => {
   let min = Infinity
   let max = 0
-  for (const groupId in fileRegistry.groups) {
-    const thisRegistry = fileRegistry.groups[groupId]
+  for (const groupIdExtended in fileRegistry.groups) {
+    const thisRegistry = fileRegistry.groups[groupIdExtended]
+
     if (thisRegistry.topLevelDeclaration === targetDeclaration) {
       if (thisRegistry.depth < min) min = thisRegistry.depth
       if (thisRegistry.depth > max) max = thisRegistry.depth
@@ -520,19 +463,19 @@ export const getAllDeclarations = (registriesByFileName, currentOffsets) => {
   const declarations = []
   for (const fileName in registriesByFileName) {
     const registry = registriesByFileName[fileName]
-    for (const groupId in registry.groups) {
-      const thisRegistry = registry.groups[groupId]
+    for (const groupIdExtended in registry.groups) {
+      const thisRegistry = registry.groups[groupIdExtended]
 
       if (_declarationExists(declarations, thisRegistry.topLevelDeclaration))
         _getDeclarationFromAllDeclarations(
           declarations,
           thisRegistry.topLevelDeclaration
-        ).groupIds.push(groupId)
+        ).groupIds.push(groupIdExtended)
       else
         declarations.push({
           name: thisRegistry.topLevelDeclaration,
           file: fileName,
-          groupIds: [groupId],
+          groupIds: [groupIdExtended],
         })
     }
   }
@@ -540,8 +483,8 @@ export const getAllDeclarations = (registriesByFileName, currentOffsets) => {
   // get the total offsets from each of the groupId associated with this declaration
   for (const declaration of declarations) {
     declaration.totalOffsets = declaration.groupIds
-      .map(groupId => {
-        return currentOffsets[groupId]
+      .map(groupIdExtended => {
+        return currentOffsets[groupIdExtended]
       })
       .reduce((a, b) => a + b, 0)
   }
@@ -549,9 +492,9 @@ export const getAllDeclarations = (registriesByFileName, currentOffsets) => {
   return declarations
 }
 
-export const _getDeclarationByGroupId = (declarations, groupId) => {
+export const _getDeclarationByGroupId = (declarations, groupIdExtended) => {
   for (const declaration of declarations)
-    if (declaration.groupIds.includes(groupId)) return declaration
+    if (declaration.groupIds.includes(groupIdExtended)) return declaration
   return null
 }
 

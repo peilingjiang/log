@@ -197,6 +197,8 @@ export const timelineGroupWiseOffsetPx = {
   min: 5,
 }
 
+export const groupIdExtendingConnector = ':'
+
 export const _L = 'left'
 export const _R = 'right'
 export const _T = 'top'

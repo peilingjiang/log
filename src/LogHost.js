@@ -20,6 +20,7 @@ export default class LogHost extends Component {
     this.state = {
       logPaused: false,
       logGroups: {},
+      graphics: {},
       logTimeline: [],
       organization: g.defaultOrganization, // timeline, augmented, list?, grid?
       ////
@@ -447,6 +448,14 @@ export default class LogHost extends Component {
 
   /* -------------------------------------------------------------------------- */
 
+  renderGraphicsElements() {
+    const { graphics } = this.state
+
+    return null
+  }
+
+  /* -------------------------------------------------------------------------- */
+
   render() {
     const {
       logPaused,
@@ -458,6 +467,7 @@ export default class LogHost extends Component {
     } = this.state
 
     let renderedLogElements
+
     switch (organization) {
       case _Aug:
         renderedLogElements = this.renderAugmentedLogs(logGroups, registries)
@@ -478,6 +488,7 @@ export default class LogHost extends Component {
     return (
       <div id="hyper-log-host" className="hyper-log-host" ref={this.ref}>
         {renderedLogElements}
+        {this.renderGraphicsElements()}
       </div>
     )
   }

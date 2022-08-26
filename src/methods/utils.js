@@ -5,6 +5,7 @@ import tinycolor from 'tinycolor2'
 import { v5 as uuidv5 } from 'uuid'
 
 import {
+  groupIdExtendingConnector,
   stackActualCallerDepth,
   validUnits,
   _DEF,
@@ -41,6 +42,22 @@ export const idFromString = str =>
     str,
     uuidv5.URL // ? any potential problems?
   )
+
+export const getIdentifier = (stackPath, line, char) => {
+  return `${stackPath}:${line}:${char}`
+}
+
+export const brutalFindGroupIdInRegistries = (groupId, registries) => {
+  let groupIdCount = 0
+
+  const registriesKeys = Object.keys(registries)
+  for (const registryKey of registriesKeys) {
+    const cleanedRegistryKey = registryKey.split(groupIdExtendingConnector)[0]
+    if (cleanedRegistryKey === groupId) groupIdCount++
+  }
+
+  return groupIdCount
+}
 
 export const arrayLast = (arr, n = 1) => {
   return n >= arr.length ? arr : arr.slice(arr.length - n)

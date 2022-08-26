@@ -11,18 +11,17 @@ import {
   bindableElement,
   constrain,
   getElementBounding,
+  getIdentifier,
   idFromString,
   parseDefaultColor,
   preventEventWrapper,
   stringifyDOMElement,
 } from '../methods/utils.js'
 import {
-  logGroupInterface,
-  logInterface,
+  groupIdExtendingConnector,
   logTimelineItemInterface,
   pageElementsQuery,
   timelineDisableAutoScrollThresholdPx,
-  timelineGroupWiseOffsetPx,
   timelineSelectionAreaOffsetButterPx,
   timelineSideDragLevelWidth,
   _rootStyles,
@@ -34,10 +33,8 @@ import { SelectionRect } from '../components/SelectionRect.js'
 import { socket } from '../global.js'
 import {
   getExpandLevels,
-  getTimelineOffset,
   getTimelineOffsets,
   hasLeastOneExpandLevel,
-  preprocessASTsToGetRegistries,
   sumRegistries,
 } from '../methods/ast.js'
 import TimelineExpandSideDragger from '../components/TimelineExpandSideDragger.js'
@@ -539,6 +536,7 @@ const TimelineLogItemsMemo = ({
   // ! MAP MAP MAP
   /* -------------------------------------------------------------------------- */
   let lastItem = null
+  let visitedIdExtendedDuringSameIdentifier = new Set()
   return logTimeline.map((logIdentifier, ind) => {
     const logGroup = logGroups[logIdentifier.groupId]
 
@@ -567,11 +565,20 @@ const TimelineLogItemsMemo = ({
     const rulerColor = logColor(level, logObj.color, logGroup.groupColor)
     const darkColor = darkLogColor(level, logObj.color, logGroup.groupColor)
 
+    const groupIdExtended = `${
+      logGroup.groupId
+    }${groupIdExtendingConnector}${getIdentifier(
+      logObj.stack.path,
+      logObj.stack.line,
+      logObj.stack.char
+    )}`
+
     const thisItem = {
       offsetPx: pxWrap(
-        logIdentifier.groupId in offsets ? offsets[logIdentifier.groupId] : 0
+        groupIdExtended in offsets ? offsets[groupIdExtended] : 0
       ),
       groupName: logGroup.name,
+      groupId: logGroup.groupId,
       stack: logObj.stack,
     }
 
@@ -580,8 +587,18 @@ const TimelineLogItemsMemo = ({
       0.25
     )}`
 
-    const firstOfTheIdentifier = !isEqual(lastItem, thisItem)
-    if (firstOfTheIdentifier) lastItem = thisItem
+    const firstOfTheIdentifier =
+      !lastItem || !isEqual(lastItem.groupId, thisItem.groupId)
+
+    if (firstOfTheIdentifier) {
+      lastItem = thisItem
+      visitedIdExtendedDuringSameIdentifier = new Set()
+    }
+
+    const showRegistries =
+      firstOfTheIdentifier ||
+      !visitedIdExtendedDuringSameIdentifier.has(groupIdExtended)
+    visitedIdExtendedDuringSameIdentifier.add(groupIdExtended)
 
     return (
       <Fragment key={`timeline-${ind}`}>
@@ -641,7 +658,7 @@ const TimelineLogItemsMemo = ({
             hostFunctions={hostFunctions}
             ////
             registries={registries}
-            showRegistries={firstOfTheIdentifier}
+            showRegistries={showRegistries}
           />
 
           <span

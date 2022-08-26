@@ -4,7 +4,7 @@ import isEqual from 'react-fast-compare'
 
 import { logViewInterface, _Aug, _DEF, _rootStyles } from '../constants.js'
 import { Formatter } from '../formatter/Formatter.js'
-import { hexAndOpacityToRGBA } from '../methods/utils.js'
+import { getIdentifier, hexAndOpacityToRGBA } from '../methods/utils.js'
 
 import Arrow from '../icons/arrow.svg'
 import CenterStage from '../icons/center-stage.svg'
@@ -88,7 +88,7 @@ export default class LogBody extends Component {
       count,
       timestamp,
       stack,
-      stack: { file, line },
+      stack: { path, file, line, char },
       color,
       unit,
       opacity,
@@ -165,6 +165,7 @@ export default class LogBody extends Component {
               args={args}
               groupId={groupId}
               logId={id}
+              locationIdentifier={getIdentifier(path, line, char)}
               view={view}
               streamFunctions={streamFunctions}
               choosingCenterStaged={choosingCenterStaged}
