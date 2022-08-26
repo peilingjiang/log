@@ -17,24 +17,31 @@ export default class LogStreamWrapperInTimeline extends LogStream {
   componentDidUpdate() {}
 
   shouldComponentUpdate(nextProps, nextState) {
-    return (
-      !isEqual(nextProps.logGroup.view, this.props.logGroup.view) ||
-      !isEqual(nextProps.log, this.props.log) ||
-      !isEqual(nextProps.timelineOffset, this.props.timelineOffset) ||
-      !isEqual(nextState, this.state) ||
-      !isEqual(
-        getLogStats(
-          nextProps.logGroup.logs,
-          nextProps.logGroup.view.centerStagedId
-        ),
-        getLogStats(
-          this.props.logGroup.logs,
-          this.props.logGroup.view.centerStagedId
-        )
-      )
-    )
-    // return false
+    // return (
+    //   !isEqual(nextProps.logGroup.view, this.props.logGroup.view) ||
+    //   !isEqual(nextProps.log, this.props.log) ||
+    //   !isEqual(nextProps.timelineOffset, this.props.timelineOffset) ||
+    //   !isEqual(nextState, this.state) ||
+    //   !isEqual(
+    //     getLogStats(
+    //       nextProps.logGroup.logs,
+    //       nextProps.logGroup.view.centerStagedId
+    //     ),
+    //     getLogStats(
+    //       this.props.logGroup.logs,
+    //       this.props.logGroup.view.centerStagedId
+    //     )
+    //   )
+    // )
+    return !isEqual(nextProps, this.props) || !isEqual(nextState, this.state)
   }
+
+  /* -------------------------------------------------------------------------- */
+
+  handleMouseEnter() {}
+  handleMouseOut() {}
+
+  /* -------------------------------------------------------------------------- */
 
   render() {
     const { expand, hovered, current } = this.state
@@ -59,15 +66,16 @@ export default class LogStreamWrapperInTimeline extends LogStream {
         className={`hyper-log-stream hyper-log-stream-in-time stream-horizontal${
           expand ? ' stream-expand' : ''
         }${isShape ? ' shape-stream' : ''}${
-          hovered ? ' stream-hovered up-front' : ''
+          ''
+          // hovered ? ' stream-hovered up-front' : ''
         }${current ? ' stream-current' : ''}`}
         ////
         style={{
           boxShadow: `-0.25rem 0 0 0 ${rulerColor}`,
         }}
         ////
-        onMouseEnter={this.handleMouseEnter}
-        onMouseLeave={this.handleMouseOut}
+        // onMouseEnter={this.handleMouseEnter}
+        // onMouseLeave={this.handleMouseOut}
       >
         <div
           className="logs-wrapper"

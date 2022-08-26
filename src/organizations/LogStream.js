@@ -81,6 +81,7 @@ export default class LogStream extends Component {
       ////
       useStats: false,
     }
+
     this.inExternalOperation = false
 
     this.ref = createRef()
