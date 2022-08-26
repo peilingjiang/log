@@ -77,3 +77,6 @@ socket.on('connect', () => {
   //   globalAST.current = data
   // })
 })
+
+// extra headers
+// https://github.com/socketio/socket.io/issues/3929
