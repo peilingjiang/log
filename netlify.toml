@@ -7,5 +7,5 @@ command = "npm run netlify"
 for = "*"
 [headers.values]
 Access-Control-Allow-Origin = "*"
-Access-Control-Allow-Private-Network = true
+Access-Control-Allow-Private-Network = "true"
 Access-Control-Allow-Headers = "Origin, X-Requested-With, Content-Type, Accept"
