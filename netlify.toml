@@ -2,3 +2,10 @@
 environment = { NODE_VERSION = "16", NPM_VERSION = "8.13.2" }
 publish = "example/public/"
 command = "npm run netlify"
+
+[[headers]]
+for = "/*"
+[headers.values]
+Access-Control-Allow-Origin = "*"
+Access-Control-Allow-Private-Network = "*"
+Access-Control-Allow-Headers = "Origin, X-Requested-With, Content-Type, Accept"
