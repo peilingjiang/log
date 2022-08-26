@@ -13,7 +13,7 @@ import SmartPix from './pages/SmartPix.js'
 import AdHocPositions from './pages/adHocPositions.js'
 import ViewDist from './pages/ViewDist.js'
 import Tracking from './pages/Tracking.js'
-import { Here } from './pages/Here.js'
+import Here from './pages/Here.js'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(

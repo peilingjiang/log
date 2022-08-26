@@ -1,9 +1,14 @@
 import React, { Component } from 'react'
 import { Link, Outlet } from 'react-router-dom'
 
+// ! load HyperLog
 import '../src/index.js'
 
 import './css/App.scss'
+
+setLog({
+  access: true,
+})
 
 export default class App extends Component {
   render() {

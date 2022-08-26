@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const Here = () => {
+const Here = () => {
   setLog({
     useSourceMaps: true,
   })
@@ -19,3 +19,5 @@ export const Here = () => {
 
   return <></>
 }
+
+export default Here
