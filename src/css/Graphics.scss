@@ -1,0 +1,165 @@
+$dot-shadow-d: calc($padding-mid + $padding-small);
+$dot-d: $padding-mid;
+
+.graphics-host {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 999;
+
+  .faded-graphics {
+    &.hyper-graphics-box {
+      // opacity: $opacity-xh;
+
+      * {
+        border: none !important;
+      }
+    }
+
+    // &.hyper-graphics-dot {
+    //   opacity: $opacity-high;
+    // }
+  }
+
+  /* -------------------------------------------------------------------------- */
+
+  .hyper-graphics-dot {
+    .the-dot-shadow {
+      width: $dot-shadow-d;
+      height: $dot-shadow-d;
+      border-radius: 50%;
+
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform: translate(-50%, -50%);
+
+      backdrop-filter: blur($blur-small);
+      cursor: crosshair;
+
+      .the-dot {
+        width: $dot-d;
+        height: $dot-d;
+        border-radius: 50%;
+
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      /* -------------------------------------------------------------------------- */
+
+      // !
+
+      &.client-dot-shadow {
+        background: rgba($elegant-green, $opacity-mid);
+        .the-dot {
+          background: $elegant-green;
+        }
+      }
+
+      &.native-dot-shadow {
+        background: rgba($bright-orange, $opacity-mid);
+        .the-dot {
+          background: $bright-orange;
+        }
+      }
+
+      &:hover + .dot-description {
+        opacity: 1;
+      }
+    }
+
+    .dot-description {
+      position: absolute;
+      top: 0;
+      left: calc($dot-shadow-d / 2 + $padding-xs);
+      transform: translateY(-50%);
+
+      display: flex;
+      flex-wrap: nowrap;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+
+      color: $dark-mid-grey;
+      white-space: nowrap;
+
+      background: rgba($light, $opacity-mid);
+      backdrop-filter: blur($blur-xh);
+      padding: $padding-xxs $padding-xs;
+      border-radius: $radius-small;
+
+      opacity: 0;
+      transition: opacity $transition-fast ease-in-out;
+      pointer-events: none;
+
+      max-width: 10rem;
+      white-space: wrap;
+      overflow: hidden;
+
+      .description-key-word {
+        font-weight: $font-weight-bold;
+      }
+
+      * {
+        @include font-fixed;
+        font-size: $font-size-default;
+        line-height: 100%;
+      }
+
+      /* -------------------------------------------------------------------------- */
+
+      // !
+
+      &.client-description * {
+        color: darken($elegant-green, 20%);
+      }
+
+      &.native-description * {
+        color: darken($bright-orange, 20%);
+      }
+    }
+  }
+
+  /* -------------------------------------------------------------------------- */
+
+  .hyper-graphics-box {
+    .the-box {
+      border-width: $padding-xxs;
+      border-style: solid;
+      box-sizing: border-box;
+
+      &.client-box {
+        background: rgba($elegant-green, $opacity-high);
+        border-color: $elegant-green;
+      }
+
+      &.native-box {
+        background: rgba($bright-orange, $opacity-high);
+        border-color: $bright-orange;
+      }
+    }
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+
+@keyframes dot-animation-bounce-in {
+  0% {
+    transform: translate(-50%, -50%) scale(0.6);
+  }
+
+  60% {
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.dot-animation-bounce-in {
+  animation: dot-animation-bounce-in $transition-fast ease-in;
+}

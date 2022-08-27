@@ -214,6 +214,8 @@ $menu-height-text: calc(
 
       opacity: 0;
       transition: opacity $transition-fast;
+
+      pointer-events: none;
     }
 
     &:hover {
@@ -253,6 +255,22 @@ $menu-height-text: calc(
 
     &.menu-resume-item {
       @include menu-item-special-config($elegant-green);
+    }
+
+    &.menu-have-graphics {
+      background: $dark-grey !important;
+
+      &.menu-graphics-single {
+        svg path {
+          fill: $white;
+        }
+      }
+
+      &.menu-graphics-all {
+        svg path {
+          fill: $bright-orange;
+        }
+      }
     }
 
     &.menu-already-center-staged {

@@ -5,13 +5,19 @@ import { addLog } from './methods/addLog.js'
 import LogStreamsHolder from './organizations/LogStreamsHolder.js'
 import TimelineHolder from './organizations/TimelineHolder.js'
 import { HyperLog } from './globalLogObject.js'
-import { deepCopyArrayOfLogs, preventEventWrapper } from './methods/utils.js'
-import { _Aug, _Time } from './constants.js'
+import {
+  cloneLogGroup,
+  cloneLogGroups,
+  deepCopyArrayOfLogs,
+  preventEventWrapper,
+} from './methods/utils.js'
+import { graphicsHistoryLength, _Aug, _Time } from './constants.js'
 import { g, socket } from './global.js'
 import { clearAllOutlines } from './methods/attachElements.js'
 import { highlightElement } from './methods/highlight.js'
 import { StackParser } from './methods/stackParser.js'
 import { preprocessASTsToGetRegistries } from './methods/ast.js'
+import Graphics from './components/Graphics.js'
 
 export default class LogHost extends Component {
   constructor(props) {
@@ -20,7 +26,6 @@ export default class LogHost extends Component {
     this.state = {
       logPaused: false,
       logGroups: {},
-      graphics: {},
       logTimeline: [],
       organization: g.defaultOrganization, // timeline, augmented, list?, grid?
       ////
@@ -49,6 +54,11 @@ export default class LogHost extends Component {
       togglePauseTheWholeLogSystem:
         this.togglePauseTheWholeLogSystem.bind(this),
       changeOrganization: this.changeOrganization.bind(this),
+      setTimelineLogOrderReversed: this.setTimelineLogOrderReversed.bind(this),
+      ////
+      updateSyncGraphics: this.updateSyncGraphics.bind(this),
+      // addLogForGraphics: this.addLogForGraphics.bind(this),
+      // removeGraphicsGroup: this.removeGraphicsGroup.bind(this),
     }
 
     this.loggedCounter = 0
@@ -167,15 +177,8 @@ export default class LogHost extends Component {
           // clear all element highlighting
           clearAllOutlines()
 
-          this.setState(
-            {
-              organization: this.state.organization === _Aug ? _Time : _Aug,
-            },
-            () => {
-              window.setLog({
-                defaultOrganization: this.state.organization,
-              })
-            }
+          this.changeOrganization(
+            this.state.organization === _Aug ? _Time : _Aug
           )
         })
       }
@@ -197,6 +200,7 @@ export default class LogHost extends Component {
         })
     }
 
+    // TODO not yet tested
     window.errorBoundary = func => {
       if (g.access) {
         try {
@@ -319,6 +323,14 @@ export default class LogHost extends Component {
       }
     )
   }
+
+  setTimelineLogOrderReversed(groupId, reversed) {
+    const thisGroup = cloneLogGroup(this.state.logGroups[groupId])
+    thisGroup.timelineLogOrderReversed = reversed
+    this.updateLogGroup(groupId, thisGroup)
+  }
+
+  /* -------------------------------------------------------------------------- */
 
   renderAugmentedLogs(logGroups, registries) {
     const { clearance } = this.state
@@ -448,11 +460,94 @@ export default class LogHost extends Component {
 
   /* -------------------------------------------------------------------------- */
 
-  renderGraphicsElements() {
-    const { graphics } = this.state
+  // ! hello graphics
 
-    return null
+  updateSyncGraphics(groupId) {
+    const thisGroup = cloneLogGroup(this.state.logGroups[groupId])
+
+    thisGroup.syncGraphics++
+    if (thisGroup.syncGraphics > 2) thisGroup.syncGraphics = 0
+
+    this.updateLogGroup(groupId, thisGroup)
   }
+
+  renderGraphicsElements() {
+    const { logGroups, registries } = this.state
+
+    const gElements = Object.keys(logGroups)
+      .map(groupId => {
+        const logGroup = logGroups[groupId]
+
+        const selectedLogInd =
+          logGroup.logs.length - logGroup.timelineLogOrderReversed - 1
+
+        if (logGroup.syncGraphics === 0) return null
+        else if (logGroup.syncGraphics === 1) {
+          // ! one
+          const log = logGroup.logs[selectedLogInd]
+          const centerStagedId = logGroup.view.centerStagedId
+          return (
+            <Graphics
+              key={`g-${groupId}-${selectedLogInd}`}
+              args={log.args}
+              id={log.id}
+              stack={log.stack}
+              centerStagedId={centerStagedId}
+              groupId={groupId}
+              registries={registries}
+              currentGraphics={true}
+              orderReversed={0}
+            />
+          )
+        } else if (logGroup.syncGraphics === 2) {
+          // ! all
+          const centerStagedId = logGroup.view.centerStagedId
+          return logGroup.logs.map((log, ind) => {
+            const orderReversed = logGroup.logs.length - 1 - ind
+            return (
+              <Graphics
+                key={`g-${groupId}-${ind}`}
+                args={log.args}
+                id={log.id}
+                stack={log.stack}
+                centerStagedId={centerStagedId}
+                groupId={groupId}
+                registries={registries}
+                currentGraphics={ind === selectedLogInd}
+                orderReversed={orderReversed}
+              />
+            )
+          })
+        }
+      })
+      .flat()
+
+    return (
+      <div key="graphics-host" className="graphics-host">
+        {gElements}
+      </div>
+    )
+  }
+
+  // addLogForGraphics(groupId, log, centerStagedId) {
+  //   // keep it possible to have multiple graphics for one group
+  //   const newGraphics = {
+  //     ...this.state.graphics,
+  //     [groupId]: [
+  //       {
+  //         log: log,
+  //         centerStagedId: centerStagedId,
+  //       },
+  //     ],
+  //   }
+  //   this.setState({ graphics: newGraphics })
+  // }
+
+  // removeGraphicsGroup(groupId) {
+  //   const newGraphics = { ...this.state.graphics }
+  //   delete newGraphics[groupId]
+  //   this.setState({ graphics: newGraphics })
+  // }
 
   /* -------------------------------------------------------------------------- */
 
@@ -488,7 +583,7 @@ export default class LogHost extends Component {
     return (
       <div id="hyper-log-host" className="hyper-log-host" ref={this.ref}>
         {renderedLogElements}
-        {this.renderGraphicsElements()}
+        {organization === _Aug && this.renderGraphicsElements()}
       </div>
     )
   }

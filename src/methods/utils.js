@@ -43,6 +43,17 @@ export const idFromString = str =>
     uuidv5.URL // ? any potential problems?
   )
 
+export const trimStringToLength = (str, length) => {
+  // remove multiple spaces
+  str = str.replace(/\s+/g, ' ')
+
+  if (str.length > length) {
+    return str.slice(0, length) + ' …'
+  } else {
+    return str
+  }
+}
+
 export const getIdentifier = (stackPath, line, char) => {
   return `${stackPath}:${line}:${char}`
 }
@@ -146,7 +157,11 @@ export const removeArgsDescriptions = args => {
   return args.replace(/\[(.*?)\]/g, '')
 }
 
-export const parseCenterStagedValueFromId = (args, id) => {
+export const centerStagedArgInd = centerStagedId => {
+  return Number(centerStagedId.split('-')[0].replace(/\[.*\]/g, ''))
+}
+
+export const parseCenterStagedValueFromId = (args, id = '') => {
   if (id.length === 0) return [args, id]
 
   const sequentialGetters = removeArgsDescriptions(id).split('-')
@@ -157,7 +172,11 @@ export const parseCenterStagedValueFromId = (args, id) => {
     const parsedGetter = assertNumber(getter) ? parseInt(getter) : getter
     // keep going only when args[parsedGetter] has a value,
     // or, if it's the last getter (the inner-most value could just be undefined)
-    if (args[parsedGetter] || getterInd === sequentialGetters.length - 1) {
+    if (
+      args[parsedGetter] ||
+      (parsedGetter && parsedGetter in args) ||
+      getterInd === sequentialGetters.length - 1
+    ) {
       args = args[parsedGetter]
       progressId += getter
     } else return [args, progressId]
@@ -286,6 +305,12 @@ export const deepCopyArrayOfLogs = arr => {
 export const keyWithSmallestValue = obj => {
   const smallestValue = Math.min(...Object.keys(obj).map(key => obj[key]))
   return Number(Object.keys(obj).filter(key => obj[key] === smallestValue)[0])
+}
+
+export const objectKeys = obj => {
+  const k = []
+  for (const key in obj) k.push(key)
+  return k
 }
 
 /* -------------------------------------------------------------------------- */
@@ -486,6 +511,79 @@ export const canUseShape = (log, centerStagedId = '') => {
     (assertString(args[0]) && _checkIfContainsValidUnit(args[0]))
   )
 }
+
+export const acceptableGraphicsSourcePairs = [
+  {
+    size: ['width', 'height'],
+    position: ['x', 'y'],
+    keyWord: 'native',
+  },
+  {
+    size: ['clientWidth', 'clientHeight'],
+    position: ['clientX', 'clientY'],
+    keyWord: 'client',
+  },
+  // {
+  //   size: ['offsetWidth', 'offsetHeight'],
+  //   position: ['offsetX', 'offsetY'],
+  //   keyWord: 'offset',
+  // },
+  // {
+  //   size: ['scrollWidth', 'scrollHeight'],
+  //   position: ['scrollX', 'scrollY'],
+  //   keyWord: 'scroll',
+  // },
+  // ['top', 'left'],
+]
+
+export const canGraphics = (log, centerStagedId = '') => {
+  const rawArgs = log.args
+
+  let args
+  if (centerStagedId.length) {
+    args = [parseCenterStagedValueFromId(rawArgs, centerStagedId)[0]]
+  } else args = rawArgs
+
+  // TODO support all args?
+  const firstArg = args[0]
+  if (!assertObject(firstArg)) return false
+
+  const keys = objectKeys(firstArg)
+  for (const configuration of acceptableGraphicsSourcePairs) {
+    const { size, position } = configuration
+    if (
+      (keys.includes(position[0]) && keys.includes(position[1])) ||
+      (keys.includes(size[0]) && keys.includes(size[1]))
+    )
+      return true
+  }
+
+  return false
+}
+
+export const anySize = arg => {
+  const keys = objectKeys(arg)
+  for (const configuration of acceptableGraphicsSourcePairs) {
+    const { size } = configuration
+    if (keys.includes(size[0]) && keys.includes(size[1])) return true
+  }
+  return false
+}
+
+export const getValidPairs = (arg, retrievalType) => {
+  const validPairs = []
+
+  const keys = objectKeys(arg)
+  for (const configuration of acceptableGraphicsSourcePairs) {
+    const retrieval = configuration[retrievalType]
+    if (keys.includes(retrieval[0]) && keys.includes(retrieval[1]))
+      validPairs.push(configuration)
+  }
+
+  return validPairs
+}
+
+/* -------------------------------------------------------------------------- */
 
 export const getLogStats = (logs, centerStagedId = '') => {
   let min = Infinity,

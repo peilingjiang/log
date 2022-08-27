@@ -1,15 +1,15 @@
 .forced-outline-bound {
-  outline: 6px solid rgba($bright-orange, $opacity-default);
+  outline: $padding-xs solid rgba($bright-orange, $opacity-default);
 }
 
 .forced-outline-bound-mid {
-  outline: 6px solid rgba($bright-orange, $opacity-default);
-  outline-offset: -3px;
+  outline: $padding-xs solid rgba($bright-orange, $opacity-default);
+  outline-offset: calc($padding-xs / -2);
 }
 
 .forced-outline-bound-inside {
-  outline: 6px solid rgba($bright-orange, $opacity-default);
-  outline-offset: -6px;
+  outline: $padding-xs solid rgba($bright-orange, $opacity-default);
+  outline-offset: -$padding-xs;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -17,8 +17,8 @@
 .sudo-pointer-element {
   position: absolute;
 
-  width: 6px;
-  height: 6px;
+  width: $padding-xs;
+  height: $padding-xs;
   background: transparent;
   // border-radius: 50%;
 

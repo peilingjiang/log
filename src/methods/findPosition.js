@@ -10,6 +10,7 @@ import {
 } from '../constants.js'
 import {
   assertExistence,
+  assertString,
   getElementBounding,
   keyWithSmallestValue,
   mergeBoundingRects,
@@ -257,6 +258,12 @@ export const pxWrap = value => {
 
 export const pxTrim = value => {
   return Number(value.replace(/px/, ''))
+}
+
+export const pxOrStringWrap = value => {
+  if (value === 0) return '0px'
+  if (assertString(value)) return value
+  return value ? `${value}px` : ''
 }
 
 /* -------------------------------------------------------------------------- */

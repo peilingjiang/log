@@ -7,11 +7,11 @@ import FormatterObject from './FormatterObject.js'
 import {
   assertElement,
   assertTypeOfArg,
+  centerStagedArgInd,
   getArgsArrayFromRawCodeObject,
   parseCenterStagedValueFromId,
   removeLogId,
 } from '../methods/utils.js'
-import { wrapString } from './utils.js'
 import { groupIdExtendingConnector, logViewInterface } from '../constants.js'
 import {
   FormatterBoolean,
@@ -98,24 +98,34 @@ export class Formatter extends Component {
 
     // ! center staged
     if (view.centerStagedId.length) {
-      const [argsForFormatter, idForFormatter] = parseCenterStagedValueFromId(
+      const [argForFormatter, idForFormatter] = parseCenterStagedValueFromId(
         args,
         view.centerStagedId
       )
 
-      formattedArgs = formatArg(
-        argsForFormatter,
-        groupId,
-        `(${logId}-)${idForFormatter}`,
-        {
-          centerStagedId: view.centerStagedId,
-          unfoldedIds: view.unfoldedIds,
-          highlightedIds: view.highlightedIds,
-        },
-        streamFunctions,
-        false,
-        choosingCenterStaged,
-        highlightChanged
+      // to show raw content for center staged value
+      const argInd = centerStagedArgInd(view.centerStagedId)
+
+      formattedArgs = (
+        <div key={`${groupId}-staged`} className="raw-content-label-wrapper">
+          {showRegistries && rawContent && rawContent[argInd] ? (
+            <span className="raw-content">{rawContent[argInd]}</span>
+          ) : null}
+          {formatArg(
+            argForFormatter,
+            groupId,
+            `(${logId}-)${idForFormatter}`,
+            {
+              centerStagedId: view.centerStagedId,
+              unfoldedIds: view.unfoldedIds,
+              highlightedIds: view.highlightedIds,
+            },
+            streamFunctions,
+            false,
+            choosingCenterStaged,
+            highlightChanged
+          )}
+        </div>
       )
     } else {
       // ! normal

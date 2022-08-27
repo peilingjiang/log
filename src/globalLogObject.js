@@ -1,4 +1,4 @@
-import { _R } from './constants.js'
+import { _config, _R } from './constants.js'
 import { assertString } from './methods/utils.js'
 
 export class HyperLog {
@@ -63,7 +63,8 @@ export class HyperLog {
 
   history(history = 0) {
     this.requests.history =
-      Math.max(Math.min(Math.round(Number(history)), 3), 0) || 1
+      Math.max(Math.min(Math.round(Number(history)), 2), 0) ||
+      _config.logStreamHistoryRenderDepth - 1
     return this
   }
 

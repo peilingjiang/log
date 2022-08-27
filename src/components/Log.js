@@ -10,10 +10,7 @@ import {
   logInterface,
   logViewInterface,
   _config,
-  _rootStyles,
-  _T,
 } from '../constants.js'
-import tinycolor from 'tinycolor2'
 import { constrain } from '../methods/utils.js'
 
 export default class Log extends Component {
@@ -62,6 +59,49 @@ export default class Log extends Component {
     return !isEqual(nextProps, this.props)
   }
 
+  // componentDidMount() {
+  //   const {
+  //     groupId,
+  //     log,
+  //     view,
+  //     asyncToGraphics,
+  //     graphicsLifeCycle: { add },
+  //   } = this.props
+
+  //   if (asyncToGraphics) {
+  //     add(groupId, log, view.centerStagedId)
+  //   }
+  // }
+
+  // componentDidUpdate(prevProps) {
+  //   const {
+  //     groupId,
+  //     log,
+  //     view,
+  //     asyncToGraphics,
+  //     graphicsLifeCycle: { add },
+  //   } = this.props
+
+  //   if (
+  //     asyncToGraphics &&
+  //     (!prevProps.asyncToGraphics ||
+  //       !areArgsEqual(log.args, prevProps.log.args))
+  //   ) {
+  //     add(groupId, log, view.centerStagedId)
+  //   }
+  // }
+
+  // given the current adding mechanism, maybe we don't need to explicitly remove
+  // componentWillUnmount() {
+  //   const {
+  //     groupId,
+  //     asyncToGraphics,
+  //     graphicsLifeCycle: { remove },
+  //   } = this.props
+
+  //   if (asyncToGraphics) remove(groupId)
+  // }
+
   render() {
     const {
       groupId,
@@ -84,6 +124,7 @@ export default class Log extends Component {
     const hasNoArgs = args.length === 0
 
     if (!expandedLog && orderReversed > log.history) return undefined
+
     return (
       <div
         className={`hyper-log${

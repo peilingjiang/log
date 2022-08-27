@@ -195,6 +195,9 @@ export const addLog = (
           deleted: false,
           ////
           view: logViewDefault,
+          timelineLogOrderReversed: 0,
+          ////
+          syncGraphics: 0,
           ////
           // customization
         }

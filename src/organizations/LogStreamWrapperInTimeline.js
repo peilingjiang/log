@@ -117,6 +117,9 @@ export default class LogStreamWrapperInTimeline extends LogStream {
               ////
               registries={registries}
               showRegistries={showRegistries}
+              ////
+              asyncToGraphics={false}
+              graphicsLifeCycle={{}}
             />
           ) : (
             <ShapeLog
@@ -141,6 +144,9 @@ export default class LogStreamWrapperInTimeline extends LogStream {
               ////
               registries={registries}
               showRegistries={showRegistries}
+              ////
+              asyncToGraphics={false}
+              graphicsLifeCycle={{}}
             />
           )}
         </div>

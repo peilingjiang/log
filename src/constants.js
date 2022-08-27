@@ -115,6 +115,9 @@ export const logGroupInterface = PropTypes.exact({
   deleted: PropTypes.bool.isRequired,
   ////
   view: logViewInterface.isRequired,
+  timelineLogOrderReversed: PropTypes.number.isRequired,
+  ////
+  syncGraphics: PropTypes.number.isRequired, // 0 none | 1 last | 2 all
   ////
   // customization
 })
@@ -170,8 +173,8 @@ export const stackActualCallerDepth = 4
 export const stackFilePathCompareDepth = 3
 
 // out of 8 possible positions around the anchor element, we only allow the first N best ones
-export const positionFindingWorstAllowed = 6
-export const switchPositionRegistrationDifferenceThresholdPx2 = 10000
+export const positionFindingWorstAllowed = 5
+export const switchPositionRegistrationDifferenceThresholdPx2 = 6400
 
 export const minimalStringShowLength = 7
 export const foldedArrayShowItemCount = 3
@@ -264,7 +267,10 @@ export const _rootStyles = Object.seal({
   warnYellow: '#ffaa00',
   warnYellowDark: '#c08000',
 
-  opacityDefault: 0.95,
+  opacityDefault: 0.9,
+  opacityMid: 0.75,
+  opacityHigh: 0.5,
+  opacityXh: 0.3,
 
   transitionFastMs: 100,
   transitionNormalMs: 300,
@@ -278,3 +284,9 @@ export const _rootStyles = Object.seal({
 export const _tinyColors = Object.seal({
   lightGrey: tinycolor(_rootStyles.lightGrey),
 })
+
+// graphics
+
+export const graphicsHistoryLength = 200
+export const graphicsHistoryOpacityFadeRate =
+  _rootStyles.opacityXh / graphicsHistoryLength

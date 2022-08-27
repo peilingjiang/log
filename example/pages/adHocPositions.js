@@ -22,17 +22,7 @@ export default class AdHocPositions extends Component {
     this.handleMouseDown = this.handleMouseDown.bind(this)
   }
 
-  componentDidMount() {
-    this.catRef.current.addEventListener('mousedown', this.handleMouseDown)
-    this.cat2Ref.current.addEventListener('mousedown', this.handleMouseDown)
-  }
-
-  componentWillUnmount() {
-    this.catRef.current.removeEventListener('mousedown', this.handleMouseDown)
-    this.cat2Ref.current.removeEventListener('mousedown', this.handleMouseDown)
-  }
-
-  handleMouseDown(e) {
+  handleMouseDown(e, ref) {
     e.preventDefault()
 
     const targetName = e.target.dataset.name
@@ -51,7 +41,8 @@ export default class AdHocPositions extends Component {
           [`${targetName}Y`]: startPos.top + e.clientY - startPos.y,
         },
         () => {
-          log('offsets').e(e.target).id(targetName).module()
+          // log(e.target.getBoundingClientRect()).e(e.target).id(targetName)
+          log(ref?.current.getBoundingClientRect()).e(e.target).id(targetName)
         }
       )
     }
@@ -80,6 +71,9 @@ export default class AdHocPositions extends Component {
             src={Cat}
             alt="Little Cat"
             data-name="cat"
+            onMouseDown={e => {
+              this.handleMouseDown(e, this.catRef)
+            }}
           />
           <img
             ref={this.cat2Ref}
@@ -94,6 +88,9 @@ export default class AdHocPositions extends Component {
             src={Cat}
             alt="Little Cat"
             data-name="cat2"
+            onMouseDown={e => {
+              this.handleMouseDown(e, this.cat2Ref)
+            }}
           />
         </div>
       </div>

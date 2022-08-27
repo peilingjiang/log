@@ -22,6 +22,7 @@ import {
   assertObject,
   bindableElement,
   brutalFindGroupIdInRegistries,
+  canGraphics,
   canUseShape,
   cloneLogGroup,
   dist,
@@ -77,7 +78,7 @@ export default class LogStream extends Component {
       choosingCenterStaged: false,
       ////
       useTimeline: false,
-      timelineLogOrderReversed: 0,
+      // timelineLogOrderReversed: 0,
       ////
       useStats: false,
     }
@@ -100,6 +101,7 @@ export default class LogStream extends Component {
       pauseStream: this.pauseStream.bind(this),
       deleteStream: this.deleteStream.bind(this),
       shapeIt: this.shapeIt.bind(this),
+      helloGraphics: this.helloGraphics.bind(this),
       startSnap: this.startSnap.bind(this),
       undoSnap: this.undoSnap.bind(this),
       toggleChoosingCenterStaged: this.toggleChoosingCenterStaged.bind(this),
@@ -158,6 +160,11 @@ export default class LogStream extends Component {
     const newUseTimeline = !this.state.useTimeline
     const newExpand = newUseTimeline ? false : this.state.expand
     this.setState({ useTimeline: newUseTimeline, expand: newExpand })
+
+    this.props.hostFunctions.setTimelineLogOrderReversed(
+      this.props.logGroup.groupId,
+      0
+    )
   }
 
   expandStream() {
@@ -279,6 +286,7 @@ export default class LogStream extends Component {
     updateLogGroup(logGroup.groupId, {
       ...cloneLogGroup(logGroup),
       deleted: true,
+      syncGraphics: 0, // ! rm graphics
     })
   }
 
@@ -299,6 +307,14 @@ export default class LogStream extends Component {
 
     updateLogGroup(logGroup.groupId, newGroup)
   }
+
+  /* -------------------------------------------------------------------------- */
+
+  helloGraphics() {
+    this.props.hostFunctions.updateSyncGraphics(this.props.logGroup.groupId)
+  }
+
+  /* -------------------------------------------------------------------------- */
 
   startSnap(e, canSnap) {
     // get the center of the target element
@@ -469,7 +485,10 @@ export default class LogStream extends Component {
   /* -------------------------------------------------------------------------- */
 
   setTimelineLogOrderReversed(orderReversed) {
-    this.setState({ timelineLogOrderReversed: orderReversed })
+    this.props.hostFunctions.setTimelineLogOrderReversed(
+      this.props.logGroup.groupId,
+      orderReversed
+    )
   }
 
   /* -------------------------------------------------------------------------- */
@@ -489,6 +508,7 @@ export default class LogStream extends Component {
         ...logGroup.view,
         centerStagedId: removeLogId(newCenterStagedId),
       },
+      syncGraphics: 0, // ! rm graphics
     }
 
     // reset logGroup format to text
@@ -691,7 +711,6 @@ export default class LogStream extends Component {
       grabbing,
       current,
       useTimeline,
-      timelineLogOrderReversed,
       choosingCenterStaged,
       useStats,
     } = this.state
@@ -716,6 +735,8 @@ export default class LogStream extends Component {
         ////
         orientation,
         view,
+        timelineLogOrderReversed,
+        syncGraphics,
       },
       hostFunctions,
       organization,
@@ -739,7 +760,7 @@ export default class LogStream extends Component {
     ////
 
     if (!useTimeline) {
-      logElements = logs.map(log => {
+      logElements = logs.map((log, ind) => {
         // to add a valid shape log, the stream must be a shape (format)
         // and this log must have a valid unit
         const useShapeLog = isShape && canUseShape(log, view.centerStagedId)
@@ -871,8 +892,17 @@ export default class LogStream extends Component {
       logWrapperStyles.flexDirection = 'row'
     }
 
+    /* -------------------------------------------------------------------------- */
+    // ! can I ...?
     const canSnap = format === 'shape' && organization === _Aug
     const canShape = canUseShape(logs[logs.length - 1], view.centerStagedId)
+
+    const canConvertToGraphics = canGraphics(
+      logs[logs.length - 1],
+      view.centerStagedId
+    )
+
+    /* -------------------------------------------------------------------------- */
 
     return (
       <div
@@ -950,6 +980,8 @@ export default class LogStream extends Component {
           menuFunctions={this.menuFunctions}
           snap={snap}
           useShape={canShape}
+          useGraphics={canConvertToGraphics}
+          syncGraphics={syncGraphics}
           organization={organization}
           ////
           allowingCenterStaged={this._allowingCenterStaged()}

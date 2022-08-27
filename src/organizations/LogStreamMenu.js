@@ -12,6 +12,7 @@ import Restart from '../icons/restart.svg'
 import Delete from '../icons/delete.svg'
 
 import Shape from '../icons/shape.svg'
+import SpatialShape from '../icons/spatial-shape.svg'
 import Text from '../icons/text.svg'
 // import Snap from '../icons/snap.svg'
 // import Unsnap from '../icons/unsnap.svg'
@@ -34,6 +35,8 @@ export default class LogStreamMenu extends Component {
     snap: PropTypes.bool.isRequired,
     ////
     useShape: PropTypes.bool.isRequired,
+    useGraphics: PropTypes.bool.isRequired, // can have graphics
+    syncGraphics: PropTypes.number.isRequired, // controlled by menu button, 0 | 1 | 2
     ////
     organization: PropTypes.string.isRequired,
     allowingCenterStaged: PropTypes.bool.isRequired,
@@ -58,6 +61,8 @@ export default class LogStreamMenu extends Component {
       orientation,
       alignment,
       useShape,
+      useGraphics,
+      syncGraphics,
       organization,
       allowingCenterStaged,
       choosingCenterStaged,
@@ -70,6 +75,7 @@ export default class LogStreamMenu extends Component {
         pauseStream,
         deleteStream,
         shapeIt,
+        helloGraphics,
         // startSnap,
         // undoSnap,
         toggleChoosingCenterStaged,
@@ -129,6 +135,33 @@ export default class LogStreamMenu extends Component {
         >
           {!isShape ? <Shape /> : <Text />}
           <span>{!isShape ? 'shape' : 'text'}</span>
+        </p>
+      )
+    }
+
+    if (useGraphics) {
+      const extraClass =
+        syncGraphics === 1
+          ? ' menu-have-graphics menu-graphics-single'
+          : syncGraphics === 2
+          ? ' menu-have-graphics menu-graphics-all'
+          : ''
+      const elTitle =
+        syncGraphics === 0 ? 'graphic' : syncGraphics === 1 ? 'one' : 'history'
+
+      specialItems.push(
+        <p
+          key={'graphics'}
+          className={`stream-menu-item special-menu-item${
+            shouldDisable ? ' disabled' : ''
+          }${extraClass}`}
+          onClick={() => {
+            helloGraphics()
+          }}
+          title={elTitle}
+        >
+          <SpatialShape />
+          <span>{elTitle}</span>
         </p>
       )
     }

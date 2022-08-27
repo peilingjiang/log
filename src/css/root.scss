@@ -86,9 +86,14 @@ $outline-dark: 1px solid $black;
 
 $outline-highlight: 1px solid $elegant-red;
 
+$blur-small: 2px;
 $blur-default: 3px;
 $blur-high: 5px;
 $blur-xh: 7px;
+
+.prevent-pointer-events {
+  pointer-events: none;
+}
 
 /* -------------------------------------------------------------------------- */
 
