@@ -1,25 +1,27 @@
 import React, { Component, createRef } from 'react'
 import isEqual from 'react-fast-compare'
 
-import { addLog } from './methods/addLog.js'
-import LogStreamsHolder from './organizations/LogStreamsHolder.js'
-import TimelineHolder from './organizations/TimelineHolder.js'
-import { HyperLog } from './globalLogObject.js'
+import { HyperLog } from '../hyperLog.ts'
+import { logProcessor } from '../log.ts'
+
+import { addLog } from '../methods/addLog.js'
+import LogStreamsHolder from '../organizations/LogStreamsHolder.js'
+import TimelineHolder from '../organizations/TimelineHolder.js'
 import {
   cloneLogGroup,
   deepCopyArrayOfLogs,
   getFilteredOutElements,
   preventEventWrapper,
-} from './methods/utils.js'
-import { _Aug, _Time } from './constants.js'
-import { g, socket } from './global.js'
-import { clearAllOutlines } from './methods/attachElements.js'
-import { highlightElement } from './methods/highlight.js'
-import { StackParser } from './methods/stackParser.js'
-import { preprocessASTsToGetRegistries } from './methods/ast.js'
-import { GraphicsHost } from './components/Graphics.js'
-import { pxWrap } from './methods/findPosition.js'
-import { SelectionRect } from './components/SelectionRect.js'
+} from '../methods/utils.js'
+import { _Aug, _Time } from '../constants.js'
+import { g, socket } from '../global.js'
+import { clearAllOutlines } from '../methods/attachElements.js'
+import { highlightElement } from '../methods/highlight.js'
+import { StackParser } from '../methods/stackParser.js'
+import { preprocessASTsToGetRegistries } from '../methods/ast.js'
+import { GraphicsHost } from './Graphics.js'
+import { pxWrap } from '../methods/findPosition.js'
+import { SelectionRect } from './SelectionRect.js'
 
 export default class LogHost extends Component {
   constructor(props) {
@@ -80,7 +82,8 @@ export default class LogHost extends Component {
 
     // register log functions
     // ! ADD LOG
-    this.defineLogs()
+    // this.defineLogs()
+    this.enableLogProcessing()
   }
 
   componentDidMount() {
@@ -213,7 +216,7 @@ export default class LogHost extends Component {
     window.log = (...args) => {
       if (!g.access) return
 
-      return new HyperLog(this, args, requests => {
+      return new HyperLog(args, requests => {
         addLog(this, this.stackParser, args, null, requests)
       })
     }
@@ -239,6 +242,19 @@ export default class LogHost extends Component {
 
     // Number.prototype.log = function (...args) {}
   }
+
+  // ! -------------------------------------------------------------------------- //
+  // ! -------------------------------------------------------------------------- //
+  // ! -------------------------------------------------------------------------- //
+  enableLogProcessing() {
+    logProcessor.setProcessFunction(hyperLog => {
+      addLog(this, this.stackParser, hyperLog.args, null, hyperLog.requests)
+    })
+    logProcessor.process()
+  }
+  // ! -------------------------------------------------------------------------- //
+  // ! -------------------------------------------------------------------------- //
+  // ! -------------------------------------------------------------------------- //
 
   // TODO use it?
   incLoggedCounter() {

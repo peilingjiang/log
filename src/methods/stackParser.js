@@ -2,7 +2,7 @@ import isEqual from 'react-fast-compare'
 import StackTrace from 'stacktrace-js'
 import ErrorStackParser from 'error-stack-parser'
 
-import { stackActualCallerDepth, validUnits } from '../constants.js'
+import { stackActualCallerDepth } from '../constants.js'
 import { g } from '../global.js'
 
 export class StackParser {

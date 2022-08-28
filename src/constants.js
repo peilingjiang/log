@@ -167,7 +167,7 @@ export const registryInterface = PropTypes.exact({
 
 // the meaningful line of where the log is from should not be the log wrapper interface
 // instead, we trace back to the actual caller
-export const stackActualCallerDepth = 4
+export const stackActualCallerDepth = 5
 // when comparing two paths, from web and file system,
 // we only care about the last part of the path
 export const stackFilePathCompareDepth = 3

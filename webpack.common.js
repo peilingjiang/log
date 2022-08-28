@@ -12,14 +12,14 @@ export const config = {
   module: {
     rules: [
       {
-        test: /\.js/,
-        use: 'babel-loader',
-        // include: __dirname + 'src/*',
+        test: /\.tsx?$/,
+        use: 'ts-loader',
         exclude: /node_modules/,
       },
       {
-        test: /\.tsx?$/,
-        use: 'ts-loader',
+        test: /\.js/,
+        use: 'babel-loader',
+        // include: __dirname + 'src/*',
         exclude: /node_modules/,
       },
       {
@@ -59,9 +59,9 @@ export const config = {
 }
 
 export const output = {
-  filename: 'log.min.js',
   library: 'log',
   libraryTarget: 'umd',
   libraryExport: 'default',
+  filename: 'log.min.js',
   sourceMapFilename: 'log.min.js.map',
 }

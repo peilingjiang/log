@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Link, Outlet } from 'react-router-dom'
 
 // ! load HyperLog
-import '../src/index.js'
+import '../src/index.tsx'
 
 import './css/App.scss'
 
