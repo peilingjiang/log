@@ -44,7 +44,7 @@ export default class LogStreamWrapperInTimeline extends LogStream {
   /* -------------------------------------------------------------------------- */
 
   render() {
-    const { expand, hovered, current } = this.state
+    const { expand, current } = this.state
     const {
       logGroup: { groupId, groupColor, format, view, logs },
       log,

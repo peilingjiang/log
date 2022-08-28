@@ -760,7 +760,7 @@ export default class LogStream extends Component {
     ////
 
     if (!useTimeline) {
-      logElements = logs.map((log, ind) => {
+      logElements = logs.map(log => {
         // to add a valid shape log, the stream must be a shape (format)
         // and this log must have a valid unit
         const useShapeLog = isShape && canUseShape(log, view.centerStagedId)
