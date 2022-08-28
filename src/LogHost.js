@@ -77,14 +77,13 @@ export default class LogHost extends Component {
     this.loggedCounter = 0
 
     this.stackParser = new StackParser()
+
+    // register log functions
+    // ! ADD LOG
+    this.defineLogs()
   }
 
   componentDidMount() {
-    // register log functions
-
-    // ADD LOG
-    this.defineLogs()
-
     // add event listeners
     window.addEventListener('resize', this._resizeHandler)
     window.addEventListener('keypress', this._shortcutHandler)
