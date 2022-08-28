@@ -33,7 +33,11 @@
   &.hyper-log {
     .shape-log-note {
       * {
-        color: $error-red;
+        color: $error-red-dark !important;
+      }
+
+      svg * {
+        fill: $error-red-dark !important;
       }
     }
   }
