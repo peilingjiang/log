@@ -20,3 +20,8 @@ root.render(
     <LogHost />
   </React.StrictMode>
 )
+
+window.console.log(
+  '%cLog Right Here, Right Now! [HyperLog]\nTime to turn off the console : )',
+  'background: #ff42a1; font-weight: bold; color: #fff; padding: 1rem;'
+)
