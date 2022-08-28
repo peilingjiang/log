@@ -8,60 +8,74 @@ const EngineeringMeasuresMemo = ({ keyWord, position, size }) => {
   let positionEl = [],
     sizeEl = []
 
-  const { x, y } = getPositionBasedOnKeyWord(keyWord, position)
-  positionEl.push(
-    ...[
-      // y
-      <MeasureLine
-        key={'line-y'}
-        identifier="y"
-        x={`calc(${pxWrap(x)} - ${measuresLineWidth})`}
-        y={'0px'}
-        width={measuresLineWidth}
-        height={pxWrap(y)}
-        textPosition={1}
-        value={y}
-      />,
-      // x
-      <MeasureLine
-        key={'line-x'}
-        identifier="x"
-        x={'0px'}
-        y={`calc(${pxWrap(y)} - ${measuresLineWidth})`}
-        width={pxWrap(x)}
-        height={measuresLineWidth}
-        textPosition={2}
-        value={x}
-      />,
-    ]
-  )
+  let x, y
+  if (position) {
+    const pos = getPositionBasedOnKeyWord(keyWord, position)
+    x = pos.x
+    y = pos.y
+
+    positionEl.push(
+      ...[
+        // y
+        y !== 0 ? (
+          <MeasureLine
+            key={'line-y'}
+            identifier="y"
+            x={`calc(${pxWrap(x)} - ${measuresLineWidth})`}
+            y={'0px'}
+            width={measuresLineWidth}
+            height={pxWrap(y)}
+            textPosition={1}
+            value={y}
+          />
+        ) : null,
+        // x
+        x !== 0 ? (
+          <MeasureLine
+            key={'line-x'}
+            identifier="x"
+            x={'0px'}
+            y={`calc(${pxWrap(y)} - ${measuresLineWidth})`}
+            width={pxWrap(x)}
+            height={measuresLineWidth}
+            textPosition={2}
+            value={x}
+          />
+        ) : null,
+      ]
+    )
+  }
 
   if (size) {
     const { width, height } = getSizeBasedOnKeyWord(keyWord, size)
     sizeEl.push(
       ...[
         // width
-        <MeasureLine
-          key={'line-width'}
-          identifier="w"
-          x={pxWrap(x)}
-          y={`calc(${pxWrap(y)} - ${measuresLineWidth})`}
-          width={pxWrap(width)}
-          height={measuresLineWidth}
-          textPosition={4}
-          value={width}
-        />,
+        width > 0 ? (
+          <MeasureLine
+            key={'line-width'}
+            identifier="w"
+            x={pxWrap(x)}
+            y={`calc(${pxWrap(y)} - ${measuresLineWidth})`}
+            width={pxWrap(width)}
+            height={measuresLineWidth}
+            textPosition={4}
+            value={width}
+          />
+        ) : null,
         // height
-        <MeasureLine
-          key={'line-height'}
-          identifier="h"
-          x={`calc(${pxWrap(x)} - ${measuresLineWidth})`}
-          y={pxWrap(y)}
-          width={measuresLineWidth}
-          height={pxWrap(height)}
-          textPosition={3}
-          value={height}
-        />,
+        height > 0 ? (
+          <MeasureLine
+            key={'line-height'}
+            identifier="h"
+            x={`calc(${pxWrap(x)} - ${measuresLineWidth})`}
+            y={pxWrap(y)}
+            width={measuresLineWidth}
+            height={pxWrap(height)}
+            textPosition={3}
+            value={height}
+          />
+        ) : null,
       ]
     )
   }
@@ -76,7 +90,7 @@ const EngineeringMeasuresMemo = ({ keyWord, position, size }) => {
 
 EngineeringMeasuresMemo.propTypes = {
   keyWord: PropTypes.string.isRequired,
-  position: PropTypes.object.isRequired,
+  position: PropTypes.object,
   size: PropTypes.object,
 }
 
@@ -101,7 +115,9 @@ const MeasureLine = props => {
         style={{
           ...textPositionOnAxis(textPosition),
         }}
-      >{`${identifier} ${pxWrap(value)}`}</div>
+      >
+        {pxWrap(value)}
+      </div>
     </div>
   )
 }
@@ -169,14 +185,14 @@ const textPositionOnAxis = quadrant => {
     case 3:
       return {
         top: '50%',
-        right: '200%',
+        left: '200%',
         transform: `translateY(-50%)`,
       }
 
     case 4:
       return {
         left: '50%',
-        bottom: '200%',
+        top: '200%',
         transform: `translateX(-50%)`,
       }
   }

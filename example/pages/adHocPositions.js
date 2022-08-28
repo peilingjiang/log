@@ -42,7 +42,8 @@ export default class AdHocPositions extends Component {
         },
         () => {
           // log(e.target.getBoundingClientRect()).e(e.target).id(targetName)
-          log(ref?.current.getBoundingClientRect()).e(e.target).id(targetName)
+          const rect = ref?.current.getBoundingClientRect()
+          log(rect).e(e.target).id(targetName)
         }
       )
     }

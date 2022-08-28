@@ -127,13 +127,26 @@ $dot-d: $padding-mid;
       right: 0;
 
       display: flex;
-      padding: $padding-xs;
+      flex-direction: column;
+      // gap: $padding-xs;
+      flex-wrap: nowrap;
+      flex-shrink: 0;
+
+      // padding: $padding-xs;
 
       cursor: pointer;
       pointer-events: initial;
 
-      svg {
-        pointer-events: none;
+      .box-icon {
+        padding: $padding-xs;
+
+        &.icon-measures:hover {
+          background: $bright-orange;
+        }
+
+        &.icon-move {
+          cursor: move;
+        }
       }
 
       svg path {
@@ -188,6 +201,7 @@ $dot-d: $padding-mid;
       @include font-fixed;
       font-size: $font-size-default;
       line-height: 100%;
+      user-select: none;
     }
 
     /* -------------------------------------------------------------------------- */
@@ -257,14 +271,16 @@ $dot-d: $padding-mid;
     position: absolute;
     white-space: nowrap;
 
-    padding: $padding-xs $padding-small;
+    padding: $padding-xs $padding-xs;
     border-radius: $radius-small;
     background: rgba($light, $opacity-mid);
     backdrop-filter: blur($blur-xh);
 
     @include font-fixed;
     font-size: $font-size-small;
+    color: $black;
 
     pointer-events: none;
+    user-select: none;
   }
 }

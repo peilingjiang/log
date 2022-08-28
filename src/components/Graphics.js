@@ -2,8 +2,6 @@ import React, { Component, useState, memo, useRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import isEqual from 'react-fast-compare'
 
-import Measures from '../icons/measures.svg'
-
 import {
   graphicsHistoryLength,
   graphicsHistoryOpacityFadeRate,
@@ -13,21 +11,30 @@ import {
 import {
   anySize,
   assertExistence,
+  canGraphics,
   centerStagedArgInd,
   getArgsArrayFromRawCodeObject,
   getIdentifier,
   getValidPairs,
   parseCenterStagedValueFromId,
+  preventEventWrapper,
   trimStringToLength,
 } from '../methods/utils.js'
 import { pxOrStringWrap } from '../methods/findPosition.js'
 import EngineeringMeasures from './Measures.js'
 
-const GraphicsHostMemo = ({ logGroups, registries }) => {
-  const [showMeasures, setShowMeasures] = useState(false)
+import Measures from '../icons/measures.svg'
+import AllWayMove from '../icons/all-way-move.svg'
 
-  const toggleShowMeasures = () => {
-    setShowMeasures(!showMeasures)
+const GraphicsHostMemo = ({ logGroups, registries }) => {
+  const [showMeasures, setShowMeasures] = useState([])
+
+  const toggleShowMeasures = groupId => {
+    setShowMeasures(
+      showMeasures.includes(groupId)
+        ? showMeasures.filter(id => id !== groupId)
+        : [...showMeasures, groupId]
+    )
   }
 
   const gElements = Object.keys(logGroups)
@@ -36,12 +43,13 @@ const GraphicsHostMemo = ({ logGroups, registries }) => {
 
       const selectedLogInd =
         logGroup.logs.length - logGroup.timelineLogOrderReversed - 1
+      const log = logGroup.logs[selectedLogInd]
+      const centerStagedId = logGroup.view.centerStagedId
 
-      if (logGroup.syncGraphics === 0) return null
+      if (logGroup.syncGraphics === 0 || !canGraphics(log, centerStagedId))
+        return null
       else if (logGroup.syncGraphics === 1) {
         // ! one
-        const log = logGroup.logs[selectedLogInd]
-        const centerStagedId = logGroup.view.centerStagedId
         return (
           <Graphics
             key={`g-${groupId}-${selectedLogInd}`}
@@ -115,7 +123,7 @@ export class Graphics extends Component {
       currentGraphics: PropTypes.bool.isRequired,
       orderReversed: PropTypes.number.isRequired,
       ////
-      showMeasures: PropTypes.bool.isRequired,
+      showMeasures: PropTypes.array.isRequired,
       setShowMeasures: PropTypes.func.isRequired,
     }
   }
@@ -205,6 +213,7 @@ export class Graphics extends Component {
               position={argPosition}
               keyWord={keyWord}
               rawContent={rawContent ? rawContent[argInd] : ''}
+              groupId={groupId}
               groupColor={groupColor}
               currentGraphics={currentGraphics}
               orderReversed={orderReversed}
@@ -240,6 +249,7 @@ export class Graphics extends Component {
               position={argPosition}
               keyWord={keyWord}
               rawContent={rawContent ? rawContent[argInd] : ''}
+              groupId={groupId}
               groupColor={groupColor}
               currentGraphics={currentGraphics}
               orderReversed={orderReversed}
@@ -266,6 +276,7 @@ const BoxGraphicsMemo = ({
   position,
   keyWord,
   rawContent,
+  groupId,
   groupColor,
   currentGraphics,
   orderReversed,
@@ -274,6 +285,10 @@ const BoxGraphicsMemo = ({
   setShowMeasures,
 }) => {
   const boxRef = useRef(null)
+  const [draggedPosition, setDraggedPosition] = useState({
+    x: 0,
+    y: 0,
+  })
   // const timeoutRef = useRef(null)
 
   // useEffect(() => {
@@ -292,6 +307,36 @@ const BoxGraphicsMemo = ({
 
   const fadedGraphics = !currentGraphics
 
+  const handleMouseDown = e => {
+    preventEventWrapper(e, () => {
+      const starter = {
+        x: e.clientX,
+        y: e.clientY,
+        top: draggedPosition.y,
+        left: draggedPosition.x,
+      }
+
+      const handleMouseMove = event => {
+        preventEventWrapper(event, () => {
+          const { x, y } = {
+            x: event.clientX - starter.x,
+            y: event.clientY - starter.y,
+          }
+          setDraggedPosition({
+            x: starter.left + x,
+            y: starter.top + y,
+          })
+        })
+      }
+
+      document.addEventListener('mousemove', handleMouseMove)
+      document.addEventListener('mouseup', function _() {
+        document.removeEventListener('mousemove', handleMouseMove)
+        document.removeEventListener('mouseup', _)
+      })
+    })
+  }
+
   return (
     <div
       ref={boxRef}
@@ -304,7 +349,10 @@ const BoxGraphicsMemo = ({
             orderReversed * graphicsHistoryOpacityFadeRate
           : undefined,
         zIndex: fadedGraphics ? -1 : 0,
-        ...offsetStylesFromKeyWord(keyWord, position),
+        ...offsetStylesFromKeyWord(
+          keyWord,
+          position ? position : draggedPosition
+        ),
       }}
     >
       <div
@@ -315,8 +363,19 @@ const BoxGraphicsMemo = ({
       ></div>
       {!fadedGraphics && (
         <>
-          <div className="box-info" onClick={setShowMeasures}>
-            <Measures />
+          <div className="box-info">
+            <Measures
+              className="box-icon icon-measures"
+              onClick={() => {
+                setShowMeasures(groupId)
+              }}
+            />
+            {!assertExistence(position) && (
+              <AllWayMove
+                className="box-icon icon-move"
+                onMouseDown={handleMouseDown}
+              />
+            )}
           </div>
           <div
             className={`graphics-description box-description ${keyWord}-description`}
@@ -329,10 +388,10 @@ const BoxGraphicsMemo = ({
             </span>
             <span>{trimStringToLength(rawContent, 22)}</span>
           </div>
-          {showMeasures && currentGraphics && (
+          {showMeasures.includes(groupId) && currentGraphics && (
             <EngineeringMeasures
               keyWord={keyWord}
-              position={position}
+              position={position ? position : draggedPosition}
               size={size}
             />
           )}
@@ -345,13 +404,14 @@ const BoxGraphicsMemo = ({
 BoxGraphicsMemo.propTypes = {
   // log: logInterface.isRequired,
   size: PropTypes.object.isRequired,
-  position: PropTypes.object.isRequired,
+  position: PropTypes.object,
   keyWord: PropTypes.string.isRequired,
   rawContent: PropTypes.string.isRequired,
+  groupId: PropTypes.string.isRequired,
   groupColor: PropTypes.string.isRequired,
   currentGraphics: PropTypes.bool.isRequired,
   orderReversed: PropTypes.number.isRequired,
-  showMeasures: PropTypes.bool.isRequired,
+  showMeasures: PropTypes.array.isRequired,
   setShowMeasures: PropTypes.func.isRequired,
 }
 
@@ -365,6 +425,7 @@ const DotGraphicsMemo = ({
   position,
   keyWord,
   rawContent,
+  groupId,
   groupColor,
   currentGraphics,
   orderReversed,
@@ -408,7 +469,9 @@ const DotGraphicsMemo = ({
     >
       <div
         className={`the-dot-shadow ${keyWord}-dot-shadow dot-animation-bounce-in`}
-        onClick={setShowMeasures}
+        onClick={() => {
+          setShowMeasures(groupId)
+        }}
       >
         <div className={`the-dot ${keyWord}-dot dot-animation-bounce-in`}></div>
       </div>
@@ -425,7 +488,7 @@ const DotGraphicsMemo = ({
         <span>{trimStringToLength(rawContent, 22)}</span>
       </div>
 
-      {showMeasures && currentGraphics && (
+      {showMeasures.includes(groupId) && currentGraphics && (
         <EngineeringMeasures keyWord={keyWord} position={position} />
       )}
     </div>
@@ -437,10 +500,11 @@ DotGraphicsMemo.propTypes = {
   position: PropTypes.object.isRequired,
   keyWord: PropTypes.string.isRequired,
   rawContent: PropTypes.string.isRequired,
+  groupId: PropTypes.string.isRequired,
   groupColor: PropTypes.string.isRequired,
   currentGraphics: PropTypes.bool.isRequired,
   orderReversed: PropTypes.number.isRequired,
-  showMeasures: PropTypes.bool.isRequired,
+  showMeasures: PropTypes.array.isRequired,
   setShowMeasures: PropTypes.func.isRequired,
 }
 
