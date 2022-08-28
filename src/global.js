@@ -19,11 +19,11 @@ export const g = Object.seal(
   defaultFromLocalStorage
     ? {
         ...JSON.parse(defaultFromLocalStorage),
-        access: development, // ! to be ENABLE after review process
+        access: true, // ! to be ENABLE after review process
       }
     : {
         ////
-        access: development,
+        access: true,
         // access: true, // ! to be ENABLE after review process
         ////
         preserveConsole: false,
@@ -40,7 +40,7 @@ export const g = Object.seal(
     if (!assertObject(g)) return
     options = Object.assign(g, options)
 
-    g.access = options.access // ! to be REMOVED after review process
+    // g.access = options.access // ! to be REMOVED after review process
     g.preserveConsole = options.preserveConsole
     g.useSourceMaps = options.useSourceMaps
     g.directionDown = options.directionDown
