@@ -212,20 +212,21 @@ export default class LogHost extends Component {
 
     // window.log
     window.log = (...args) => {
-      if (g.access)
-        return new HyperLog(this, args, requests => {
-          addLog(this, this.stackParser, args, null, requests)
-        })
+      if (!g.access) return
+
+      return new HyperLog(this, args, requests => {
+        addLog(this, this.stackParser, args, null, requests)
+      })
     }
 
     // TODO not yet tested
     window.errorBoundary = func => {
-      if (g.access) {
-        try {
-          func()
-        } catch (e) {
-          log(e).level('error')
-        }
+      if (!g.access) return
+
+      try {
+        func()
+      } catch (e) {
+        log(e).level('error')
       }
     }
 
