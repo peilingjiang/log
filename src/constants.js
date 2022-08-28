@@ -290,3 +290,5 @@ export const _tinyColors = Object.seal({
 export const graphicsHistoryLength = 200
 export const graphicsHistoryOpacityFadeRate =
   _rootStyles.opacityXh / graphicsHistoryLength
+
+export const measuresLineWidth = `0.125rem`

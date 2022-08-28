@@ -17,7 +17,7 @@ import { clearAllOutlines } from './methods/attachElements.js'
 import { highlightElement } from './methods/highlight.js'
 import { StackParser } from './methods/stackParser.js'
 import { preprocessASTsToGetRegistries } from './methods/ast.js'
-import Graphics from './components/Graphics.js'
+import { Graphics, GraphicsHost } from './components/Graphics.js'
 
 export default class LogHost extends Component {
   constructor(props) {
@@ -473,60 +473,7 @@ export default class LogHost extends Component {
 
   renderGraphicsElements() {
     const { logGroups, registries } = this.state
-
-    const gElements = Object.keys(logGroups)
-      .map(groupId => {
-        const logGroup = logGroups[groupId]
-
-        const selectedLogInd =
-          logGroup.logs.length - logGroup.timelineLogOrderReversed - 1
-
-        if (logGroup.syncGraphics === 0) return null
-        else if (logGroup.syncGraphics === 1) {
-          // ! one
-          const log = logGroup.logs[selectedLogInd]
-          const centerStagedId = logGroup.view.centerStagedId
-          return (
-            <Graphics
-              key={`g-${groupId}-${selectedLogInd}`}
-              args={log.args}
-              id={log.id}
-              stack={log.stack}
-              centerStagedId={centerStagedId}
-              groupId={groupId}
-              registries={registries}
-              currentGraphics={true}
-              orderReversed={0}
-            />
-          )
-        } else if (logGroup.syncGraphics === 2) {
-          // ! all
-          const centerStagedId = logGroup.view.centerStagedId
-          return logGroup.logs.map((log, ind) => {
-            const orderReversed = logGroup.logs.length - 1 - ind
-            return (
-              <Graphics
-                key={`g-${groupId}-${ind}`}
-                args={log.args}
-                id={log.id}
-                stack={log.stack}
-                centerStagedId={centerStagedId}
-                groupId={groupId}
-                registries={registries}
-                currentGraphics={ind === selectedLogInd}
-                orderReversed={orderReversed}
-              />
-            )
-          })
-        }
-      })
-      .flat()
-
-    return (
-      <div key="graphics-host" className="graphics-host">
-        {gElements}
-      </div>
-    )
+    return <GraphicsHost logGroups={logGroups} registries={registries} />
   }
 
   // addLogForGraphics(groupId, log, centerStagedId) {

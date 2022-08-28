@@ -46,6 +46,8 @@ $dot-d: $padding-mid;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
+
+        pointer-events: none;
       }
 
       /* -------------------------------------------------------------------------- */
@@ -72,74 +74,132 @@ $dot-d: $padding-mid;
     }
 
     .dot-description {
-      position: absolute;
-      top: 0;
       left: calc($dot-shadow-d / 2 + $padding-xs);
       transform: translateY(-50%);
-
-      display: flex;
-      flex-wrap: nowrap;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: center;
-
-      color: $dark-mid-grey;
-      white-space: nowrap;
-
-      background: rgba($light, $opacity-mid);
-      backdrop-filter: blur($blur-xh);
-      padding: $padding-xxs $padding-xs;
-      border-radius: $radius-small;
-
-      opacity: 0;
-      transition: opacity $transition-fast ease-in-out;
-      pointer-events: none;
-
-      max-width: 10rem;
-      white-space: wrap;
-      overflow: hidden;
-
-      .description-key-word {
-        font-weight: $font-weight-bold;
-      }
-
-      * {
-        @include font-fixed;
-        font-size: $font-size-default;
-        line-height: 100%;
-      }
-
-      /* -------------------------------------------------------------------------- */
-
-      // !
-
-      &.client-description * {
-        color: darken($elegant-green, 20%);
-      }
-
-      &.native-description * {
-        color: darken($bright-orange, 20%);
-      }
     }
   }
 
   /* -------------------------------------------------------------------------- */
 
   .hyper-graphics-box {
+    pointer-events: none;
+
     .the-box {
       border-width: $padding-xxs;
       border-style: solid;
       box-sizing: border-box;
 
+      pointer-events: none;
+
       &.client-box {
         background: rgba($elegant-green, $opacity-high);
-        border-color: $elegant-green;
+        border-color: darken($bright-green, 15%);
       }
 
       &.native-box {
         background: rgba($bright-orange, $opacity-high);
-        border-color: $bright-orange;
+        border-color: darken($bright-orange, 15%);
       }
+
+      // .group-color-dot {
+      //   right: 0;
+      //   bottom: 0;
+      //   width: $padding-xs;
+      //   height: $padding-xs;
+      // }
+    }
+
+    &.client-graphics {
+      .box-info {
+        background: darken($bright-green, 15%);
+      }
+    }
+
+    &.native-graphics {
+      .box-info {
+        background: darken($bright-orange, 15%);
+      }
+    }
+
+    .box-info {
+      position: absolute;
+      top: 0;
+      right: 0;
+
+      display: flex;
+      padding: $padding-xs;
+
+      cursor: pointer;
+      pointer-events: initial;
+
+      svg {
+        pointer-events: none;
+      }
+
+      svg path {
+        fill: $white;
+      }
+
+      &:hover + .box-description {
+        opacity: 1;
+      }
+    }
+
+    .box-description {
+      left: 100%;
+    }
+  }
+
+  .graphics-description {
+    position: absolute;
+    top: 0;
+
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+
+    color: $dark-mid-grey;
+    white-space: nowrap;
+
+    border-left-width: $padding-xs;
+    border-left-style: solid;
+
+    background: rgba($light, $opacity-mid);
+    backdrop-filter: blur($blur-xh);
+    padding: $padding-xs;
+
+    opacity: 0;
+    transition: opacity $transition-fast ease-in-out;
+    pointer-events: none;
+
+    max-width: 10rem;
+    white-space: wrap;
+    overflow: hidden;
+
+    pointer-events: none;
+
+    .description-key-word {
+      font-weight: $font-weight-bold;
+    }
+
+    * {
+      @include font-fixed;
+      font-size: $font-size-default;
+      line-height: 100%;
+    }
+
+    /* -------------------------------------------------------------------------- */
+
+    // !
+
+    &.client-description * {
+      color: darken($elegant-green, 20%);
+    }
+
+    &.native-description * {
+      color: darken($bright-orange, 20%);
     }
   }
 }
@@ -162,4 +222,49 @@ $dot-d: $padding-mid;
 
 .dot-animation-bounce-in {
   animation: dot-animation-bounce-in $transition-fast ease-in;
+}
+
+/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+
+.hyper-measures {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+
+  padding: 0;
+  margin: 0;
+
+  .measure-line-holder {
+    position: absolute;
+  }
+
+  .measure-line {
+    padding: 0;
+    margin: 0;
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    background: rgba($light-grey, $opacity-high);
+    backdrop-filter: invert(1);
+    pointer-events: none;
+  }
+
+  .measure-line-text {
+    position: absolute;
+    white-space: nowrap;
+
+    padding: $padding-xs $padding-small;
+    border-radius: $radius-small;
+    background: rgba($light, $opacity-mid);
+    backdrop-filter: blur($blur-xh);
+
+    @include font-fixed;
+    font-size: $font-size-small;
+
+    pointer-events: none;
+  }
 }
