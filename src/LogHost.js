@@ -7,17 +7,19 @@ import TimelineHolder from './organizations/TimelineHolder.js'
 import { HyperLog } from './globalLogObject.js'
 import {
   cloneLogGroup,
-  cloneLogGroups,
   deepCopyArrayOfLogs,
+  getFilteredOutElements,
   preventEventWrapper,
 } from './methods/utils.js'
-import { graphicsHistoryLength, _Aug, _Time } from './constants.js'
+import { _Aug, _Time } from './constants.js'
 import { g, socket } from './global.js'
 import { clearAllOutlines } from './methods/attachElements.js'
 import { highlightElement } from './methods/highlight.js'
 import { StackParser } from './methods/stackParser.js'
 import { preprocessASTsToGetRegistries } from './methods/ast.js'
-import { Graphics, GraphicsHost } from './components/Graphics.js'
+import { GraphicsHost } from './components/Graphics.js'
+import { pxWrap } from './methods/findPosition.js'
+import { SelectionRect } from './components/SelectionRect.js'
 
 export default class LogHost extends Component {
   constructor(props) {
@@ -37,6 +39,14 @@ export default class LogHost extends Component {
       ////
       // ! adjust for page elements
       clearance: false,
+      ////
+      filterArea: {
+        left: pxWrap(window.innerWidth * 0.2),
+        top: pxWrap(window.innerHeight * 0.2),
+        right: pxWrap(window.innerWidth * (1 - 0.2)),
+        bottom: pxWrap(window.innerHeight * (1 - 0.2)),
+      }, // { left, top, right, bottom }
+      enableFilterArea: false,
     }
 
     this.ref = createRef()
@@ -59,6 +69,9 @@ export default class LogHost extends Component {
       updateSyncGraphics: this.updateSyncGraphics.bind(this),
       // addLogForGraphics: this.addLogForGraphics.bind(this),
       // removeGraphicsGroup: this.removeGraphicsGroup.bind(this),
+      ////
+      handleFilterArea: this.handleFilterArea.bind(this),
+      handleFilterAreaChange: this.handleFilterAreaChange.bind(this),
     }
 
     this.loggedCounter = 0
@@ -180,6 +193,11 @@ export default class LogHost extends Component {
           this.changeOrganization(
             this.state.organization === _Aug ? _Time : _Aug
           )
+        })
+      } else if (e.code === 'KeyA') {
+        // ! area
+        preventEventWrapper(e, () => {
+          this.handleFilterArea()
         })
       }
     }
@@ -332,8 +350,28 @@ export default class LogHost extends Component {
 
   /* -------------------------------------------------------------------------- */
 
+  // ! area
+
+  handleFilterArea() {
+    this.setState({
+      enableFilterArea: !this.state.enableFilterArea,
+    })
+  }
+
+  // drag selection area dots around
+  handleFilterAreaChange(newAreaData) {
+    this.setState({
+      filterArea: {
+        ...this.state.filterArea,
+        ...newAreaData,
+      },
+    })
+  }
+
+  /* -------------------------------------------------------------------------- */
+
   renderAugmentedLogs(logGroups, registries) {
-    const { clearance } = this.state
+    const { clearance, enableFilterArea, filterArea } = this.state
 
     // we remove old streamsHoldersRefs if corresponding holder has gone
     const currentlyExistingLogGroupHolderIds = []
@@ -342,22 +380,36 @@ export default class LogHost extends Component {
     const streamsHoldersByElement = {}
     const streamsHolderSnapByElement = {}
 
+    const filteredOutElements = []
+    if (enableFilterArea)
+      filteredOutElements.push(...getFilteredOutElements(filterArea))
+
     for (const logGroupId in logGroups) {
       const thisGroup = logGroups[logGroupId]
 
-      // if this is a snapped group, then append to a snap holder
-      // if not, then append to a normal holder
-      if (thisGroup.snap) {
-        if (!streamsHolderSnapByElement[thisGroup.snapElementId])
-          streamsHolderSnapByElement[thisGroup.snapElementId] = []
-        streamsHolderSnapByElement[thisGroup.snapElementId].push(thisGroup)
-      } else {
-        if (!streamsHoldersByElement[thisGroup.groupElementId])
-          streamsHoldersByElement[thisGroup.groupElementId] = []
-        streamsHoldersByElement[thisGroup.groupElementId].push(thisGroup)
+      // filter out elements
+      let toContinue = false
+      if (enableFilterArea && !thisGroup.element) toContinue = true
+      for (let el of filteredOutElements) {
+        if (el.isSameNode(thisGroup.element)) toContinue = true
+      }
+
+      if (!toContinue) {
+        // if this is a snapped group, then append to a snap holder
+        // if not, then append to a normal holder
+        if (thisGroup.snap) {
+          if (!streamsHolderSnapByElement[thisGroup.snapElementId])
+            streamsHolderSnapByElement[thisGroup.snapElementId] = []
+          streamsHolderSnapByElement[thisGroup.snapElementId].push(thisGroup)
+        } else {
+          if (!streamsHoldersByElement[thisGroup.groupElementId])
+            streamsHoldersByElement[thisGroup.groupElementId] = []
+          streamsHoldersByElement[thisGroup.groupElementId].push(thisGroup)
+        }
       }
     }
 
+    // ! snap
     for (const snapElementId in streamsHolderSnapByElement) {
       if (!this.streamsHoldersRefs[snapElementId])
         this.streamsHoldersRefs[snapElementId] = createRef()
@@ -392,6 +444,7 @@ export default class LogHost extends Component {
       )
     }
 
+    // ! attached
     for (let groupElementId in streamsHoldersByElement) {
       if (!this.streamsHoldersRefs[groupElementId])
         this.streamsHoldersRefs[groupElementId] = createRef()
@@ -429,7 +482,7 @@ export default class LogHost extends Component {
   }
 
   renderTimelineLogs(logGroups, logTimeline, logPaused, asts, registries) {
-    const { clearance } = this.state
+    const { clearance, filterArea, enableFilterArea } = this.state
 
     // calculate the total number of logs
     let totalLogs = 0
@@ -453,6 +506,9 @@ export default class LogHost extends Component {
           registries={registries}
           ////
           clearance={clearance}
+          ////
+          filterArea={filterArea}
+          enableFilterArea={enableFilterArea}
         />
       )
     )
@@ -506,6 +562,8 @@ export default class LogHost extends Component {
       organization,
       asts,
       registries,
+      filterArea,
+      enableFilterArea,
     } = this.state
 
     let renderedLogElements
@@ -529,6 +587,12 @@ export default class LogHost extends Component {
 
     return (
       <div id="hyper-log-host" className="hyper-log-host" ref={this.ref}>
+        {enableFilterArea && (
+          <SelectionRect
+            filterArea={filterArea}
+            handleTimelineSetArea={this.hostFunctions.handleFilterAreaChange}
+          />
+        )}
         {renderedLogElements}
         {organization === _Aug && this.renderGraphicsElements()}
       </div>

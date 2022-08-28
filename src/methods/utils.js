@@ -6,12 +6,14 @@ import { v5 as uuidv5 } from 'uuid'
 
 import {
   groupIdExtendingConnector,
+  pageElementsQuery,
   stackActualCallerDepth,
   validUnits,
   _DEF,
   _rootStyles,
 } from '../constants.js'
 import { g } from '../global.js'
+import { isOverlapped, pxTrim } from './findPosition.js'
 
 export const pseudoFunc = () => {}
 
@@ -224,6 +226,28 @@ export const stringifyDOMElement = (ele, _depth = 1) => {
     ' ' +
     (_depth > 0 && ele.parentNode ? stringifyDOMElement(ele.parentNode, 0) : '')
   )
+}
+
+export const getFilteredOutElements = filterArea => {
+  const filteredOutElements = []
+  const existingPageElements = document.querySelectorAll(pageElementsQuery)
+
+  for (let el of existingPageElements) {
+    if (bindableElement(el)) {
+      if (
+        !isOverlapped(getElementBounding(el), {
+          left: pxTrim(filterArea.left),
+          top: pxTrim(filterArea.top),
+          right: pxTrim(filterArea.right),
+          bottom: pxTrim(filterArea.bottom),
+        })
+      ) {
+        filteredOutElements.push(el)
+      }
+    }
+  }
+
+  return filteredOutElements
 }
 
 /* -------------------------------------------------------------------------- */

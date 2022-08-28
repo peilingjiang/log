@@ -228,7 +228,7 @@ export const _Aug = 'augmented'
 export const _Time = 'timeline'
 
 export const pageElementsQuery =
-  'body * :not(#root, .hyper-log-host, .hyper-log-streams-holder, .hyper-log-streams-holder *, #sudo-pointer-element, .leader-line, .leader-line *, .hyper-log-timeline, .hyper-log-timeline *)'
+  'body * :not(#root, .hyper-log-host, .hyper-log-streams-holder, .hyper-log-streams-holder *, #sudo-pointer-element, .leader-line, .leader-line *, .hyper-log-timeline, .hyper-log-timeline *, .hyper-selection-rect, .hyper-selection-rect *)'
 
 /* -------------------------------------------------------------------------- */
 
