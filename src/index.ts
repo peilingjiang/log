@@ -1,5 +1,5 @@
 import { HyperLog, Timestamp } from './hyperLog'
-import { logProcessor } from './log'
+import { logProcessor } from './logProcessor'
 import './rendering'
 // import './objectLog.js'
 

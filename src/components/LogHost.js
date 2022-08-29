@@ -2,7 +2,7 @@ import React, { Component, createRef } from 'react'
 import isEqual from 'react-fast-compare'
 
 import { HyperLog } from '../hyperLog.ts'
-import { logProcessor } from '../log.ts'
+import { logProcessor } from '../logProcessor.ts'
 
 import { addLog } from '../methods/addLog.js'
 import LogStreamsHolder from '../organizations/LogStreamsHolder.js'
