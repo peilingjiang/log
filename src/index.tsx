@@ -35,7 +35,7 @@ declare global {
   }
 }
 
-window.log = function (...args: any[]): HyperLog {
+export function log(...args: any[]): HyperLog {
   // if (!g.access) return
 
   const timestamp: Timestamp = {
@@ -49,7 +49,7 @@ window.log = function (...args: any[]): HyperLog {
   return thisHyperLog
 }
 
-window.errorBoundary = function (func: () => void): void {
+export function errorBoundary(func: () => void): void {
   try {
     func()
   } catch (error) {
@@ -57,11 +57,12 @@ window.errorBoundary = function (func: () => void): void {
   }
 }
 
+;(window as any).log = log
+;(window as any).errorBoundary = errorBoundary
+
 /* -------------------------------------------------------------------------- */
 
 window.console.log(
   '%cLog Right Here, Right Now! [HyperLog]\nTime to turn off the console : )',
   'background: #ff42a1; font-weight: bold; color: #fff; padding: 1rem;'
 )
-
-export default window.log

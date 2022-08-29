@@ -6,5 +6,5 @@ declare global {
         errorBoundary: (func: () => void) => void;
     }
 }
-declare const _default: (...args: any[]) => HyperLog;
-export default _default;
+export declare function log(...args: any[]): HyperLog;
+export declare function errorBoundary(func: () => void): void;
