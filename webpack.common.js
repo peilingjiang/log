@@ -59,8 +59,9 @@ export const config = {
 }
 
 export const output = {
-  library: 'l',
+  library: 'log',
   libraryTarget: 'umd',
-  filename: 'log.js',
-  sourceMapFilename: 'log.js.map',
+  libraryExport: 'default',
+  filename: 'index.js',
+  // sourceMapFilename: 'log.js.map',
 }

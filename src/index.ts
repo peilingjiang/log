@@ -36,7 +36,7 @@ function log(...args: any[]): HyperLog {
 //   }
 // }
 
-;(window as any).log = log
+// ;(window as any).log = log
 // window.errorBoundary = errorBoundary
 
 /* -------------------------------------------------------------------------- */
@@ -46,4 +46,4 @@ window.console.log(
   'background: #ff42a1; font-weight: bold; color: #fff; padding: 1rem;'
 )
 
-export { log as log }
+export default log

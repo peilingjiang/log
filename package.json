@@ -2,7 +2,8 @@
   "name": "log-here-now",
   "version": "0.0.6-beta.10",
   "description": "Log right here, right now.",
-  "main": "./lib/log.js",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
   "scripts": {
     "start": "webpack-dev-server --config example/webpack.config.js --env development",
     "build": "webpack --config webpack.config.js --env production",
@@ -63,7 +64,6 @@
     "uuid": "^8.3.2"
   },
   "type": "module",
-  "types": "./lib/types/index.d.ts",
   "lint-staged": {
     "*.js": "eslint --cache --fix",
     "*.{js,json,md,html,scss,ts,tsx}": "prettier --write"

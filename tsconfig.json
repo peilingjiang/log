@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "./lib/types/",
+    "outDir": "./lib/types",
     "strict": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
@@ -16,9 +16,13 @@
     "esModuleInterop": true,
     "declaration": true,
     "sourceMap": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "target": "ES5",
-    "module": "CommonJS",
-    "jsx": "react"
+    "module": "ESNext",
+    "lib": ["ES2015", "ES2016", "ES2017", "DOM"],
+    "jsx": "react",
+    "moduleResolution": "node"
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["node_modules", "**/*.d.ts"]
