@@ -18,7 +18,7 @@ interface LogFunc {
 //   }
 // }
 
-export const log: LogFunc = (...args: any[]): HyperLog => {
+export function log(...args: any[]): HyperLog {
   // if (!g.access) return
 
   const timestamp: Timestamp = {

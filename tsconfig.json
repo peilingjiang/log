@@ -19,9 +19,9 @@
     "emitDecoratorMetadata": true,
     "sourceMap": true,
     "target": "ES5",
-    "module": "NodeNext",
+    "module": "CommonJS",
     "jsx": "react"
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["node_modules", "**/*.d.ts"]
 }

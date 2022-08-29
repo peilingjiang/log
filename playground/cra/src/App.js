@@ -1,11 +1,9 @@
 import logo from './logo.svg'
 import './App.css'
 
-import 'log-here-now'
+// import * as log from 'log-here-now'
 
 function App() {
-  // log('hello world')
-
   return (
     <div className="App">
       <header className="App-header">
