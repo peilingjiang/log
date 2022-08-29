@@ -7,12 +7,11 @@ import {
   localStorageKeys,
   timelineWaitConnectionTimeout,
   _Aug,
-  _Time,
 } from './constants.js'
 import { assertObject } from './methods/utils.js'
 
 // eslint-disable-next-line no-undef
-const development = process.env.NODE_ENV === 'development'
+// const development = process.env.NODE_ENV === 'development'
 
 const defaultFromLocalStorage = localStorage.getItem(localStorageKeys.DEFAULT)
 export const g = Object.seal(

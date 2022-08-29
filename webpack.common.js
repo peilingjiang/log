@@ -54,7 +54,7 @@ export const config = {
   },
   devtool: 'source-map',
   resolve: {
-    extensions: ['.js', '.ts', '.scss', '.svg'],
+    extensions: ['.js', '.ts', '.tsx', '.scss', '.svg'],
   },
 }
 

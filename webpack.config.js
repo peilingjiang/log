@@ -13,11 +13,9 @@ export default env => {
     console.log('Producing production build...')
     return {
       ...config,
-      entry: './src/index.tsx',
+      entry: './src/index',
       mode: 'production',
-      output: Object.assign({}, output, {
-        path: __dirname + '/lib',
-      }),
+      output: { ...output, path: __dirname + '/lib' },
       optimization: {
         minimize: true,
       },

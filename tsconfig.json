@@ -10,16 +10,17 @@
     "noImplicitThis": true,
     "noImplicitReturns": true,
     "allowJs": true,
+    "allowSyntheticDefaultImports": true,
     "alwaysStrict": true,
+    "removeComments": true,
     "esModuleInterop": true,
     "declaration": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "sourceMap": true,
-    "target": "es5",
-    "jsx": "react",
-    "module": "ESNext",
-    "moduleResolution": "node"
+    "target": "ES5",
+    "module": "NodeNext",
+    "jsx": "react"
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "**/*.d.ts"]
