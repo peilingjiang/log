@@ -1,6 +1,6 @@
 {
   "name": "log-here-now",
-  "version": "0.0.6-beta.9",
+  "version": "0.0.6-beta.10",
   "description": "Log right here, right now.",
   "main": "./lib/log.js",
   "scripts": {
