@@ -2,7 +2,7 @@
   "name": "log-here-now",
   "version": "0.0.6-beta.7",
   "description": "Log right here, right now.",
-  "main": "lib/log.min.js",
+  "main": "lib/log.js",
   "directories": {
     "lib": "lib",
     "example": "example"
@@ -73,6 +73,7 @@
     "*.{js,json,md,html,scss,ts,tsx}": "prettier --write"
   },
   "files": [
-    "lib"
+    "lib",
+    "types"
   ]
 }
