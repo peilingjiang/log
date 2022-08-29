@@ -69,7 +69,6 @@
     "*.{js,json,md,html,scss,ts,tsx}": "prettier --write"
   },
   "files": [
-    "lib",
-    "types"
+    "lib"
   ]
 }

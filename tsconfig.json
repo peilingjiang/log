@@ -15,8 +15,6 @@
     "removeComments": true,
     "esModuleInterop": true,
     "declaration": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
     "sourceMap": true,
     "target": "ES5",
     "module": "CommonJS",

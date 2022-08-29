@@ -7,10 +7,6 @@ import './css/main.scss'
 
 /* -------------------------------------------------------------------------- */
 
-interface LogFunc {
-  (...args: any[]): HyperLog
-}
-
 // declare global {
 //   interface Window {
 //     log: LogFunc
@@ -18,7 +14,7 @@ interface LogFunc {
 //   }
 // }
 
-export function log(...args: any[]): HyperLog {
+function log(...args: any[]): HyperLog {
   // if (!g.access) return
 
   const timestamp: Timestamp = {
@@ -32,10 +28,6 @@ export function log(...args: any[]): HyperLog {
   return thisHyperLog
 }
 
-// function log(...args: any[]): HyperLog {
-
-// }
-
 // function errorBoundary(func: () => void): void {
 //   try {
 //     func()
@@ -43,6 +35,7 @@ export function log(...args: any[]): HyperLog {
 //     window.log(error).level('error')
 //   }
 // }
+
 ;(window as any).log = log
 // window.errorBoundary = errorBoundary
 
@@ -52,3 +45,5 @@ window.console.log(
   '%cLog Right Here, Right Now! [HyperLog]\nTime to turn off the console : )',
   'background: #ff42a1; font-weight: bold; color: #fff; padding: 1rem;'
 )
+
+export { log as log }

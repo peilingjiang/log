@@ -59,7 +59,7 @@ export const config = {
 }
 
 export const output = {
-  library: 'lib',
+  library: 'l',
   libraryTarget: 'umd',
   filename: 'log.js',
   sourceMapFilename: 'log.js.map',

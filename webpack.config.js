@@ -13,7 +13,9 @@ export default env => {
     console.log('Producing production build...')
     return {
       ...config,
-      entry: './src/index',
+      entry: {
+        lib: './src/index',
+      },
       mode: 'production',
       output: { ...output, path: __dirname + '/lib' },
       optimization: {
