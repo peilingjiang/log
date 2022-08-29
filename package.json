@@ -57,13 +57,11 @@
   },
   "dependencies": {
     "error-stack-parser": "^2.1.4",
-    "fuse.js": "^6.6.2",
     "leader-line-new": "^1.1.9",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-fast-compare": "^3.2.0",
     "socket.io-client": "^4.5.1",
-    "stacktrace-gps": "^3.1.2",
     "stacktrace-js": "^2.0.2",
     "tinycolor2": "^1.4.2",
     "uuid": "^8.3.2"
