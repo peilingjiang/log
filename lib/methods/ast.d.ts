@@ -17,7 +17,7 @@ export function overallExtremeDepths(registriesByFileName: any): {
     max: number;
     min: number;
 };
-export function getExtremeDepthsByTopLevelDeclarations(fileRegistry: any, targetDeclaration: any): {
+export function getExtremeDepthsByTopLevelDeclarations(fileRegistry: any, targetDeclaration: any, toDoDeclarations: any): {
     max: number;
     min: number;
 };

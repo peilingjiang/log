@@ -7,4 +7,6 @@ lib/
 dist/
 
 index.bundle.js
+
 logs.json
+logsGist.json

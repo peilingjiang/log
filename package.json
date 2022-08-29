@@ -10,7 +10,7 @@
   "scripts": {
     "start": "webpack-dev-server --config example/webpack.config.js --env development",
     "build": "webpack --config webpack.config.js --env production",
-    "format": "prettier --write \"**/*.{js,json,md,html,scss}\"",
+    "format": "prettier --write \"**/*.{js,json,md,html,scss,ts,tsx}\"",
     "prepare": "husky install",
     "ext:init": "yo code",
     "netlify": "webpack --config example/webpack.config.js --env production"
@@ -69,9 +69,10 @@
     "uuid": "^8.3.2"
   },
   "type": "module",
+  "types": "./lib/index.d.ts",
   "lint-staged": {
     "*.js": "eslint --cache --fix",
-    "*.{js,json,md,html,scss}": "prettier --write"
+    "*.{js,json,md,html,scss,ts,tsx}": "prettier --write"
   },
   "files": [
     "lib"

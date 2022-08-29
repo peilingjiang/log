@@ -19,12 +19,21 @@ interface SnapOptions {
   snapAnchorPercent: number | undefined
 }
 
+export interface Timestamp {
+  now: number
+}
+
 export class HyperLog {
   private args: any[]
+  private timestamp: Timestamp
+  private error: Error
   readonly requests: RequestOptions
 
-  constructor(args: any[]) {
+  constructor(args: any[], timestamp: Timestamp, error: Error) {
     this.args = args
+    this.timestamp = timestamp
+    this.error = error
+
     this.requests = {
       level: undefined,
       element: undefined,

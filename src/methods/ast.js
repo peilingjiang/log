@@ -205,16 +205,24 @@ const isIgnoredStackType = type => {
 const reachedTheLogStatement = expression => {
   return (
     (expression.type === 'CallExpression' &&
-      expression.callee.name === 'log') ||
-    (expression.type === 'Identifier' && expression.name === 'log')
+      (expression.callee.name === 'log' ||
+        expression.callee.name === 'window')) ||
+    (expression.type === 'Identifier' &&
+      (expression.name === 'log' || expression.name === 'window'))
   )
 }
 
 const getRawLogContent = (rawCodeText, rawCodeObject) => {
-  const subString = rawCodeText.substring(
+  let subString = rawCodeText.substring(
     rawCodeObject.start,
     rawCodeObject.end + 1
   )
+
+  if (subString.includes('window')) {
+    // TODO support window.log
+    return '*'
+  }
+
   // use regex to get content inside log( * )
   // s is for matching multiple lines
   const regex = /log\((.*)\)/s
@@ -322,7 +330,7 @@ export const getTimelineOffsets = (
   budget,
   expandLevels
 ) => {
-  const { indentationPx, declarationPx /* filePx */ } =
+  const { indentationPx, declarationPx, declarationSingleMaxPx } =
     timelineSideDragLevelWidth
   const offsets = {}
   let indentationOffsets = {}
@@ -332,6 +340,10 @@ export const getTimelineOffsets = (
     return { offsets, indentationOffsets, declarationOffsets }
 
   // ! indentation
+
+  const toDoDeclarations =
+    expandLevels.declarations &&
+    Math.max(0, budget - expandLevels.indentation * indentationPx) > 0
 
   for (const logGroupId in logGroups) {
     const logGroup = logGroups[logGroupId]
@@ -352,9 +364,13 @@ export const getTimelineOffsets = (
 
         const extremeDepthsOfAll = getExtremeDepthsByTopLevelDeclarations(
           fileRegistry,
-          logGroupRegistry.topLevelDeclaration
+          logGroupRegistry.topLevelDeclaration,
+          toDoDeclarations
         )
-        const overallLevels = extremeDepthsOfAll.max - extremeDepthsOfAll.min
+        const overallLevels = Math.max(
+          extremeDepthsOfAll.max - extremeDepthsOfAll.min,
+          1
+        )
 
         const budgetForIndentation = Math.min(budget, indentationPx)
         const eachLevelOffset = budgetForIndentation / overallLevels
@@ -377,8 +393,10 @@ export const getTimelineOffsets = (
       allDeclarations[declarationIndex].index = declarationIndex
 
     const budgetForDeclarations = Math.min(budget, declarationPx)
-    const eachDeclarationOffset =
-      budgetForDeclarations / (allDeclarations.length - 1)
+    const eachDeclarationOffset = Math.min(
+      budgetForDeclarations / (allDeclarations.length - 1),
+      declarationSingleMaxPx
+    )
 
     for (const logGroupId in logGroups) {
       const logGroup = logGroups[logGroupId]
@@ -426,14 +444,18 @@ export const overallExtremeDepths = registriesByFileName => {
 
 export const getExtremeDepthsByTopLevelDeclarations = (
   fileRegistry,
-  targetDeclaration
+  targetDeclaration,
+  toDoDeclarations
 ) => {
   let min = Infinity
   let max = 0
   for (const groupIdExtended in fileRegistry.groups) {
     const thisRegistry = fileRegistry.groups[groupIdExtended]
 
-    if (thisRegistry.topLevelDeclaration === targetDeclaration) {
+    if (
+      !toDoDeclarations ||
+      thisRegistry.topLevelDeclaration === targetDeclaration
+    ) {
       if (thisRegistry.depth < min) min = thisRegistry.depth
       if (thisRegistry.depth > max) max = thisRegistry.depth
     }

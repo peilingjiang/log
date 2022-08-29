@@ -12,4 +12,4 @@ export function newLog(args: any, element: any, level: any, groupId: any, timest
     history: any;
     specialIdentifier: any[];
 };
-export function addLog(logHost: any, stackParser: any, args: any, element?: null, requests?: {}): void;
+export function addLog(logHost: any, stackParser: any, args: any, timestamp: any, error: any, requests?: {}, element?: null): void;

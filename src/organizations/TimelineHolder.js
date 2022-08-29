@@ -63,7 +63,7 @@ export default class TimelineHolder extends Component {
 
     this.state = {
       folded: false,
-      hovered: false,
+      hovered: true, // !
       grabbing: false,
       right: '0px',
       pinnedGroupId: null, // TODO
@@ -292,8 +292,8 @@ export default class TimelineHolder extends Component {
           right: right,
           ...this.getClearanceTransform(clearance, right),
         }}
-        onMouseEnter={() => this.handleTimelineHover(true)}
-        onMouseLeave={() => this.handleTimelineHover(false)}
+        // onMouseEnter={() => this.handleTimelineHover(true)}
+        // onMouseLeave={() => this.handleTimelineHover(false)}
       >
         <TimelineName
           key={'timeline-name'}

@@ -96,19 +96,19 @@ export const addLog = (
   logHost,
   stackParser,
   args,
-  element = null,
-  requests = {}
+  timestamp,
+  error,
+  requests = {},
+  element = null
 ) => {
   // ! do not do anything when paused
   if (logHost.state.logPaused) return
-
-  const timestamp = getTimestamp()
 
   // Traditional
   if (g.preserveConsole) window.console.log(...args)
 
   // HyperLog
-  stackParser.push(args, new Error(), parsedStack => {
+  stackParser.push(args, error, parsedStack => {
     // add log to logHost
     logHost.setState(prevState => {
       // ! Access requests in setState only

@@ -168,7 +168,8 @@
 
   .timeline-stream-item-wrappers-header {
     cursor: pointer;
-    transition: background-color $transition-normal ease-in-out;
+    transition: background-color $transition-normal ease-in-out,
+      border $transition-fast ease-in-out;
 
     &.filtered-out-group-header {
       // background: $dark-grey;
@@ -200,7 +201,9 @@
     padding: 0 $padding-small 0 0;
 
     transform-origin: center;
-    transition: max-height $transition-normal ease-in-out;
+    transition: max-height $transition-normal
+        cubic-bezier(0.645, 0.045, 0.355, 1),
+      border $transition-fast ease-in-out;
     overflow: hidden;
 
     .hyper-log-stream-in-time {
@@ -240,6 +243,9 @@
     top: 0;
     height: 100%;
     z-index: -1;
+
+    transition: left $transition-fast ease-in-out,
+      opacity $transition-fast ease-in-out;
 
     &.indentation-box {
       border-left: $padding-xxs solid $light;

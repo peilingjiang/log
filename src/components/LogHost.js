@@ -83,10 +83,12 @@ export default class LogHost extends Component {
     // register log functions
     // ! ADD LOG
     // this.defineLogs()
-    this.enableLogProcessing()
   }
 
   componentDidMount() {
+    // !
+    this.enableLogProcessing()
+
     // add event listeners
     window.addEventListener('resize', this._resizeHandler)
     window.addEventListener('keypress', this._shortcutHandler)
@@ -248,7 +250,15 @@ export default class LogHost extends Component {
   // ! -------------------------------------------------------------------------- //
   enableLogProcessing() {
     logProcessor.setProcessFunction(hyperLog => {
-      addLog(this, this.stackParser, hyperLog.args, null, hyperLog.requests)
+      addLog(
+        this,
+        this.stackParser,
+        hyperLog.args,
+        hyperLog.timestamp,
+        hyperLog.error,
+        hyperLog.requests,
+        null
+      )
     })
     logProcessor.process()
   }

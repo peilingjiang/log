@@ -15,10 +15,15 @@ interface SnapOptions {
     snapAnchorSide: string | undefined;
     snapAnchorPercent: number | undefined;
 }
+export interface Timestamp {
+    now: number;
+}
 export declare class HyperLog {
     private args;
+    private timestamp;
+    private error;
     readonly requests: RequestOptions;
-    constructor(args: any[]);
+    constructor(args: any[], timestamp: Timestamp, error: Error);
     level(level?: string): this;
     e(element: HTMLElement | string): this;
     id(id: string): this;

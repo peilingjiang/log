@@ -161,7 +161,7 @@ export const registryInterface: PropTypes.Requireable<Required<PropTypes.InferPr
     depth: PropTypes.Validator<number>;
     depthStack: PropTypes.Validator<(string | null | undefined)[]>;
 }>>>;
-export const stackActualCallerDepth: 5;
+export const stackActualCallerDepth: 1;
 export const stackFilePathCompareDepth: 3;
 export const positionFindingWorstAllowed: 5;
 export const switchPositionRegistrationDifferenceThresholdPx2: 6400;
@@ -178,6 +178,7 @@ export namespace timelineSideDragLevelWidth {
     const indentationPx: number;
     const declarationPx: number;
     const filePx: number;
+    const declarationSingleMaxPx: number;
 }
 export namespace timelineGroupWiseOffsetPx {
     const shared: number;

@@ -116,7 +116,7 @@ export default class TimelineExpandSideDragger extends Component {
 
       let newOffset = timelineOffsetBudget
       const autoMoveInterval = setInterval(() => {
-        newOffset = newOffset + 0.25 * (targetBudget - newOffset)
+        newOffset = newOffset + 0.3 * (targetBudget - newOffset)
 
         if (Math.abs(newOffset - targetBudget) < 2) {
           clearInterval(autoMoveInterval)
@@ -124,7 +124,7 @@ export default class TimelineExpandSideDragger extends Component {
         } else {
           setTimelineOffsetBudget(newOffset)
         }
-      }, 10)
+      }, 15)
     })
   }
 
