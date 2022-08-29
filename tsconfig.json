@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "./lib/types/",
+    "outDir": "./types/",
     "strict": true,
     "noImplicitAny": true,
     "strictNullChecks": true,

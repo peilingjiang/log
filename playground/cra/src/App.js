@@ -1,7 +1,7 @@
 import logo from './logo.svg'
 import './App.css'
 
-// import * as log from 'log-here-now'
+import { log } from 'log-here-now'
 
 function App() {
   return (
