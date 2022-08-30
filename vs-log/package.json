@@ -1,8 +1,9 @@
 {
   "name": "vs-log",
   "displayName": "VS Log",
+  "icon": "vs-log-icon.png",
   "description": "VS Code extension for a novel logging framework.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": {
     "vscode": "^1.70.0"
   },
@@ -66,7 +67,7 @@
     "url": "git+https://github.com/peilingjiang/log.git"
   },
   "devDependencies": {
-    "@types/glob": "^7.2.0",
+    "@types/glob": "^8.0.0",
     "@types/mocha": "^9.1.1",
     "@types/node": "18.x",
     "@types/vscode": "^1.70.0",

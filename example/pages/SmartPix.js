@@ -56,7 +56,7 @@ export default class SmartPix extends Component {
             .id(targetName)
             .name('offsetX')
             .unit('px')
-            .history(2)
+            .history(0)
             .shape()
         }
       )
