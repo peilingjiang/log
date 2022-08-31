@@ -257,6 +257,9 @@ export const addLog = (
         }
 
         thisGroup.orientation = snapBounding.orientation
+
+        ////
+        thisGroup.format = newLogFormat
       }
 
       // check if got exactly the same as the last log

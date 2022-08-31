@@ -56,8 +56,10 @@ const ElementDisplay = ({
 }) => {
   return (
     <p className="element-content">
-      <span className="element-text">{`<${tagName}`}</span>
-      {tagId && (
+      <span className="element-text">{`<${
+        tagName.length ? tagName : 'unknown'
+      }`}</span>
+      {tagId.length && (
         <span className="element-text-field">
           <span className="element-text-label">id</span>
           <FormatterString
@@ -86,7 +88,11 @@ ElementDisplay.propTypes = {
 /* -------------------------------------------------------------------------- */
 
 const _getTagName = outerHTML => {
-  const firstTag = outerHTML.match(/<(\w+)\s+\w+.*?>/g)[0]
+  let firstTag = outerHTML.match(/<(\w+)\s+\w+.*?>/g)
+  if (!firstTag) return { tagName: '', tagId: '', tagClass: '' }
+
+  firstTag = firstTag[0]
+
   const tagName = firstTag.match(/<(\w+)\s+\w+.*?>/)[1]
 
   const classes = firstTag.match(/class=["'](.*?)["']/g)

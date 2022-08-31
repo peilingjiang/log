@@ -157,21 +157,27 @@ export class HyperLog {
 
     switch (position) {
       case 'x':
+        this.requests.name = 'x'
         return this.snap(getSnapOptions(_L))
 
       case 'y':
+        this.requests.name = 'y'
         return this.snap(getSnapOptions(_T))
 
       case 'top':
+        this.requests.name = 'top'
         return this.snap(getSnapOptions(_T))
 
       case 'left':
+        this.requests.name = 'left'
         return this.snap(getSnapOptions(_L))
 
       case 'right':
+        this.requests.name = 'right'
         return this.snap(getSnapOptions(_R))
 
       case 'bottom':
+        this.requests.name = 'bottom'
         return this.snap(getSnapOptions(_B))
 
       default:
