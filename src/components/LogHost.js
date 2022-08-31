@@ -1,6 +1,7 @@
 import React, { Component, createRef } from 'react'
 import isEqual from 'react-fast-compare'
 
+import { setLog } from '../index.ts'
 import { HyperLog } from '../hyperLog.ts'
 import { logProcessor } from '../logProcessor.ts'
 
@@ -370,7 +371,7 @@ export default class LogHost extends Component {
         timelineHighlightedLogId: logId,
       },
       () => {
-        window.setLog({
+        setLog({
           defaultOrganization: newOrganization,
         })
       }
