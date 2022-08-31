@@ -180,7 +180,7 @@ export default class LogHost extends Component {
 
   _shortcutHandler(e) {
     if (e.altKey) {
-      if (e.code === 'KeyC') {
+      if (e.code === 'KeyH') {
         // ! clearance
         preventEventWrapper(e, () => {
           // clear the whole log system
@@ -202,6 +202,15 @@ export default class LogHost extends Component {
         // ! area
         preventEventWrapper(e, () => {
           this.handleFilterArea()
+        })
+      } else if (e.code === 'KeyC') {
+        // ! sync
+        preventEventWrapper(e, () => {
+          this.setState({
+            logGroups: {},
+            logTimeline: [],
+            registries: {},
+          })
         })
       }
     }

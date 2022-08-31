@@ -101,7 +101,6 @@ export const preprocessASTsToGetRegistries = (
     })
   }
 
-  window.console.log('newRegistries', newRegistries)
   return newRegistries
 }
 
