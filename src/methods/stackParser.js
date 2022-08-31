@@ -3,7 +3,7 @@ import StackTrace from 'stacktrace-js'
 import ErrorStackParser from 'error-stack-parser'
 
 import { stackActualCallerDepth } from '../constants.js'
-import { g } from '../global.js'
+import { g } from '../global.ts'
 
 export class StackParser {
   constructor() {

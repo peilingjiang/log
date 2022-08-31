@@ -12,7 +12,7 @@ import {
   _rootStyles,
 } from '../constants.js'
 
-import { g } from '../global.js'
+import { g } from '../global.ts'
 import { preprocessASTsToGetRegistries } from './ast.js'
 import { sanitizeFormat, sanitizeLevel } from './sanitize.js'
 import { checkForSpecialIdentifiers } from './specialHubUtils.js'

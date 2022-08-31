@@ -2,14 +2,11 @@ import React, { Component } from 'react'
 import { Link, Outlet } from 'react-router-dom'
 
 // ! load HyperLog
-import log from '../src/index.ts'
+import log, { setLog } from '../src/index.ts'
 window.log = log
+window.setLog = setLog
 
 import './css/App.scss'
-
-setLog({
-  access: true,
-})
 
 export default class App extends Component {
   render() {

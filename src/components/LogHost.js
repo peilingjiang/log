@@ -14,7 +14,7 @@ import {
   preventEventWrapper,
 } from '../methods/utils.js'
 import { _Aug, _Time } from '../constants.js'
-import { g, socket } from '../global.js'
+import { g, socket } from '../global.ts'
 import { clearAllOutlines } from '../methods/attachElements.js'
 import { highlightElement } from '../methods/highlight.js'
 import { StackParser } from '../methods/stackParser.js'

@@ -2,17 +2,37 @@ import React, { memo } from 'react'
 import PropTypes from 'prop-types'
 import isEqual from 'react-fast-compare'
 
+import { preventEventWrapper } from '../methods/utils.js'
+
 import Expand from '../icons/folded-s.svg'
 import Fold from '../icons/unfolded-s.svg'
 
-const ObjectKeyMemo = ({ value, inheritId, bold, choosing }) => {
+const ObjectKeyMemo = ({
+  value,
+  inheritId,
+  bold,
+  choosing,
+  groupId,
+  setCenterStagedId,
+}) => {
+  const thisKey = `${inheritId}-${value}[obj*key]`
+
+  const handleClick = e => {
+    preventEventWrapper(e, () => {
+      if (!choosing) {
+        setCenterStagedId(groupId, thisKey)
+      }
+    })
+  }
+
   return (
     <span
       // key={`${inheritId}-obj-key`}
-      data-key={`${inheritId}-${value}[obj*key]`}
+      data-key={thisKey}
       className={`f-object-key${bold ? ' info-bold' : ''}${
         choosing ? ' hyper-choosing' : ''
       }`}
+      onDoubleClick={handleClick}
     >
       {value}
     </span>
@@ -24,6 +44,8 @@ ObjectKeyMemo.propTypes = {
   inheritId: PropTypes.string.isRequired,
   bold: PropTypes.bool.isRequired,
   choosing: PropTypes.bool.isRequired,
+  groupId: PropTypes.string.isRequired,
+  setCenterStagedId: PropTypes.func.isRequired,
 }
 
 export const ObjectKey = memo(ObjectKeyMemo, isEqual)

@@ -212,6 +212,12 @@
       // position: sticky;
       // top: 0;
       color: $purple;
+      cursor: pointer;
+      user-select: none;
+
+      &:active {
+        color: lighten($color: $purple, $amount: 30%);
+      }
     }
   }
 

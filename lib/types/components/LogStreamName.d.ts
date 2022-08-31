@@ -24,5 +24,35 @@ export default class LogStreamName extends React.Component<any, any, any> {
     shouldComponentUpdate(nextProps: any): boolean;
     render(): JSX.Element;
 }
+export class CenterStageNav extends React.PureComponent<any, any, any> {
+    static get propTypes(): {
+        centerStagedId: PropTypes.Validator<string>;
+        logGroupId: PropTypes.Validator<string>;
+        setCenterStagedId: PropTypes.Requireable<(...args: any[]) => any>;
+        inTimeline: PropTypes.Validator<boolean>;
+    };
+    constructor(props: any);
+    idRef: React.RefObject<any>;
+    copyIconRef: React.RefObject<any>;
+    render(): JSX.Element;
+}
+export function CenterStageNavItem({ centerStagedIdPart, ind, isLastPart, parsedIdParts, logGroupId, setCenterStagedId, }: {
+    centerStagedIdPart: any;
+    ind: any;
+    isLastPart: any;
+    parsedIdParts: any;
+    logGroupId: any;
+    setCenterStagedId: any;
+}): JSX.Element;
+export namespace CenterStageNavItem {
+    namespace propTypes {
+        const centerStagedIdPart: PropTypes.Validator<string>;
+        const ind: PropTypes.Validator<number>;
+        const isLastPart: PropTypes.Validator<boolean>;
+        const parsedIdParts: PropTypes.Validator<any[]>;
+        const logGroupId: PropTypes.Validator<string>;
+        const setCenterStagedId: PropTypes.Validator<(...args: any[]) => any>;
+    }
+}
 import React from "react";
 import PropTypes from "prop-types";

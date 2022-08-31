@@ -63,6 +63,8 @@ export default class LogStream extends Component {
       hostFunctions: PropTypes.object.isRequired,
       ////
       registries: PropTypes.object.isRequired,
+      ////
+      centerStageNav: PropTypes.object,
     }
   }
 

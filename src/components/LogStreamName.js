@@ -3,7 +3,11 @@ import PropTypes from 'prop-types'
 import isEqual from 'react-fast-compare'
 
 import { _V } from '../constants.js'
-import { onlyNumbers, removeArgsDescriptions } from '../methods/utils.js'
+import {
+  onlyNumbers,
+  parseCenterStagedId,
+  removeArgsDescriptions,
+} from '../methods/utils.js'
 
 import Move from '../icons/move.svg'
 import Relink from '../icons/relink-name.svg'
@@ -114,6 +118,7 @@ export default class LogStreamName extends Component {
             centerStagedId={centerStagedId}
             setCenterStagedId={setCenterStagedId}
             logGroupId={logGroupId}
+            inTimeline={false}
           />
         ) : null}
       </div>
@@ -152,12 +157,13 @@ class RelinkName extends Component {
 
 /* -------------------------------------------------------------------------- */
 
-class CenterStageNav extends PureComponent {
+export class CenterStageNav extends PureComponent {
   static get propTypes() {
     return {
       centerStagedId: PropTypes.string.isRequired,
       logGroupId: PropTypes.string.isRequired,
-      setCenterStagedId: PropTypes.func.isRequired,
+      setCenterStagedId: PropTypes.func,
+      inTimeline: PropTypes.bool.isRequired,
     }
   }
 
@@ -169,13 +175,18 @@ class CenterStageNav extends PureComponent {
   }
 
   render() {
-    const { centerStagedId, logGroupId, setCenterStagedId } = this.props
+    const { centerStagedId, logGroupId, setCenterStagedId, inTimeline } =
+      this.props
 
     const parsedIdParts = parseCenterStagedId(centerStagedId)
     const centerStagedSequence = parsedIdParts.slice(1)
 
     return (
-      <div className="center-stage-holder">
+      <div
+        className={`center-stage-holder${
+          inTimeline ? ' center-stage-holder-time' : ''
+        }`}
+      >
         <div
           ref={this.copyIconRef}
           className="center-stage-id-copy name-icon"
@@ -211,7 +222,7 @@ class CenterStageNav extends PureComponent {
   }
 }
 
-const CenterStageNavItem = ({
+export const CenterStageNavItem = ({
   centerStagedIdPart,
   ind,
   isLastPart,
@@ -246,10 +257,6 @@ CenterStageNavItem.propTypes = {
 }
 
 /* -------------------------------------------------------------------------- */
-
-const parseCenterStagedId = centerStagedId => {
-  return centerStagedId.split('-')
-}
 
 const parseIdPart = id => {
   return onlyNumbers(id) ? `[${id}]` : `.${id}`

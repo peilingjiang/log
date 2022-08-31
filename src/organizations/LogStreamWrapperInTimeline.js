@@ -7,6 +7,7 @@ import ShapeLog from '../components/ShapeLog.js'
 import { canUseShape, getLogStats } from '../methods/utils.js'
 import { _H } from '../constants.js'
 import { logColor } from '../methods/levels.js'
+import { CenterStageNav } from '../components/LogStreamName.js'
 // import LogStreamMenu from './LogStreamMenu.js'
 // import LogStreamName from '../components/LogStreamName.js'
 
@@ -53,6 +54,7 @@ export default class LogStreamWrapperInTimeline extends LogStream {
       hostFunctions,
       registries,
       showRegistries,
+      centerStageNav: { show, centerStagedId },
     } = this.props
 
     const isShape = format === 'shape'
@@ -77,6 +79,14 @@ export default class LogStreamWrapperInTimeline extends LogStream {
         // onMouseEnter={this.handleMouseEnter}
         // onMouseLeave={this.handleMouseLeave}
       >
+        {show && centerStagedId.length ? (
+          <CenterStageNav
+            centerStagedId={centerStagedId}
+            logGroupId={groupId}
+            setCenterStagedId={this.streamFunctions.setCenterStagedId}
+            inTimeline={true}
+          />
+        ) : null}
         <div
           className="logs-wrapper"
           ref={this.logsWrapperRef}

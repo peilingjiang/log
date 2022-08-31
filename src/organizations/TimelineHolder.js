@@ -11,8 +11,10 @@ import {
   constrain,
   getFilteredOutElements,
   getIdentifier,
+  parseCenterStagedId,
   parseDefaultColor,
   preventEventWrapper,
+  removeArgsDescriptions,
 } from '../methods/utils.js'
 import {
   groupIdExtendingConnector,
@@ -25,7 +27,7 @@ import {
 } from '../constants.js'
 import { getLog } from '../methods/getLog.js'
 import { pxTrim, pxWrap } from '../methods/findPosition.js'
-import { socket } from '../global.js'
+import { socket } from '../global.ts'
 import {
   getExpandLevels,
   getTimelineOffsets,
@@ -34,6 +36,10 @@ import {
 } from '../methods/ast.js'
 import TimelineExpandSideDragger from '../components/TimelineExpandSideDragger.js'
 import { darkLogColor, lightLogColor, logColor } from '../methods/levels.js'
+import {
+  CenterStageNav,
+  CenterStageNavItem,
+} from '../components/LogStreamName.js'
 
 export default class TimelineHolder extends Component {
   static get propTypes() {
@@ -542,6 +548,7 @@ const TimelineLogItemsMemo = ({
       0.25
     )}`
 
+    // ! firstOfTheIdentifier
     const firstOfTheIdentifier =
       !lastItem || !isEqual(lastItem.groupId, thisItem.groupId)
 
@@ -554,6 +561,10 @@ const TimelineLogItemsMemo = ({
       firstOfTheIdentifier ||
       !visitedIdExtendedDuringSameIdentifier.has(groupIdExtended)
     visitedIdExtendedDuringSameIdentifier.add(groupIdExtended)
+
+    /* -------------------------------------------------------------------------- */
+    const centerStagedId = logGroup.view.centerStagedId
+    /* -------------------------------------------------------------------------- */
 
     return (
       <Fragment key={`timeline-${ind}`}>
@@ -614,6 +625,11 @@ const TimelineLogItemsMemo = ({
             ////
             registries={registries}
             showRegistries={showRegistries}
+            ////
+            centerStageNav={{
+              show: firstOfTheIdentifier,
+              centerStagedId,
+            }}
           />
 
           <span

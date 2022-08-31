@@ -62,6 +62,8 @@ const FormatterObject = ({
               inheritId={`${inheritId}[0]`}
               bold={true}
               choosing={choosing}
+              groupId={groupId}
+              setCenterStagedId={streamFunctions.setCenterStagedId}
             />
           ) : (
             <FormatterFoldedDisplay
@@ -104,6 +106,8 @@ const FormatterObject = ({
           inheritId={`${inheritId}[${keyInd}]`}
           bold={false}
           choosing={choosing}
+          groupId={groupId}
+          setCenterStagedId={streamFunctions.setCenterStagedId}
         />
       )
       innerItems.push(
@@ -190,6 +194,8 @@ const FormatterObject = ({
                   inheritId={`${inheritId}[${i}]`}
                   bold={true}
                   choosing={choosing}
+                  groupId={groupId}
+                  setCenterStagedId={streamFunctions.setCenterStagedId}
                 />
                 <span
                   key={`${inheritId}-${i}[col]`}

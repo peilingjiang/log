@@ -89,6 +89,7 @@ export default class LogStream extends React.Component<any, any, any> {
         organization: PropTypes.Validator<string>;
         hostFunctions: PropTypes.Validator<object>;
         registries: PropTypes.Validator<object>;
+        centerStageNav: PropTypes.Requireable<object>;
     };
     constructor(props: any);
     state: {

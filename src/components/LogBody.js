@@ -150,7 +150,12 @@ export default class LogBody extends Component {
         )}
         <div className="hyper-log-body-content">
           {view.centerStagedId.length > 0 && (
-            <CenterStage className="hyper-log-center-stage" />
+            <CenterStage
+              className="hyper-log-center-stage"
+              onDoubleClick={() => {
+                streamFunctions.setCenterStagedId(groupId, '')
+              }}
+            />
           )}
           {count > 1 && <span className="hyper-log-count">{count}</span>}
           {hasNoArgs ? (

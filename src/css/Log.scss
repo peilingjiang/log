@@ -164,6 +164,21 @@
     flex-shrink: 0;
     font-size: calc($font-size-xs + 2 * $padding-xxs);
     padding: 0;
+
+    user-select: none;
+    cursor: pointer;
+
+    &:hover {
+      * {
+        fill: $grey;
+      }
+    }
+
+    &:active {
+      * {
+        fill: $dark-grey;
+      }
+    }
   }
 
   .hyper-log-count {

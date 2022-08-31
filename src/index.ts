@@ -1,7 +1,10 @@
 import { HyperLog, Timestamp } from './hyperLog'
 import { logProcessor } from './logProcessor'
+import { GlobalSettings, g } from './global'
 import './rendering'
 // import './objectLog.js'
+import { assertObject } from './methods/utils'
+import { localStorageKeys } from './constants'
 
 import './css/main.scss'
 
@@ -28,6 +31,18 @@ function log(...args: any[]): HyperLog {
   return thisHyperLog
 }
 
+function setLog(options: GlobalSettings): void {
+  if (!assertObject(options)) return
+
+  g.preserveConsole = g.preserveConsole || options.preserveConsole
+  g.useSourceMaps = g.useSourceMaps || options.useSourceMaps
+  g.directionDown = g.directionDown || options.directionDown
+  g.defaultOrganization = g.defaultOrganization || options.defaultOrganization
+  g.vsLogPort = g.vsLogPort || options.vsLogPort
+
+  localStorage.setItem(localStorageKeys.DEFAULT, JSON.stringify(options))
+}
+
 // function errorBoundary(func: () => void): void {
 //   try {
 //     func()
@@ -47,3 +62,4 @@ window.console.log(
 )
 
 export default log
+export { setLog }

@@ -12,7 +12,7 @@ import {
   _DEF,
   _rootStyles,
 } from '../constants.js'
-import { g } from '../global.js'
+import { g } from '../global.ts'
 import { isOverlapped, pxTrim } from './findPosition.js'
 
 export const pseudoFunc = () => {}
@@ -58,6 +58,10 @@ export const trimStringToLength = (str, length) => {
 
 export const getIdentifier = (stackPath, line, char) => {
   return `${stackPath}:${line}:${char}`
+}
+
+export const parseCenterStagedId = centerStagedId => {
+  return centerStagedId.split('-')
 }
 
 export const brutalFindGroupIdInRegistries = (groupId, registries) => {
