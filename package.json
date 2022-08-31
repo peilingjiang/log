@@ -1,6 +1,6 @@
 {
   "name": "log-here-now",
-  "version": "0.0.12-beta.0",
+  "version": "0.0.12-beta.1",
   "description": "Log right here, right now.",
   "main": "lib/index.js",
   "types": "lib/types/index.d.ts",
