@@ -51,13 +51,14 @@ export default class SmartPix extends Component {
           [`${targetName}Y`]: startPos.top + e.clientY - startPos.y,
         },
         () => {
-          log(this.state[`${targetName}X`])
-            .e(e.target)
-            .id(targetName)
-            .name('offsetX')
-            .unit('px')
-            .history(0)
-            .shape()
+          // log(this.state[`${targetName}X`])
+          //   .e(e.target)
+          //   .id(targetName)
+          //   .name('offsetX')
+          //   .unit('px')
+          //   .history(0)
+          //   .shape()
+          log(this.state[`${targetName}X`]).snapTo('x', '#little-cat')
         }
       )
     }

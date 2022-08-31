@@ -134,16 +134,18 @@ export default class LogStreamsHolder extends Component {
       snapAnchorSide,
       this.ref.current
     )
-    this.setState({
-      bounding: {
-        left: snapPosition.left,
-        right: snapPosition.right,
-        top: snapPosition.top,
-        bottom: snapPosition.bottom,
-        verticalAlign: snapPosition.verticalAlign,
-        horizontalAlign: snapPosition.horizontalAlign,
-      },
-    })
+
+    if (snapPosition)
+      this.setState({
+        bounding: {
+          left: snapPosition.left,
+          right: snapPosition.right,
+          top: snapPosition.top,
+          bottom: snapPosition.bottom,
+          verticalAlign: snapPosition.verticalAlign,
+          horizontalAlign: snapPosition.horizontalAlign,
+        },
+      })
   }
 
   getClearanceTransform(clearance, bounding) {

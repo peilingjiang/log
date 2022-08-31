@@ -40,6 +40,8 @@ export const findNearestSnapPoint = (mX, mY) => {
 }
 
 export const getSnapPosition = (anchorElement, anchorSide, holderElement) => {
+  if (!anchorElement || !holderElement) return
+
   const elementBounding = getElementBounding(anchorElement)
   const holderBounding = getElementBounding(holderElement)
   const { left, right, top, bottom, width, height } = elementBounding

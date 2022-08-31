@@ -129,7 +129,7 @@ export class HyperLog {
         snapAnchorPercent: 0.5, // TODO
       },
       options
-    )
+    ) as SnapOptions
 
     if (options.snapElement) this.requests.snap = options
     return this
@@ -142,8 +142,9 @@ export class HyperLog {
     // no element to snap to
     if (typeof element === 'undefined' && !this.requests.element) return this
     else if (!this.requests.element) this.e(element!)
-
     if (!this.requests.element) return this
+
+    this.shape(true)
 
     const getSnapOptions = (anchorSide: string): SnapOptions => {
       return {

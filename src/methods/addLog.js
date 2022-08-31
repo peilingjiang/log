@@ -15,16 +15,13 @@ import {
 import { g } from '../global.ts'
 import { preprocessASTsToGetRegistries } from './ast.js'
 import { sanitizeFormat, sanitizeLevel } from './sanitize.js'
+import { defaultBoundingAlignmentFromSnapSide } from './snap.js'
 import { checkForSpecialIdentifiers } from './specialHubUtils.js'
 import {
   areArgsEqual,
-  assertArguments,
-  assertArray,
   assertElement,
   assertExistence,
   assertNumber,
-  assertObject,
-  assertString,
   cloneLogGroups,
   cloneLogTimeline,
   deepCopyArrayOfLogs,
@@ -227,8 +224,9 @@ export const addLog = (
       // ! snap
       if (requests.snap && requests.snap.snapElement) {
         const thisGroup = newState.logGroups[groupId]
+
         thisGroup.snap = true
-        thisGroup.snapElement = requests.snap.snapElement
+
         thisGroup.snapAnchorSide =
           requests.snap.snapAnchorSide || thisGroup.snapAnchorSide
         // thisGroup.snapTargetSide =
@@ -238,6 +236,27 @@ export const addLog = (
         )
           ? requests.snap.snapAnchorPercent
           : thisGroup.snapAnchorPercent
+
+        thisGroup.snapElement = requests.snap.snapElement
+        thisGroup.snapElementId = idFromString(
+          stringifyDOMElement(thisGroup.snapElement) +
+            ' ' +
+            thisGroup.snapAnchorSide
+        )
+
+        const snapBounding = defaultBoundingAlignmentFromSnapSide(
+          thisGroup.snapAnchorSide
+        )
+
+        thisGroup.bounding = {
+          ...thisGroup.bounding,
+          left: '0px',
+          top: '0px',
+          horizontalAlign: snapBounding.horizontalAlign,
+          verticalAlign: snapBounding.verticalAlign,
+        }
+
+        thisGroup.orientation = snapBounding.orientation
       }
 
       // check if got exactly the same as the last log
