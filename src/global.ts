@@ -41,7 +41,6 @@ export const g: GlobalSettings = Object.seal(
       } as GlobalSettings)
     : defaultGlobalSettings
 )
-console.log(g)
 
 // ! setLog
 // ;(() => {
