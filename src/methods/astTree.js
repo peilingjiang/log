@@ -55,6 +55,8 @@ export const proceedDeeper = instance => {
         return instance.expression
       case 'ReturnStatement':
         return instance.argument
+      case 'BlockStatement':
+        return instance.body
     }
     return instance.body
   }
@@ -84,7 +86,7 @@ export const proceedDeeper = instance => {
   }
 
   // !
-  console.error(
+  window.console.error(
     '[HyperLog Dev] unsupported ast instance',
     instance,
     'unrecognized instance type',

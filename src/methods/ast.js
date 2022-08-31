@@ -61,27 +61,28 @@ export const preprocessASTsToGetRegistries = (
         for (const astFilePath in newASTs) {
           if (matchWebPathAndFilePath(repLog.stack.path, astFilePath)) {
             const rawCodeFile = newASTs[astFilePath].text
-
             const astTree = newASTs[astFilePath].result.program.body
 
-            // const depthStack = parseAST(astTree, logLine, logChar)
             let depthStack, rawCodeObject
             try {
               // eslint-disable-next-line no-extra-semi
-              ;[depthStack, rawCodeObject] = parseAST(astTree, logLine, logChar)
-              rawCodeObject.rawCodeContent = getRawLogContent(
-                rawCodeFile,
-                rawCodeObject
-              )
-            } catch (e) {
-              console.error(e)
-              depthStack = ['Unknown']
-              rawCodeObject = {
-                rawCodeContent: '',
+              const astParseResult = parseAST(astTree, logLine, logChar)
+              if (astParseResult) {
+                depthStack = astParseResult[0]
+                rawCodeObject = astParseResult[1]
+                rawCodeObject.rawCodeContent = getRawLogContent(
+                  rawCodeFile,
+                  rawCodeObject
+                )
               }
+            } catch (e) {
+              window.console.error(e)
             }
 
             depthStack = depthStack || ['Unknown']
+            rawCodeObject = rawCodeObject || {
+              rawCodeContent: '',
+            }
 
             newRegistries[logGroupIdExtended] = {
               identifier: identifier,
@@ -100,6 +101,7 @@ export const preprocessASTsToGetRegistries = (
     })
   }
 
+  window.console.log('newRegistries', newRegistries)
   return newRegistries
 }
 
@@ -110,8 +112,12 @@ const parseAST = (astProgramBody, targetLine, targetChar) => {
 
 const parseASTPart = (bodyArray, targetLine, targetChar, prevDepthStack) => {
   // when final body is the single only child, they will not be placed in an array
-  if (assertObject(bodyArray) && reachedTheLogStatement(bodyArray))
+  if (assertObject(bodyArray) && reachedTheLogStatement(bodyArray)) {
     return [prevDepthStack, bodyArray]
+  }
+
+  // if there's no exact match, we try to find one that has the minimum distance
+  const diffRecord = []
 
   for (const bodyInd in bodyArray) {
     const body = bodyArray[bodyInd]
@@ -119,6 +125,7 @@ const parseASTPart = (bodyArray, targetLine, targetChar, prevDepthStack) => {
     if (targetPositionWithinBody(body, targetLine, targetChar)) {
       // stop proceed when reaching the log statement
       if (reachedTheLogStatement(body)) return [prevDepthStack, body]
+
       // proceed deeper
       const [increasedStack, next] = proceed(body, bodyInd)
 
@@ -126,7 +133,28 @@ const parseASTPart = (bodyArray, targetLine, targetChar, prevDepthStack) => {
         ...prevDepthStack,
         ...increasedStack,
       ])
+    } else if (body.loc.start.line === targetLine) {
+      const diff = body.loc.start.column - targetChar
+      diffRecord.push({
+        bodyInd,
+        diff: Math.abs(diff),
+      })
     }
+  }
+
+  // ! no matching found
+  if (diffRecord.length > 0) {
+    const minDiff = Math.min(...diffRecord.map(record => record.diff))
+    const minDiffRecord = diffRecord.find(record => record.diff === minDiff)
+    const body = bodyArray[minDiffRecord.bodyInd]
+
+    if (reachedTheLogStatement(body)) return [prevDepthStack, body]
+
+    const [increasedStack, next] = proceed(body, minDiffRecord.bodyInd)
+    return parseASTPart(next, targetLine, targetChar, [
+      ...prevDepthStack,
+      ...increasedStack,
+    ])
   }
 }
 
