@@ -178,7 +178,14 @@ export const parseCenterStagedValueFromId = (args, id = '') => {
     const parsedGetter = assertNumber(getter) ? parseInt(getter) : getter
     // keep going only when args[parsedGetter] has a value,
     // or, if it's the last getter (the inner-most value could just be undefined)
-    if (
+    if (assertSet(args)) {
+      // TODO this is the worst possible way of doing this
+      const arrArgs = Array.from(args)
+      if (arrArgs[parsedGetter]) {
+        args = arrArgs[parsedGetter]
+        progressId += getter
+      }
+    } else if (
       args[parsedGetter] ||
       (parsedGetter && parsedGetter in args) ||
       getterInd === sequentialGetters.length - 1
@@ -436,6 +443,10 @@ export const assertElement = a => {
   )
 }
 
+export const assertSet = a => {
+  return assertExistence(a) && a instanceof Set
+}
+
 export const assertArguments = argsAndAssertions => {
   for (const argAndAssertion of argsAndAssertions) {
     const { value, assertion, shape } = argAndAssertion
@@ -450,6 +461,7 @@ export const assertTypeOfArg = arg => {
   if (assertString(arg)) return 'string'
   if (assertBoolean(arg)) return 'boolean'
   if (assertFunction(arg)) return 'function'
+  if (assertSet(arg)) return 'set'
   if (assertArray(arg)) return 'array'
   // if (assertElement(arg)) return 'element'
   if (assertObject(arg)) return 'object'

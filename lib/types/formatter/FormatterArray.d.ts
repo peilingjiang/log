@@ -1,5 +1,5 @@
 declare const _default: React.MemoExoticComponent<{
-    ({ arr, groupId, inheritId, idViews, streamFunctions, formatArg, minimal, choosing, highlightChanged, }: {
+    ({ arr, groupId, inheritId, idViews, streamFunctions, formatArg, minimal, choosing, highlightChanged, isSet, }: {
         arr: any;
         groupId: any;
         inheritId: any;
@@ -9,9 +9,10 @@ declare const _default: React.MemoExoticComponent<{
         minimal: any;
         choosing: any;
         highlightChanged: any;
+        isSet: any;
     }): JSX.Element;
     propTypes: {
-        arr: PropTypes.Validator<any[]>;
+        arr: PropTypes.Validator<object>;
         groupId: PropTypes.Validator<string>;
         inheritId: PropTypes.Validator<string>;
         idViews: PropTypes.Validator<Required<PropTypes.InferProps<{
@@ -24,6 +25,7 @@ declare const _default: React.MemoExoticComponent<{
         minimal: PropTypes.Validator<boolean>;
         choosing: PropTypes.Validator<boolean>;
         highlightChanged: PropTypes.Validator<boolean>;
+        isSet: PropTypes.Validator<boolean>;
     };
 }>;
 export default _default;

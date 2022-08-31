@@ -258,6 +258,23 @@ export const formatArg = (
         </p>
       )
 
+    case 'set':
+      return (
+        <FormatterArray
+          key={`${standardInheritId}[set]`}
+          arr={arg}
+          groupId={groupId}
+          inheritId={inheritId}
+          idViews={idViews}
+          streamFunctions={streamFunctions}
+          formatArg={formatArg}
+          minimal={minimal}
+          choosing={choosing}
+          highlightChanged={highlightChanged}
+          isSet={true}
+        />
+      )
+
     case 'array':
       return (
         <FormatterArray
@@ -271,6 +288,7 @@ export const formatArg = (
           minimal={minimal}
           choosing={choosing}
           highlightChanged={highlightChanged}
+          isSet={false}
         />
       )
 

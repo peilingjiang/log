@@ -23,7 +23,13 @@ const FormatterArray = ({
   minimal,
   choosing,
   highlightChanged,
+  isSet,
 }) => {
+  const startingSign = isSet ? '{' : '['
+  const endingSign = isSet ? '}' : ']'
+
+  if (isSet) arr = Array.from(arr)
+
   const folded = !matchLocInObjectByRemovingLogId(
     idViews.unfoldedIds,
     inheritId
@@ -35,7 +41,7 @@ const FormatterArray = ({
     if (arr.length)
       content = (
         <>
-          {'['}
+          {startingSign}
           {arr.length === 1 ? (
             formatArg(
               arr[0],
@@ -55,10 +61,10 @@ const FormatterArray = ({
               highlightChanged={highlightChanged}
             />
           )}
-          {']'}
+          {endingSign}
         </>
       )
-    else content = '[]'
+    else content = `${startingSign}${endingSign}`
     return (
       <div
         className={`f-array f-array-minimal minimal${
@@ -105,7 +111,7 @@ const FormatterArray = ({
           />
         )}
         <span className="arr-length info-dimmed">{`(${arr.length})`}</span>
-        {'['}
+        {startingSign}
         {innerItems}
         {arr.length > foldedArrayShowItemCount ? (
           <FormatterFoldedDisplay
@@ -115,7 +121,7 @@ const FormatterArray = ({
             highlightChanged={highlightChanged}
           />
         ) : null}
-        {']'}
+        {endingSign}
       </>
     )
   } else {
@@ -129,11 +135,13 @@ const FormatterArray = ({
             id={inheritId}
             setUnfoldedIds={streamFunctions.setUnfoldedIds}
           />
-          {'['}
+          {startingSign}
         </div>
 
         <div className="unfolded-inner">
           {arr.map((arg, i) => {
+            const thisUniqueId = `${inheritId}-${i}`
+
             return (
               <div
                 key={`${
@@ -141,13 +149,18 @@ const FormatterArray = ({
                 }-${i}-in`}
                 className="inner-item"
               >
-                <div className="simple-inline-element inner-item-ind info-dimmed">
+                <div
+                  className="simple-inline-element inner-item-ind info-dimmed"
+                  onDoubleClick={() => {
+                    streamFunctions.setCenterStagedId(groupId, thisUniqueId)
+                  }}
+                >
                   {i}
                 </div>
                 {formatArg(
                   arg,
                   groupId,
-                  `${inheritId}-${i}`,
+                  thisUniqueId,
                   idViews,
                   streamFunctions,
                   false,
@@ -159,7 +172,7 @@ const FormatterArray = ({
           })}
         </div>
 
-        <div className="simple-inline-element info-bold">{']'}</div>
+        <div className="simple-inline-element info-bold">{endingSign}</div>
       </>
     )
   }
@@ -177,7 +190,7 @@ const FormatterArray = ({
 }
 
 FormatterArray.propTypes = {
-  arr: PropTypes.array.isRequired,
+  arr: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
   groupId: PropTypes.string.isRequired,
   inheritId: PropTypes.string.isRequired,
   idViews: idViewsInterface.isRequired,
@@ -186,6 +199,7 @@ FormatterArray.propTypes = {
   minimal: PropTypes.bool.isRequired,
   choosing: PropTypes.bool.isRequired,
   highlightChanged: PropTypes.bool.isRequired,
+  isSet: PropTypes.bool.isRequired,
 }
 
 export default memo(FormatterArray, isEqual)

@@ -14,6 +14,9 @@ export default class Types extends Component {
 
     log(['a', ['b', ['c', ['d', ['e']]]]])
 
+    const mySet = new Set([1, 2, 3, 4, 5])
+    log(mySet)
+
     log(
       1,
       'log',

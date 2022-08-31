@@ -123,6 +123,12 @@
     flex-direction: row;
     align-items: center;
     gap: $padding-xxs;
+
+    cursor: pointer;
+
+    &:active {
+      color: $dark-grey !important;
+    }
   }
 
   .unfolded-inner {
