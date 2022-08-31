@@ -255,7 +255,7 @@ export default class LogHost extends Component {
         this.stackParser,
         hyperLog.args,
         hyperLog.timestamp,
-        hyperLog.error,
+        hyperLog.rawError,
         hyperLog.requests,
         null
       )

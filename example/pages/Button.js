@@ -34,7 +34,7 @@ export default class Button extends Component {
               text: e.target.value,
             })
 
-            // log(e.target.value).e(e.target).level('error')
+            // log(e.target.value).e(e.target).error()
             log(e)
           }}
         />

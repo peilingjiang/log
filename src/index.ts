@@ -32,7 +32,7 @@ function log(...args: any[]): HyperLog {
 //   try {
 //     func()
 //   } catch (error) {
-//     window.log(error).level('error')
+//     window.log(error).error()
 //   }
 // }
 

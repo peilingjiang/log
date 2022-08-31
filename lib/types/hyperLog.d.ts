@@ -20,11 +20,12 @@ export interface Timestamp {
 }
 export declare class HyperLog {
     private args;
-    private timestamp;
-    private error;
+    readonly timestamp: Timestamp;
+    readonly rawError: Error;
     readonly requests: RequestOptions;
     constructor(args: any[], timestamp: Timestamp, error: Error);
-    level(level?: string): this;
+    warn(): this;
+    error(): this;
     e(element: HTMLElement | string): this;
     id(id: string): this;
     name(name?: string): this;
@@ -32,6 +33,7 @@ export declare class HyperLog {
     unit(unit?: string): this;
     history(history?: number): this;
     snap(options?: SnapOptions): this;
+    snapTo(position?: 'x' | 'y' | 'top' | 'left' | 'right' | 'bottom', element?: HTMLElement | string | undefined): this;
     shape(shape?: boolean): this;
 }
 export {};

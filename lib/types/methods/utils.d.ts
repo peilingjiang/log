@@ -61,7 +61,7 @@ export function assertClass(a: any, nameOfObjectClass: any): boolean;
 export function assertObject(a: any, shape?: null): boolean;
 export function assertElement(a: any): boolean;
 export function assertArguments(argsAndAssertions: any): void;
-export function assertTypeOfArg(arg: any): "string" | "object" | "number" | "null" | "undefined" | "boolean" | "function" | "array" | "unknown";
+export function assertTypeOfArg(arg: any): "string" | "object" | "undefined" | "number" | "null" | "boolean" | "function" | "array" | "unknown";
 export function containsOnlyNumber(str: any): boolean;
 export function containsOnlyString(str: any): boolean;
 export function containsOnlyNull(str: any): boolean;

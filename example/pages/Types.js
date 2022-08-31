@@ -43,11 +43,11 @@ export default class Types extends Component {
     for (let i = 0; i < 20; i++)
       log(Math.round(Math.random() * 200))
         .e(document.getElementById('home-link'))
-        .level('warn')
+        .warn()
     for (let i = 0; i < 20; i++)
       log(Math.round(Math.random() * 200))
         .e(document.getElementById('home-link'))
-        .level('error')
+        .error()
   }
 
   render() {

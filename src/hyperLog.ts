@@ -1,4 +1,4 @@
-import { _config, _R } from './constants.js'
+import { _B, _config, _L, _R, _T } from './constants.js'
 
 interface RequestOptions {
   level: string | undefined
@@ -25,14 +25,14 @@ export interface Timestamp {
 
 export class HyperLog {
   private args: any[]
-  private timestamp: Timestamp
-  private error: Error
+  readonly timestamp: Timestamp
+  readonly rawError: Error
   readonly requests: RequestOptions
 
   constructor(args: any[], timestamp: Timestamp, error: Error) {
     this.args = args
     this.timestamp = timestamp
-    this.error = error
+    this.rawError = error
 
     this.requests = {
       level: undefined,
@@ -52,9 +52,13 @@ export class HyperLog {
     return this
   }
 
-  level(level: string = 'log') {
-    // log, error, warn
-    this.requests.level = level
+  warn() {
+    this.requests.level = 'warn'
+    return this
+  }
+
+  error() {
+    this.requests.level = 'error'
     return this
   }
 
@@ -107,6 +111,7 @@ export class HyperLog {
     return this
   }
 
+  /* -------------------------------------------------------------------------- */
   snap(
     options: SnapOptions = {
       snap: true,
@@ -129,6 +134,50 @@ export class HyperLog {
     if (options.snapElement) this.requests.snap = options
     return this
   }
+
+  snapTo(
+    position: 'x' | 'y' | 'top' | 'left' | 'right' | 'bottom' = 'right',
+    element: HTMLElement | string | undefined = undefined
+  ) {
+    // no element to snap to
+    if (typeof element === 'undefined' && !this.requests.element) return this
+    else if (!this.requests.element) this.e(element!)
+
+    if (!this.requests.element) return this
+
+    const getSnapOptions = (anchorSide: string): SnapOptions => {
+      return {
+        snap: true,
+        snapElement: this.requests.element,
+        snapAnchorSide: anchorSide,
+        snapAnchorPercent: 0.5,
+      }
+    }
+
+    switch (position) {
+      case 'x':
+        return this.snap(getSnapOptions(_L))
+
+      case 'y':
+        return this.snap(getSnapOptions(_T))
+
+      case 'top':
+        return this.snap(getSnapOptions(_T))
+
+      case 'left':
+        return this.snap(getSnapOptions(_L))
+
+      case 'right':
+        return this.snap(getSnapOptions(_R))
+
+      case 'bottom':
+        return this.snap(getSnapOptions(_B))
+
+      default:
+        return this
+    }
+  }
+  /* -------------------------------------------------------------------------- */
 
   shape(shape: boolean = true) {
     this.requests.format = shape ? 'shape' : 'text'
