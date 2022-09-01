@@ -4,6 +4,7 @@ export default class LogStreamName extends React.Component<any, any, any> {
         level: PropTypes.Validator<string>;
         logGroupElement: PropTypes.Requireable<HTMLElement>;
         logGroupId: PropTypes.Validator<string>;
+        logsCount: PropTypes.Validator<number>;
         paused: PropTypes.Validator<boolean>;
         orientation: PropTypes.Validator<string>;
         alignment: PropTypes.Validator<string>;

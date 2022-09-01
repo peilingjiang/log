@@ -164,7 +164,7 @@ export const registryInterface: PropTypes.Requireable<Required<PropTypes.InferPr
 export const stackActualCallerDepth: 1;
 export const stackFilePathCompareDepth: 3;
 export const positionFindingWorstAllowed: 5;
-export const switchPositionRegistrationDifferenceThresholdPx2: 6400;
+export const switchPositionRegistrationDifferenceThresholdPx2: 10000;
 export const minimalStringShowLength: 7;
 export const foldedArrayShowItemCount: 3;
 export const foldedObjectShowItemCount: 3;

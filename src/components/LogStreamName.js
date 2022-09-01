@@ -23,6 +23,7 @@ export default class LogStreamName extends Component {
       logGroupElement: PropTypes.instanceOf(HTMLElement),
       logGroupId: PropTypes.string.isRequired,
       ////
+      logsCount: PropTypes.number.isRequired,
       paused: PropTypes.bool.isRequired,
       orientation: PropTypes.string.isRequired,
       alignment: PropTypes.string.isRequired,
@@ -73,6 +74,7 @@ export default class LogStreamName extends Component {
       level,
       logGroupElement,
       logGroupId,
+      logsCount,
       canSnap,
       snap,
       streamGrabbing,
@@ -109,7 +111,10 @@ export default class LogStreamName extends Component {
               textDecoration: paused ? 'line-through' : undefined,
             }}
           >
-            {name || 'logs'}
+            {`${name || 'logs'}`}
+            {logsCount > 1 ? (
+              <span className="log-total-counter">{` ${logsCount}`}</span>
+            ) : null}
           </span>
         </div>
 

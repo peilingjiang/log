@@ -16,6 +16,7 @@ export default class LogHost extends React.Component<any, any, any> {
             bottom: string;
         };
         enableFilterArea: boolean;
+        showShortcuts: boolean;
     };
     ref: React.RefObject<any>;
     streamsHoldersRefs: {};
@@ -24,6 +25,7 @@ export default class LogHost extends React.Component<any, any, any> {
     updateLog(logGroupId: any, logId: any, log: any): void;
     _resizeHandler(): void;
     _shortcutHandler(e: any): void;
+    _shortcutEndHandler(e: any): void;
     hostFunctions: {
         togglePauseTheWholeLogSystem: () => void;
         changeOrganization: (newOrganization: any, logId?: null) => void;

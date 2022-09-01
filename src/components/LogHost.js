@@ -23,6 +23,7 @@ import { preprocessASTsToGetRegistries } from '../methods/ast.js'
 import { GraphicsHost } from './Graphics.js'
 import { pxWrap } from '../methods/findPosition.js'
 import { SelectionRect } from './SelectionRect.js'
+import Shortcuts from './Shortcuts.js'
 
 export default class LogHost extends Component {
   constructor(props) {
@@ -50,6 +51,8 @@ export default class LogHost extends Component {
         bottom: pxWrap(window.innerHeight * (1 - 0.2)),
       }, // { left, top, right, bottom }
       enableFilterArea: false,
+      ////
+      showShortcuts: false,
     }
 
     this.ref = createRef()
@@ -62,6 +65,7 @@ export default class LogHost extends Component {
 
     this._resizeHandler = this._resizeHandler.bind(this)
     this._shortcutHandler = this._shortcutHandler.bind(this)
+    this._shortcutEndHandler = this._shortcutEndHandler.bind(this)
 
     this.hostFunctions = {
       togglePauseTheWholeLogSystem:
@@ -92,7 +96,8 @@ export default class LogHost extends Component {
 
     // add event listeners
     window.addEventListener('resize', this._resizeHandler)
-    window.addEventListener('keypress', this._shortcutHandler)
+    window.addEventListener('keydown', this._shortcutHandler)
+    window.addEventListener('keyup', this._shortcutEndHandler)
 
     // asts
     socket.on('ast', data => {
@@ -130,7 +135,8 @@ export default class LogHost extends Component {
 
   componentWillUnmount() {
     window.removeEventListener('resize', this._resizeHandler)
-    window.addEventListener('keypress', this._shortcutHandler)
+    window.addEventListener('keydown', this._shortcutHandler)
+    window.addEventListener('keyup', this._shortcutEndHandler)
 
     this.setState({
       logGroups: {},
@@ -181,7 +187,11 @@ export default class LogHost extends Component {
 
   _shortcutHandler(e) {
     if (e.altKey) {
-      if (e.code === 'KeyC') {
+      if (e.key === 'Alt') {
+        this.setState({
+          showShortcuts: true,
+        })
+      } else if (e.code === 'KeyC') {
         // ! clearance
         preventEventWrapper(e, () => {
           // clear the whole log system
@@ -214,6 +224,14 @@ export default class LogHost extends Component {
           })
         })
       }
+    }
+  }
+
+  _shortcutEndHandler(e) {
+    if (e.key === 'Alt') {
+      this.setState({
+        showShortcuts: false,
+      })
     }
   }
 
@@ -416,9 +434,11 @@ export default class LogHost extends Component {
     const streamsHoldersByElement = {}
     const streamsHolderSnapByElement = {}
 
+    ////
     const filteredOutElements = []
     if (enableFilterArea)
       filteredOutElements.push(...getFilteredOutElements(filterArea))
+    ////
 
     for (const logGroupId in logGroups) {
       const thisGroup = logGroups[logGroupId]
@@ -600,6 +620,7 @@ export default class LogHost extends Component {
       registries,
       filterArea,
       enableFilterArea,
+      showShortcuts,
     } = this.state
 
     let renderedLogElements
@@ -631,6 +652,7 @@ export default class LogHost extends Component {
         )}
         {renderedLogElements}
         {organization === _Aug && this.renderGraphicsElements()}
+        {<Shortcuts show={showShortcuts} />}
       </div>
     )
   }

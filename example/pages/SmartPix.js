@@ -58,7 +58,11 @@ export default class SmartPix extends Component {
           //   .unit('px')
           //   .history(0)
           //   .shape()
-          log(this.state[`${targetName}X`]).snapTo('x', '#little-cat')
+          log(targetName)
+          log(this.state[`${targetName}X`]).snapTo(
+            'x',
+            targetName === 'cat' ? '#little-cat' : '#little-cat-2'
+          )
         }
       )
     }

@@ -174,7 +174,7 @@ export const stackFilePathCompareDepth = 3
 
 // out of 8 possible positions around the anchor element, we only allow the first N best ones
 export const positionFindingWorstAllowed = 5
-export const switchPositionRegistrationDifferenceThresholdPx2 = 6400
+export const switchPositionRegistrationDifferenceThresholdPx2 = 10000
 
 export const minimalStringShowLength = 7
 export const foldedArrayShowItemCount = 3
@@ -246,7 +246,7 @@ export const _config = Object.seal({
   shapeRectWidth: '17px',
   ////
   snapThresholdPx: 15,
-  attachLineLengthThresholdPx: 15,
+  attachLineLengthThresholdPx: 30,
 })
 
 export const _rootStyles = Object.seal({

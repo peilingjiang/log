@@ -20,6 +20,15 @@
   white-space: nowrap;
   user-select: none;
 
+  .display-name {
+    margin-right: $padding-xs;
+
+    .log-total-counter {
+      @include font-fixed;
+      color: $grey;
+    }
+  }
+
   & > div {
     display: flex;
     align-items: center;

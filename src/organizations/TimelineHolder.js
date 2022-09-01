@@ -40,6 +40,7 @@ import {
   CenterStageNav,
   CenterStageNavItem,
 } from '../components/LogStreamName.js'
+import { g } from '../global.ts'
 
 export default class TimelineHolder extends Component {
   static get propTypes() {
@@ -489,12 +490,13 @@ const TimelineLogItemsMemo = ({
     else filterGroupIdsFunctions.add(id)
   }
 
+  let lastItem = null
+  let visitedIdExtendedDuringSameIdentifier = new Set()
+  const startingAt = Math.max(logTimeline.length - g.logHistoryLength, 0)
   /* -------------------------------------------------------------------------- */
   // ! MAP MAP MAP
   /* -------------------------------------------------------------------------- */
-  let lastItem = null
-  let visitedIdExtendedDuringSameIdentifier = new Set()
-  return logTimeline.map((logIdentifier, ind) => {
+  return logTimeline.slice(startingAt).map((logIdentifier, ind) => {
     const logGroup = logGroups[logIdentifier.groupId]
 
     // ! filter out elements
@@ -632,7 +634,7 @@ const TimelineLogItemsMemo = ({
             }}
           />
 
-          <span
+          {/* <span
             className="timeline-timestamp"
             style={{
               color:
@@ -645,7 +647,7 @@ const TimelineLogItemsMemo = ({
             }}
           >
             {Math.round(logObj.timestamps[0].now)}
-          </span>
+          </span> */}
         </div>
       </Fragment>
     )

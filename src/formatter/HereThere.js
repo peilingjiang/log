@@ -52,12 +52,12 @@ export const HereThere = ({ stack, color }) => {
         Here!
       </p>
 
-      <p className="here-details">
+      {/* <p className="here-details">
         <b style={spanStyle}>{stack.method}</b>
-        {/* <span style={spanStyle}>
+        <span style={spanStyle}>
           {stack.file}:{stack.line}
-        </span> */}
-      </p>
+        </span>
+      </p> */}
     </div>
   )
 }

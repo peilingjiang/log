@@ -50,6 +50,8 @@ export const preprocessASTsToGetRegistries = (
   for (const logIdentifier of logTimeline) {
     const logGroupId = logIdentifier.groupId
 
+    // if (!(logIdentifier in logGroups)) continue
+
     logGroups[logGroupId].logs.map(repLog => {
       const logLine = repLog.stack.line
       const logChar = repLog.stack.char

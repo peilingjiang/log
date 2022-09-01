@@ -1,0 +1,55 @@
+.hyper-shortcuts {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: $padding-small;
+
+  position: fixed;
+  bottom: $padding-x-large;
+  left: $padding-x-large;
+  margin: 0;
+  padding: $padding-large $padding-x-large $padding-large $padding-large;
+
+  border-radius: $radius-small;
+  background: rgba($grey, $opacity-mid);
+  backdrop-filter: blur($blur-xh);
+
+  opacity: 0;
+  transition: opacity $transition-fast ease-in-out;
+  // transition-delay: $transition-normal;
+
+  pointer-events: none;
+  z-index: 999999;
+
+  &.show {
+    opacity: 1;
+  }
+
+  .shortcut {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: $padding-mid;
+    pointer-events: none;
+
+    * {
+      color: $white;
+      pointer-events: none;
+    }
+  }
+
+  .shortcut-key {
+    @include font-fixed;
+    font-size: 2rem;
+
+    border: 1px solid $white;
+    padding: $padding-small $padding-large;
+    border-radius: $radius-large;
+  }
+
+  .shortcut-description {
+    font-size: $font-size-large;
+    font-weight: $font-weight-thin;
+  }
+}

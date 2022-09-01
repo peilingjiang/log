@@ -283,7 +283,7 @@ export const addLog = (
       )
 
       if (logs.length) {
-        const lastLog = logs[logs.length - 1]
+        const lastLog = { ...logs[logs.length - 1] }
 
         if (
           areArgsEqual(lastLog.args, args) &&
@@ -330,12 +330,12 @@ export const addLog = (
           }
 
           // remove the old ones if logTimeline length is greater than logHistory
-          const r = removeFirstLog(returnedState)
+          // const r = removeFirstLog(returnedState)
 
           // ! update ast registries
-          _updateRegistries(logHost, r)
+          _updateRegistries(logHost, returnedState)
 
-          return r
+          return returnedState
         }
       }
 
@@ -363,12 +363,12 @@ export const addLog = (
         ],
       }
 
-      const r = removeFirstLog(returnedState)
+      // const r = removeFirstLog(returnedState)
 
       // ! update ast registries
-      _updateRegistries(logHost, r)
+      _updateRegistries(logHost, returnedState)
 
-      return r
+      return returnedState
     })
   })
 }
@@ -379,33 +379,45 @@ const removeFirstLog = returnedState => {
     return returnedState
 
   const firstLogInLogTimeline = returnedState.logTimeline[0]
-
   const firstLogInLogGroups =
     returnedState.logGroups[firstLogInLogTimeline.groupId].logs[
       firstLogInLogTimeline.logInd
     ]
 
-  // remove from logTimeline
   returnedState.logTimeline = returnedState.logTimeline.slice(1)
 
   // remove from logGroups
   if (firstLogInLogGroups.timestamps.length > 1) {
+    // logGroups
     firstLogInLogGroups.timestamps = firstLogInLogGroups.timestamps.slice(1)
     firstLogInLogGroups.count -= 1
 
-    returnedState.logTimeline.map(log => {
+    // logTimeline
+    returnedState.logTimeline.forEach((identifier, ind) => {
       if (
-        log.groupId === firstLogInLogTimeline.groupId &&
-        log.logInd === firstLogInLogTimeline.logInd
+        identifier.groupId === firstLogInLogTimeline.groupId &&
+        identifier.logInd === firstLogInLogTimeline.logInd
       )
-        log.timestampInd -= 1
+        returnedState.logTimeline[ind].timestampInd -= 1
     })
-  } else if (firstLogInLogGroups.timestamps.length === 1) {
-    returnedState.logGroups[firstLogInLogTimeline.groupId].logs =
-      returnedState.logGroups[firstLogInLogTimeline.groupId].logs.slice(1)
+    ////
+  } else {
+    // logGroups
+    if (
+      returnedState.logGroups[firstLogInLogTimeline.groupId].logs.length > 1
+    ) {
+      returnedState.logGroups[firstLogInLogTimeline.groupId].logs =
+        returnedState.logGroups[firstLogInLogTimeline.groupId].logs.slice(1)
+    } else {
+      returnedState.logGroups[firstLogInLogTimeline.groupId] = undefined
+      delete returnedState.logGroups[firstLogInLogTimeline.groupId]
+    }
 
-    returnedState.logTimeline.map(log => {
-      if (log.groupId === firstLogInLogTimeline.groupId) log.logInd -= 1
+    // logTimeline
+    returnedState.logTimeline.forEach((log, ind) => {
+      if (log.groupId === firstLogInLogTimeline.groupId) {
+        returnedState.logTimeline[ind].logInd -= 1
+      }
     })
   }
 

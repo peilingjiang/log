@@ -44,6 +44,7 @@ import {
 import { setupLeaderLine } from '../others/leaderLine.js'
 import { outlineToHighlightElement } from '../methods/attachElements.js'
 import { StreamTimelineSlider } from '../components/StreamTimelineSlider.js'
+import { g } from '../global.ts'
 
 // for augmented logs
 
@@ -762,7 +763,9 @@ export default class LogStream extends Component {
     ////
 
     if (!useTimeline) {
-      logElements = logs.map(log => {
+      const startingAt = Math.max(logs.length - g.logHistoryLength, 0)
+      orderReversed -= startingAt
+      logElements = logs.slice(startingAt).map(log => {
         // to add a valid shape log, the stream must be a shape (format)
         // and this log must have a valid unit
         const useShapeLog = isShape && canUseShape(log, view.centerStagedId)
@@ -935,6 +938,7 @@ export default class LogStream extends Component {
           level={level}
           logGroupElement={element}
           logGroupId={groupId}
+          logsCount={useTimeline ? 1 : logs.length}
           paused={paused}
           orientation={orientation}
           alignment={alignItemsValue}
