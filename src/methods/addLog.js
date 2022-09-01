@@ -123,7 +123,7 @@ export const addLog = (
       }
 
       // ! groupId
-      let groupId =
+      const groupId =
         requests.id ||
         idFromString(
           `${parsedStack.file}:${parsedStack.line}:${parsedStack.char}`
@@ -135,7 +135,6 @@ export const addLog = (
       // if (!requests.id) groupId = `${groupId}${groupElementId}`
 
       // ! color from location in CODE
-      window.console.log(`${parsedStack.file}?line=${parsedStack.line}`)
       const idFromLocation = uuidv5(
         // `${parsedStack.file}?line=${parsedStack.line}&char=${parsedStack.char}`,
         `${parsedStack.file}?line=${parsedStack.line}`,

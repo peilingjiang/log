@@ -468,12 +468,18 @@ const DotGraphicsMemo = ({
       }}
     >
       <div
-        className={`the-dot-shadow ${keyWord}-dot-shadow dot-animation-bounce-in`}
+        className={`the-dot-shadow ${keyWord}-dot-shadow${
+          currentGraphics ? ' dot-animation-bounce-in' : ''
+        }`}
         onClick={() => {
           setShowMeasures(groupId)
         }}
       >
-        <div className={`the-dot ${keyWord}-dot dot-animation-bounce-in`}></div>
+        <div
+          className={`the-dot ${keyWord}-dot${
+            currentGraphics ? ' dot-animation-bounce-in' : ''
+          }`}
+        ></div>
       </div>
 
       <div
