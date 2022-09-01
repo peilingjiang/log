@@ -283,7 +283,7 @@ export const addLog = (
       )
 
       if (logs.length) {
-        const lastLog = { ...logs[logs.length - 1] }
+        const lastLog = logs[logs.length - 1]
 
         if (
           areArgsEqual(lastLog.args, args) &&
@@ -374,55 +374,55 @@ export const addLog = (
 }
 
 // TODO optimize and test more
-const removeFirstLog = returnedState => {
-  if (returnedState.logTimeline.length <= g.logHistoryLength)
-    return returnedState
+// const removeFirstLog = returnedState => {
+//   if (returnedState.logTimeline.length <= g.logHistoryLength)
+//     return returnedState
 
-  const firstLogInLogTimeline = returnedState.logTimeline[0]
-  const firstLogInLogGroups =
-    returnedState.logGroups[firstLogInLogTimeline.groupId].logs[
-      firstLogInLogTimeline.logInd
-    ]
+//   const firstLogInLogTimeline = returnedState.logTimeline[0]
+//   const firstLogInLogGroups =
+//     returnedState.logGroups[firstLogInLogTimeline.groupId].logs[
+//       firstLogInLogTimeline.logInd
+//     ]
 
-  returnedState.logTimeline = returnedState.logTimeline.slice(1)
+//   returnedState.logTimeline = returnedState.logTimeline.slice(1)
 
-  // remove from logGroups
-  if (firstLogInLogGroups.timestamps.length > 1) {
-    // logGroups
-    firstLogInLogGroups.timestamps = firstLogInLogGroups.timestamps.slice(1)
-    firstLogInLogGroups.count -= 1
+//   // remove from logGroups
+//   if (firstLogInLogGroups.timestamps.length > 1) {
+//     // logGroups
+//     firstLogInLogGroups.timestamps = firstLogInLogGroups.timestamps.slice(1)
+//     firstLogInLogGroups.count -= 1
 
-    // logTimeline
-    returnedState.logTimeline.forEach((identifier, ind) => {
-      if (
-        identifier.groupId === firstLogInLogTimeline.groupId &&
-        identifier.logInd === firstLogInLogTimeline.logInd
-      )
-        returnedState.logTimeline[ind].timestampInd -= 1
-    })
-    ////
-  } else {
-    // logGroups
-    if (
-      returnedState.logGroups[firstLogInLogTimeline.groupId].logs.length > 1
-    ) {
-      returnedState.logGroups[firstLogInLogTimeline.groupId].logs =
-        returnedState.logGroups[firstLogInLogTimeline.groupId].logs.slice(1)
-    } else {
-      returnedState.logGroups[firstLogInLogTimeline.groupId] = undefined
-      delete returnedState.logGroups[firstLogInLogTimeline.groupId]
-    }
+//     // logTimeline
+//     returnedState.logTimeline.forEach((identifier, ind) => {
+//       if (
+//         identifier.groupId === firstLogInLogTimeline.groupId &&
+//         identifier.logInd === firstLogInLogTimeline.logInd
+//       )
+//         returnedState.logTimeline[ind].timestampInd -= 1
+//     })
+//     ////
+//   } else {
+//     // logGroups
+//     if (
+//       returnedState.logGroups[firstLogInLogTimeline.groupId].logs.length > 1
+//     ) {
+//       returnedState.logGroups[firstLogInLogTimeline.groupId].logs =
+//         returnedState.logGroups[firstLogInLogTimeline.groupId].logs.slice(1)
+//     } else {
+//       returnedState.logGroups[firstLogInLogTimeline.groupId] = undefined
+//       delete returnedState.logGroups[firstLogInLogTimeline.groupId]
+//     }
 
-    // logTimeline
-    returnedState.logTimeline.forEach((log, ind) => {
-      if (log.groupId === firstLogInLogTimeline.groupId) {
-        returnedState.logTimeline[ind].logInd -= 1
-      }
-    })
-  }
+//     // logTimeline
+//     returnedState.logTimeline.forEach((log, ind) => {
+//       if (log.groupId === firstLogInLogTimeline.groupId) {
+//         returnedState.logTimeline[ind].logInd -= 1
+//       }
+//     })
+//   }
 
-  return returnedState
-}
+//   return returnedState
+// }
 
 const _updateRegistries = (logHost, returnedState) => {
   const newRegistries = preprocessASTsToGetRegistries(
