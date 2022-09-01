@@ -19,6 +19,7 @@ export interface GlobalSettings {
   useSourceMaps: boolean | undefined
   directionDown: boolean | undefined
   defaultOrganization: string | undefined
+  logHistoryLength: number | undefined
   vsLogPort: number | undefined
 }
 
@@ -29,6 +30,7 @@ const defaultGlobalSettings: GlobalSettings = {
   useSourceMaps: true,
   directionDown: true,
   defaultOrganization: _Time,
+  logHistoryLength: 50,
   vsLogPort: 2022,
 }
 

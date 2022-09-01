@@ -329,10 +329,13 @@ export const addLog = (
             ],
           }
 
-          // ! update ast registries
-          _updateRegistries(logHost, returnedState)
+          // remove the old ones if logTimeline length is greater than logHistory
+          const r = removeFirstLog(returnedState)
 
-          return returnedState
+          // ! update ast registries
+          _updateRegistries(logHost, r)
+
+          return r
         }
       }
 
@@ -354,18 +357,59 @@ export const addLog = (
           {
             timestamp: timestamp,
             groupId: groupId,
-            logInd: logs.length,
+            logInd: logs.length, // an extra one
             timestampInd: 0,
           },
         ],
       }
 
-      // ! update ast registries
-      _updateRegistries(logHost, returnedState)
+      const r = removeFirstLog(returnedState)
 
-      return returnedState
+      // ! update ast registries
+      _updateRegistries(logHost, r)
+
+      return r
     })
   })
+}
+
+// TODO optimize and test more
+const removeFirstLog = returnedState => {
+  if (returnedState.logTimeline.length <= g.logHistoryLength)
+    return returnedState
+
+  const firstLogInLogTimeline = returnedState.logTimeline[0]
+
+  const firstLogInLogGroups =
+    returnedState.logGroups[firstLogInLogTimeline.groupId].logs[
+      firstLogInLogTimeline.logInd
+    ]
+
+  // remove from logTimeline
+  returnedState.logTimeline = returnedState.logTimeline.slice(1)
+
+  // remove from logGroups
+  if (firstLogInLogGroups.timestamps.length > 1) {
+    firstLogInLogGroups.timestamps = firstLogInLogGroups.timestamps.slice(1)
+    firstLogInLogGroups.count -= 1
+
+    returnedState.logTimeline.map(log => {
+      if (
+        log.groupId === firstLogInLogTimeline.groupId &&
+        log.logInd === firstLogInLogTimeline.logInd
+      )
+        log.timestampInd -= 1
+    })
+  } else if (firstLogInLogGroups.timestamps.length === 1) {
+    returnedState.logGroups[firstLogInLogTimeline.groupId].logs =
+      returnedState.logGroups[firstLogInLogTimeline.groupId].logs.slice(1)
+
+    returnedState.logTimeline.map(log => {
+      if (log.groupId === firstLogInLogTimeline.groupId) log.logInd -= 1
+    })
+  }
+
+  return returnedState
 }
 
 const _updateRegistries = (logHost, returnedState) => {

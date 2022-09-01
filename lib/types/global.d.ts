@@ -3,6 +3,7 @@ export interface GlobalSettings {
     useSourceMaps: boolean | undefined;
     directionDown: boolean | undefined;
     defaultOrganization: string | undefined;
+    logHistoryLength: number | undefined;
     vsLogPort: number | undefined;
 }
 export declare const g: GlobalSettings;
