@@ -134,6 +134,7 @@ export const addLog = (
       groupId = `${groupId}${groupElementId}`
 
       // ! color from location in CODE
+      window.console.log(`${parsedStack.file}?line=${parsedStack.line}`)
       const idFromLocation = uuidv5(
         // `${parsedStack.file}?line=${parsedStack.line}&char=${parsedStack.char}`,
         `${parsedStack.file}?line=${parsedStack.line}`,
