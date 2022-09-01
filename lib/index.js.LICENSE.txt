@@ -1,5 +1,5 @@
 /*!
- *   Log Right Here, Right Now! HyperLog v0.0.12-beta.2
+ *   Log Right Here, Right Now! HyperLog v0.0.12-beta.3
  *
  *   / a research project /
  *
