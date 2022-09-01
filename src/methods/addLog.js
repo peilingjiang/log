@@ -131,7 +131,8 @@ export const addLog = (
       // ! groupElementId
       const groupElementId = idFromString(stringifyDOMElement(element))
 
-      groupId = `${groupId}${groupElementId}`
+      // TODO
+      // if (!requests.id) groupId = `${groupId}${groupElementId}`
 
       // ! color from location in CODE
       window.console.log(`${parsedStack.file}?line=${parsedStack.line}`)
