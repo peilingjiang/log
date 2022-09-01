@@ -123,7 +123,7 @@ export const addLog = (
       }
 
       // ! groupId
-      const groupId =
+      let groupId =
         requests.id ||
         idFromString(
           `${parsedStack.file}:${parsedStack.line}:${parsedStack.char}`
@@ -131,9 +131,12 @@ export const addLog = (
       // ! groupElementId
       const groupElementId = idFromString(stringifyDOMElement(element))
 
+      groupId = `${groupId}${groupElementId}`
+
       // ! color from location in CODE
       const idFromLocation = uuidv5(
-        `${parsedStack.file}?line=${parsedStack.line}&char=${parsedStack.char}`,
+        // `${parsedStack.file}?line=${parsedStack.line}&char=${parsedStack.char}`,
+        `${parsedStack.file}?line=${parsedStack.line}`,
         uuidv5.URL
       )
       let hereThereColor = tinycolor(idFromLocation.slice(0, 6))

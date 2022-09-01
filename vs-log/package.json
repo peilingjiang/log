@@ -3,7 +3,7 @@
   "displayName": "VS Log",
   "icon": "vs-log-icon.png",
   "description": "VS Code extension for a novel logging framework.",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "engines": {
     "vscode": "^1.70.0"
   },

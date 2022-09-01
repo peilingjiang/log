@@ -16,7 +16,8 @@ export const getDecoration = (
 ) => {
   // ! uuid from filename, lineNumber, charIndex
   const idFromLocation = uuid(
-    `${filename}?line=${lineNumber + 1}&char=${charIndex}`,
+    // `${filename}?line=${lineNumber + 1}&char=${charIndex}`,
+    `${filename}?line=${lineNumber + 1}`,
     uuid.URL
   )
   const hereThereColor = color
