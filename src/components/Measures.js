@@ -116,7 +116,7 @@ const MeasureLine = props => {
           ...textPositionOnAxis(textPosition),
         }}
       >
-        {pxWrap(value)}
+        {pxWrap(Math.round(value))}
       </div>
     </div>
   )
