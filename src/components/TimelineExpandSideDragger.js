@@ -32,8 +32,6 @@ export default class TimelineExpandSideDragger extends Component {
 
   handleMouseDown(e) {
     const that = this
-    const { expandLevels, timelineOffsetBudget, setTimelineOffsetBudget } =
-      this.props
 
     let clickTimeOut = false
     setTimeout(() => {
@@ -43,43 +41,43 @@ export default class TimelineExpandSideDragger extends Component {
     preventEventWrapper(e, () => {
       this.setState({ active: true })
 
-      const startPosition = {
-        x: e.clientX,
-        offset: timelineOffsetBudget,
-      }
+      // const startPosition = {
+      //   x: e.clientX,
+      //   offset: timelineOffsetBudget,
+      // }
 
-      const mouseMove = moveEvent => {
-        const delta = moveEvent.clientX - startPosition.x
-        let newOffset = constrain(
-          startPosition.offset - delta,
-          0,
-          getMaxExpandOffset(expandLevels)
-        )
+      // const mouseMove = moveEvent => {
+      //   const delta = moveEvent.clientX - startPosition.x
+      //   let newOffset = constrain(
+      //     startPosition.offset - delta,
+      //     0,
+      //     getMaxExpandOffset(expandLevels)
+      //   )
 
-        // ! snap
-        const { indentationPx, declarationPx } = timelineSideDragLevelWidth
+      //   // ! snap
+      //   const { indentationPx, declarationPx } = timelineSideDragLevelWidth
 
-        const possibleLevels = [0]
-        if (expandLevels.indentation) possibleLevels.push(indentationPx)
-        if (expandLevels.declarations)
-          possibleLevels.push(indentationPx + declarationPx)
+      //   const possibleLevels = [0]
+      //   if (expandLevels.indentation) possibleLevels.push(indentationPx)
+      //   if (expandLevels.declarations)
+      //     possibleLevels.push(indentationPx + declarationPx)
 
-        for (let snappingOffset of possibleLevels) {
-          if (
-            Math.abs(newOffset - snappingOffset) <
-            timelineSideDraggerSnapThresholdPx
-          ) {
-            newOffset = snappingOffset
-            break
-          }
-        }
+      //   for (let snappingOffset of possibleLevels) {
+      //     if (
+      //       Math.abs(newOffset - snappingOffset) <
+      //       timelineSideDraggerSnapThresholdPx
+      //     ) {
+      //       newOffset = snappingOffset
+      //       break
+      //     }
+      //   }
 
-        setTimelineOffsetBudget(newOffset)
-      }
+      //   setTimelineOffsetBudget(newOffset)
+      // }
 
-      document.addEventListener('mousemove', mouseMove)
+      // document.addEventListener('mousemove', mouseMove)
       document.addEventListener('mouseup', function _() {
-        document.removeEventListener('mousemove', mouseMove)
+        // document.removeEventListener('mousemove', mouseMove)
         document.removeEventListener('mouseup', _)
 
         if (!clickTimeOut) {
@@ -91,44 +89,54 @@ export default class TimelineExpandSideDragger extends Component {
     })
   }
 
+  getTargetBudget() {
+    const { expandLevels, timelineOffsetBudget } = this.props
+
+    let targetBudget
+    const { indentationPx, declarationPx } = timelineSideDragLevelWidth
+
+    const budgetCutoffs = [0]
+    if (expandLevels.indentation) budgetCutoffs.push(indentationPx)
+    if (expandLevels.declarations)
+      budgetCutoffs.push(indentationPx + declarationPx)
+
+    for (const c of budgetCutoffs)
+      if (c > timelineOffsetBudget) {
+        targetBudget = c
+        break
+      }
+
+    if (targetBudget === undefined) targetBudget = 0
+
+    return targetBudget
+  }
+
   handleClick(e) {
-    const { expandLevels, timelineOffsetBudget, setTimelineOffsetBudget } =
-      this.props
+    const { setTimelineOffsetBudget } = this.props
 
     preventEventWrapper(e, () => {
       // this.setState({ active: true })
 
-      let targetBudget
-      const { indentationPx, declarationPx } = timelineSideDragLevelWidth
+      const targetBudget = this.getTargetBudget()
 
-      const budgetCutoffs = [0]
-      if (expandLevels.indentation) budgetCutoffs.push(indentationPx)
-      if (expandLevels.declarations)
-        budgetCutoffs.push(indentationPx + declarationPx)
+      // let newOffset = timelineOffsetBudget
+      setTimelineOffsetBudget(targetBudget)
+      // const autoMoveInterval = setInterval(() => {
+      //   newOffset = newOffset + 0.3 * (targetBudget - newOffset)
 
-      for (const c of budgetCutoffs)
-        if (c > timelineOffsetBudget) {
-          targetBudget = c
-          break
-        }
-
-      if (targetBudget === undefined) targetBudget = 0
-
-      let newOffset = timelineOffsetBudget
-      const autoMoveInterval = setInterval(() => {
-        newOffset = newOffset + 0.3 * (targetBudget - newOffset)
-
-        if (Math.abs(newOffset - targetBudget) < 2) {
-          clearInterval(autoMoveInterval)
-          setTimelineOffsetBudget(targetBudget)
-        } else {
-          setTimelineOffsetBudget(newOffset)
-        }
-      }, 15)
+      //   if (Math.abs(newOffset - targetBudget) < 2) {
+      //     clearInterval(autoMoveInterval)
+      //     setTimelineOffsetBudget(targetBudget)
+      //   } else {
+      //     setTimelineOffsetBudget(newOffset)
+      //   }
+      // }, 15)
     })
   }
 
   render() {
+    const targetBudget = this.getTargetBudget()
+
     return (
       <div
         className={`timeline-side-dragger animation-width-expand${
@@ -137,7 +145,7 @@ export default class TimelineExpandSideDragger extends Component {
         onMouseDown={this.handleMouseDown}
         // onClick={this.handleClick}
       >
-        <ThisWay />
+        <ThisWay className={targetBudget === 0 ? 'this-way-back' : ''} />
       </div>
     )
   }

@@ -35,6 +35,11 @@
       pointer-events: none;
       font-size: $font-size-default;
       margin: 0;
+      transition: transform $transition-normal ease-in-out;
+
+      &.this-way-back {
+        transform: rotate(180deg);
+      }
     }
   }
 }

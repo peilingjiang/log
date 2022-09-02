@@ -569,7 +569,7 @@ const TimelineLogItemsMemo = ({
     /* -------------------------------------------------------------------------- */
 
     return (
-      <Fragment key={`timeline-${ind}`}>
+      <Fragment key={`timeline-${ind + startingAt}`}>
         {firstOfTheIdentifier && (
           <div
             key={`header-${ind}-time`}
@@ -687,15 +687,16 @@ const AlignmentBoxes = ({ indentationOffsets, declarationOffsets, budget }) => {
       const offset =
         indentationOffsets[groupId] +
         (declarationOffsets[groupId] ? declarationOffsets[groupId] : 0)
+      const hidden = constrain(budget / indentationPx, 0, 1) === 0
 
       return (
         <div
           key={`indentation-${ind}`}
-          className="timeline-alignment-box indentation-box"
+          className={`timeline-alignment-box indentation-box${
+            hidden ? ' hidden-alignment-box' : ''
+          }`}
           style={{
-            // top: pxWrap(scrollTop),
             left: pxWrap(offset),
-            opacity: constrain(budget / indentationPx, 0, 1),
           }}
         ></div>
       )
@@ -704,14 +705,16 @@ const AlignmentBoxes = ({ indentationOffsets, declarationOffsets, budget }) => {
 
   const declarationBoxes = [...new Set(Object.values(declarationOffsets))].map(
     (offset, ind) => {
+      const hidden =
+        constrain((budget - indentationPx) / declarationPx, 0, 1) === 0
       return (
         <div
           key={`declaration-${ind}`}
-          className="timeline-alignment-box declaration-box"
+          className={`timeline-alignment-box declaration-box${
+            hidden ? ' hidden-alignment-box' : ''
+          }`}
           style={{
-            // top: pxWrap(scrollTop),
             left: pxWrap(offset),
-            opacity: constrain((budget - indentationPx) / declarationPx, 0, 1),
           }}
         ></div>
       )

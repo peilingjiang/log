@@ -1,3 +1,5 @@
+$expand-transition-time: $transition-normal;
+
 .hyper-log-timeline {
   position: fixed;
 
@@ -136,7 +138,8 @@
 
     @include scrollbar($scrollbar-width-large, $white, $grey, $dark-grey);
     &::-webkit-scrollbar {
-      height: $scrollbar-width-large;
+      // height: $scrollbar-width-large;
+      height: 0;
     }
 
     .timeline-background-alignment {
@@ -169,7 +172,7 @@
   .timeline-stream-item-wrappers-header {
     cursor: pointer;
     transition: background-color $transition-normal ease-in-out,
-      border $transition-fast ease-in-out;
+      border $expand-transition-time ease-in-out;
 
     &.filtered-out-group-header {
       // background: $dark-grey;
@@ -203,7 +206,7 @@
     transform-origin: center;
     transition: max-height $transition-normal
         cubic-bezier(0.645, 0.045, 0.355, 1),
-      border $transition-fast ease-in-out;
+      border $expand-transition-time ease-in-out;
     overflow: hidden;
 
     .hyper-log-stream-in-time {
@@ -244,8 +247,12 @@
     height: 100%;
     z-index: -1;
 
-    transition: left $transition-fast ease-in-out,
-      opacity $transition-fast ease-in-out;
+    // transition: left $transition-normal ease-in-out, opacity $transition-normal !important;
+    transition: left $expand-transition-time ease-in-out;
+
+    &.hidden-alignment-box {
+      opacity: 0;
+    }
 
     &.indentation-box {
       border-left: $padding-xxs solid $light;

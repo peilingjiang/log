@@ -10,6 +10,7 @@ export default class TimelineExpandSideDragger extends React.Component<any, any,
     };
     handleMouseDown(e: any): void;
     handleClick(e: any): void;
+    getTargetBudget(): number;
     render(): JSX.Element;
 }
 import React from "react";

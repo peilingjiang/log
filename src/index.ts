@@ -57,7 +57,7 @@ function setLog(options: GlobalSettings): void {
 /* -------------------------------------------------------------------------- */
 
 window.console.log(
-  '%cLog Right Here, Right Now! [HyperLog]\nTime to turn off the console : )',
+  '%c[Log-it] Log Right Here, Right Now!\nTime to turn off the console : )',
   'background: #ff42a1; font-weight: bold; color: #fff; padding: 1rem;'
 )
 
