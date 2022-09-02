@@ -30,7 +30,7 @@ const defaultGlobalSettings: GlobalSettings = {
   useSourceMaps: true,
   directionDown: true,
   defaultOrganization: _Time,
-  logHistoryLength: 50,
+  logHistoryLength: 100,
   vsLogPort: 2022,
 }
 

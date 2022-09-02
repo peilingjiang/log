@@ -18,11 +18,11 @@ const ObjectKeyMemo = ({
   const thisKey = `${inheritId}-${value}[obj*key]`
 
   const handleClick = e => {
-    preventEventWrapper(e, () => {
-      if (!choosing) {
+    if (!choosing) {
+      preventEventWrapper(e, () => {
         setCenterStagedId(groupId, thisKey)
-      }
-    })
+      })
+    }
   }
 
   return (

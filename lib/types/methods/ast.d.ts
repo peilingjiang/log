@@ -1,5 +1,5 @@
-export function preprocessASTsToGetRegistries(logGroups: any, logTimeline: any, newASTs: any, prevRegistries: any): {};
-export function matchWebPathAndFilePath(webPath: any, filePath: any): boolean | undefined;
+export function preprocessASTsToGetRegistries(logGroups: any, logTimeline: any, newASTs: any, prevRegistries: any, removeOld?: boolean): {};
+export function matchWebPathAndFilePath(webPath: any, filePath: any): boolean;
 export function sumRegistries(registries: any): {};
 export function getExpandLevels(files: any): {
     indentation: boolean;

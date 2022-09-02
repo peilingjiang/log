@@ -302,30 +302,32 @@ export const addLog = (
             }
           )
         ) {
+          const updatedGroup = {
+            ...newState.logGroups[groupId],
+            logs: [
+              ...deepCopyArrayOfLogs(logs).slice(0, logs.length - 1),
+              {
+                ...lastLog,
+                timestamps: [...lastLog.timestamps, timestamp],
+                count: lastLog.count + 1,
+              },
+            ],
+          }
+          const newIdentifier = {
+            timestamp: timestamp,
+            groupId: groupId,
+            logInd: logs.length - 1,
+            timestampInd: lastLog.timestamps.length,
+          }
           const returnedState = {
             ...newState,
             logGroups: {
               ...cloneLogGroups(newState.logGroups),
-              [groupId]: {
-                ...newState.logGroups[groupId],
-                logs: [
-                  ...deepCopyArrayOfLogs(logs).slice(0, logs.length - 1),
-                  {
-                    ...lastLog,
-                    timestamps: [...lastLog.timestamps, timestamp],
-                    count: lastLog.count + 1,
-                  },
-                ],
-              },
+              [groupId]: updatedGroup,
             },
             logTimeline: [
               ...cloneLogTimeline(prevState.logTimeline),
-              {
-                timestamp: timestamp,
-                groupId: groupId,
-                logInd: logs.length - 1,
-                timestampInd: lastLog.timestamps.length,
-              },
+              newIdentifier,
             ],
           }
 
@@ -333,7 +335,7 @@ export const addLog = (
           // const r = removeFirstLog(returnedState)
 
           // ! update ast registries
-          _updateRegistries(logHost, returnedState)
+          _updateRegistries(logHost, returnedState, newIdentifier)
 
           return returnedState
         }
@@ -342,31 +344,32 @@ export const addLog = (
       /* -------------------------------------------------------------------------- */
       // ! actually add a log here
       /* -------------------------------------------------------------------------- */
-
+      const newGroup = {
+        ...newState.logGroups[groupId],
+        logs: [...deepCopyArrayOfLogs(logs), aFreshNewLog],
+      }
+      const newIdentifier = {
+        timestamp: timestamp,
+        groupId: groupId,
+        logInd: logs.length, // an extra one
+        timestampInd: 0,
+      }
       const returnedState = {
         ...newState,
         logGroups: {
           ...cloneLogGroups(newState.logGroups),
-          [groupId]: {
-            ...newState.logGroups[groupId],
-            logs: [...deepCopyArrayOfLogs(logs), aFreshNewLog],
-          },
+          [groupId]: newGroup,
         },
         logTimeline: [
           ...cloneLogTimeline(prevState.logTimeline),
-          {
-            timestamp: timestamp,
-            groupId: groupId,
-            logInd: logs.length, // an extra one
-            timestampInd: 0,
-          },
+          newIdentifier,
         ],
       }
 
       // const r = removeFirstLog(returnedState)
 
       // ! update ast registries
-      _updateRegistries(logHost, returnedState)
+      _updateRegistries(logHost, returnedState, newIdentifier)
 
       return returnedState
     })
@@ -424,12 +427,13 @@ export const addLog = (
 //   return returnedState
 // }
 
-const _updateRegistries = (logHost, returnedState) => {
+const _updateRegistries = (logHost, returnedState, newIdentifier) => {
   const newRegistries = preprocessASTsToGetRegistries(
     returnedState.logGroups,
-    returnedState.logTimeline,
+    [newIdentifier],
     returnedState.asts,
-    returnedState.registries
+    returnedState.registries,
+    false
   )
   if (
     Object.keys(newRegistries).length > 0 &&

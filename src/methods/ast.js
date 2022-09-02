@@ -15,7 +15,8 @@ export const preprocessASTsToGetRegistries = (
   logGroups,
   logTimeline,
   newASTs,
-  prevRegistries
+  prevRegistries,
+  removeOld = true
 ) => {
   /**
    * registry
@@ -38,7 +39,10 @@ export const preprocessASTsToGetRegistries = (
   const newFilePaths = Object.keys(newASTs)
   for (const registryGroupIdExtended in prevRegistries) {
     if (
-      !newFilePaths.includes(prevRegistries[registryGroupIdExtended].filePath)
+      !newFilePaths.includes(
+        prevRegistries[registryGroupIdExtended].filePath
+      ) ||
+      !removeOld
     ) {
       newRegistries[registryGroupIdExtended] = {
         ...prevRegistries[registryGroupIdExtended],
@@ -49,58 +53,56 @@ export const preprocessASTsToGetRegistries = (
   // register new registries
   for (const logIdentifier of logTimeline) {
     const logGroupId = logIdentifier.groupId
+    const repLog = logGroups[logGroupId].logs[logIdentifier.logInd]
 
     // if (!(logIdentifier in logGroups)) continue
 
-    logGroups[logGroupId].logs.map(repLog => {
-      const logLine = repLog.stack.line
-      const logChar = repLog.stack.char
+    const logLine = repLog.stack.line
+    const logChar = repLog.stack.char
 
-      const identifier = getIdentifier(repLog.stack.path, logLine, logChar)
-      const logGroupIdExtended = `${logGroupId}${groupIdExtendingConnector}${identifier}`
+    const identifier = getIdentifier(repLog.stack.path, logLine, logChar)
+    const logGroupIdExtended = `${logGroupId}${groupIdExtendingConnector}${identifier}`
 
-      if (!(logGroupIdExtended in newRegistries)) {
-        for (const astFilePath in newASTs) {
-          if (matchWebPathAndFilePath(repLog.stack.path, astFilePath)) {
-            const rawCodeFile = newASTs[astFilePath].text
-            const astTree = newASTs[astFilePath].result.program.body
+    // if (!(logGroupIdExtended in newRegistries))
+    for (const astFilePath in newASTs) {
+      if (matchWebPathAndFilePath(repLog.stack.path, astFilePath)) {
+        const rawCodeFile = newASTs[astFilePath].text
+        const astTree = newASTs[astFilePath].result.program.body
 
-            let depthStack, rawCodeObject
-            try {
-              // eslint-disable-next-line no-extra-semi
-              const astParseResult = parseAST(astTree, logLine, logChar)
-              if (astParseResult) {
-                depthStack = astParseResult[0]
-                rawCodeObject = astParseResult[1]
-                rawCodeObject.rawCodeContent = getRawLogContent(
-                  rawCodeFile,
-                  rawCodeObject
-                )
-              }
-            } catch (e) {
-              window.console.error(e)
-            }
-
-            depthStack = depthStack || ['Unknown']
-            rawCodeObject = rawCodeObject || {
-              rawCodeContent: '',
-            }
-
-            newRegistries[logGroupIdExtended] = {
-              identifier: identifier,
-              rawCodeObject,
-              filePath: astFilePath,
-              stackPath: repLog.stack.path,
-              stackFile: repLog.stack.file,
-              stackLine: repLog.stack.line,
-              stackChar: repLog.stack.char,
-              depth: depthStack.length,
-              depthStack: depthStack,
-            }
+        let depthStack, rawCodeObject
+        try {
+          // eslint-disable-next-line no-extra-semi
+          const astParseResult = parseAST(astTree, logLine, logChar)
+          if (astParseResult) {
+            depthStack = astParseResult[0]
+            rawCodeObject = astParseResult[1]
+            rawCodeObject.rawCodeContent = getRawLogContent(
+              rawCodeFile,
+              rawCodeObject
+            )
           }
+        } catch (e) {
+          window.console.error(e)
+        }
+
+        depthStack = depthStack || ['Unknown']
+        rawCodeObject = rawCodeObject || {
+          rawCodeContent: '',
+        }
+
+        newRegistries[logGroupIdExtended] = {
+          identifier: identifier,
+          rawCodeObject,
+          filePath: astFilePath,
+          stackPath: repLog.stack.path,
+          stackFile: repLog.stack.file,
+          stackLine: repLog.stack.line,
+          stackChar: repLog.stack.char,
+          depth: depthStack.length,
+          depthStack: depthStack,
         }
       }
-    })
+    }
   }
 
   return newRegistries
@@ -162,7 +164,7 @@ const parseASTPart = (bodyArray, targetLine, targetChar, prevDepthStack) => {
 /* -------------------------------------------------------------------------- */
 
 export const matchWebPathAndFilePath = (webPath, filePath) => {
-  if (!assertString(webPath) || !assertString(filePath)) return
+  // if (!assertString(webPath) || !assertString(filePath)) return
 
   // TODO is this robust enough?
   const webPathParts = webPath.includes('//')

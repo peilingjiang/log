@@ -162,7 +162,7 @@ export const registryInterface: PropTypes.Requireable<Required<PropTypes.InferPr
     depthStack: PropTypes.Validator<(string | null | undefined)[]>;
 }>>>;
 export const stackActualCallerDepth: 1;
-export const stackFilePathCompareDepth: 3;
+export const stackFilePathCompareDepth: 2;
 export const positionFindingWorstAllowed: 5;
 export const switchPositionRegistrationDifferenceThresholdPx2: 10000;
 export const minimalStringShowLength: 7;

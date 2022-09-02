@@ -9,7 +9,7 @@ const Shortcuts = ({ show }) => {
     },
     {
       key: 'C',
-      description: 'hide',
+      description: 'hide / show',
     },
     {
       key: 'X',
@@ -17,7 +17,7 @@ const Shortcuts = ({ show }) => {
     },
     {
       key: 'M',
-      description: 'delete all',
+      description: 'remove all',
     },
   ]
   return (

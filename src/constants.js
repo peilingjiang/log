@@ -170,7 +170,7 @@ export const registryInterface = PropTypes.exact({
 export const stackActualCallerDepth = 1
 // when comparing two paths, from web and file system,
 // we only care about the last part of the path
-export const stackFilePathCompareDepth = 3
+export const stackFilePathCompareDepth = 2
 
 // out of 8 possible positions around the anchor element, we only allow the first N best ones
 export const positionFindingWorstAllowed = 5

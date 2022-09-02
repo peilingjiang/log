@@ -41,15 +41,15 @@
 
   .shortcut-key {
     @include font-fixed;
-    font-size: 2rem;
+    font-size: $font-size-x-large;
 
-    border: 1px solid $white;
-    padding: $padding-small $padding-large;
+    border: 1px solid rgba($white, $opacity-mid);
+    padding: $padding-small $padding-mid;
     border-radius: $radius-large;
   }
 
   .shortcut-description {
     font-size: $font-size-large;
-    font-weight: $font-weight-thin;
+    font-weight: $font-weight-default;
   }
 }
