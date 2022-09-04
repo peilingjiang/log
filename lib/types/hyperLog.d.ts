@@ -8,7 +8,6 @@ interface RequestOptions {
     history: number | undefined;
     snap: SnapOptions | undefined;
     format: string | undefined;
-    stackFrame: StackFrame | undefined;
 }
 interface SnapOptions {
     snap: boolean | undefined;
@@ -36,6 +35,5 @@ export declare class HyperLog {
     snap(options?: SnapOptions): this;
     snapTo(position?: 'x' | 'y' | 'top' | 'left' | 'right' | 'bottom', element?: HTMLElement | string | undefined): this;
     shape(shape?: boolean): this;
-    stackFrame(frame: StackFrame): this;
 }
 export {};

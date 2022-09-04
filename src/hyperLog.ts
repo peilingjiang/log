@@ -10,7 +10,6 @@ interface RequestOptions {
   history: number | undefined
   snap: SnapOptions | undefined
   format: string | undefined
-  stackFrame: StackFrame | undefined
 }
 
 interface SnapOptions {
@@ -45,7 +44,6 @@ export class HyperLog {
       history: undefined,
       snap: undefined,
       format: undefined,
-      stackFrame: undefined,
     }
 
     // call addLog
@@ -190,11 +188,6 @@ export class HyperLog {
 
   shape(shape: boolean = true) {
     this.requests.format = shape ? 'shape' : 'text'
-    return this
-  }
-
-  stackFrame(frame: StackFrame) {
-    this.requests.stackFrame = frame
     return this
   }
 
