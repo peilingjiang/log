@@ -196,48 +196,33 @@ export default class LogStreamMenu extends Component {
     //   )
     // }
 
-    if (allowingCenterStaged) {
-      specialItems.push(
-        <p
-          key={'menu-center-staged'}
-          className={`stream-menu-item special-menu-item${
-            choosingCenterStaged ? ' menu-choosing-item' : ''
-          }${centerStagedId.length ? ' menu-already-center-staged' : ''}`}
-          onClick={() => {
-            if (choosingCenterStaged) {
-              setCenterStagedId(groupId, '')
-              // no need to toggle, set choosing to false when update id
-              // toggleChoosingCenterStaged()
-            } else {
-              toggleChoosingCenterStaged()
-            }
-          }}
-          title={
-            choosingCenterStaged
-              ? 'dismantle the center stage'
-              : 'center stage a component'
-          }
-        >
-          <CenterStage />
-          <span>{choosingCenterStaged ? 'un-stage' : 'stage'}</span>
-        </p>
-      )
-      // if (centerStagedId.length) {
-      //   // already has a center staged id
-      //   specialItems.push(
-      //     <p
-      //       key={'menu-un-center-staged'}
-      //       className={`stream-menu-item special-menu-item menu-un-center-staged-item`}
-      //       onClick={() => {
-      //         setCenterStagedId(groupId, '')
-      //       }}
-      //       title="dismantle the center stage"
-      //     >
-      //       <CenterStage />
-      //     </p>
-      //   )
-      // } else {}
-    }
+    // if (allowingCenterStaged) {
+    //   specialItems.push(
+    //     <p
+    //       key={'menu-center-staged'}
+    //       className={`stream-menu-item special-menu-item${
+    //         choosingCenterStaged ? ' menu-choosing-item' : ''
+    //       }${centerStagedId.length ? ' menu-already-center-staged' : ''}`}
+    //       onClick={() => {
+    //         if (choosingCenterStaged) {
+    //           setCenterStagedId(groupId, '')
+    //           // no need to toggle, set choosing to false when update id
+    //           // toggleChoosingCenterStaged()
+    //         } else {
+    //           toggleChoosingCenterStaged()
+    //         }
+    //       }}
+    //       title={
+    //         choosingCenterStaged
+    //           ? 'dismantle the center stage'
+    //           : 'center stage a component'
+    //       }
+    //     >
+    //       <CenterStage />
+    //       <span>{choosingCenterStaged ? 'un-stage' : 'stage'}</span>
+    //     </p>
+    //   )
+    // }
 
     return (
       <div

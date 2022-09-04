@@ -28,6 +28,7 @@ $expand-transition-time: $transition-normal;
     height: $padding-xx-large !important;
 
     user-select: none;
+    border: none !important;
 
     .pseudo-expander {
       flex-grow: 1;

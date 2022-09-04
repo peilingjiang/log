@@ -472,8 +472,8 @@ export default class LogStream extends Component {
       snapAnchorSide: _R,
       bounding: {
         ...(logGroup?.bounding || boundingDefault),
-        left: pxWrap(0),
-        top: pxWrap(0),
+        left: '0px',
+        top: '0px',
         horizontalAlign: _L,
         verticalAlign: _T,
       },
@@ -727,7 +727,7 @@ export default class LogStream extends Component {
         element,
         bounding,
         format,
-        // groupColor,
+        groupColor,
         paused,
         ////
         snap,
@@ -936,6 +936,7 @@ export default class LogStream extends Component {
         <LogStreamName
           name={name}
           level={level}
+          logGroupColor={groupColor}
           logGroupElement={element}
           logGroupId={groupId}
           logsCount={useTimeline ? 1 : logs.length}

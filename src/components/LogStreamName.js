@@ -20,6 +20,7 @@ export default class LogStreamName extends Component {
       name: PropTypes.string.isRequired,
       level: PropTypes.string.isRequired,
       ////
+      logGroupColor: PropTypes.string.isRequired,
       logGroupElement: PropTypes.instanceOf(HTMLElement),
       logGroupId: PropTypes.string.isRequired,
       ////
@@ -72,6 +73,7 @@ export default class LogStreamName extends Component {
     const {
       name,
       level,
+      logGroupColor,
       logGroupElement,
       logGroupId,
       logsCount,
@@ -96,6 +98,7 @@ export default class LogStreamName extends Component {
         style={{
           alignItems: alignment,
           writingMode: snap && orientation === _V ? 'vertical-lr' : undefined,
+          borderLeftColor: logGroupColor,
         }}
       >
         <div className="display-name">
@@ -105,7 +108,7 @@ export default class LogStreamName extends Component {
             snap={snap}
             startSnap={startSnap}
           />
-          <Move />{' '}
+          <Move />
           <span
             style={{
               textDecoration: paused ? 'line-through' : undefined,

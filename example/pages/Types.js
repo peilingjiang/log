@@ -43,14 +43,14 @@ export default class Types extends Component {
       }
     }
 
-    for (let i = 0; i < 20; i++)
-      log(Math.round(Math.random() * 200))
-        .e(document.getElementById('home-link'))
-        .warn()
-    for (let i = 0; i < 20; i++)
-      log(Math.round(Math.random() * 200))
-        .e(document.getElementById('home-link'))
-        .error()
+    // for (let i = 0; i < 20; i++)
+    //   log(Math.round(Math.random() * 200))
+    //     .e(document.getElementById('home-link'))
+    //     .warn()
+    log(Math.round(Math.random() * 200))
+      .e(document.getElementById('home-link'))
+      .error()
+    // for (let i = 0; i < 20; i++)
   }
 
   render() {
@@ -70,17 +70,17 @@ export default class Types extends Component {
 function testAnotherTopLevelDeclaration() {
   log("I'm from another top level declaration!")
 
-  for (let i = 0; i < 10; i++) {
-    setTimeout(() => {
-      log({
-        value: {
-          viewingDistanceCm: 500 * Math.random(),
-          nearPointCm: { x: Math.random(), y: Math.random() },
-          latencyMs: 100,
-        },
-        timestamp: performance.now(),
-        method: 'Random',
-      }).e(document.getElementById('home-link'))
-    }, Math.random() * 1000)
-  }
+  // for (let i = 0; i < 10; i++) {
+  //   setTimeout(() => {
+  //     log({
+  //       value: {
+  //         viewingDistanceCm: 500 * Math.random(),
+  //         nearPointCm: { x: Math.random(), y: Math.random() },
+  //         latencyMs: 100,
+  //       },
+  //       timestamp: performance.now(),
+  //       method: 'Random',
+  //     }).e(document.getElementById('home-link'))
+  //   }, Math.random() * 1000)
+  // }
 }

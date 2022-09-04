@@ -11,6 +11,10 @@
   backdrop-filter: blur($blur-xh);
   box-shadow: 0 1px 0 0 $white;
 
+  border-left-width: $padding-xxs;
+  border-left-style: solid;
+  box-sizing: border-box;
+
   width: 100%;
 
   color: $black;
@@ -21,7 +25,7 @@
   user-select: none;
 
   .display-name {
-    margin-right: $padding-xs;
+    margin: 0 $padding-xs;
 
     .log-total-counter {
       @include font-fixed;

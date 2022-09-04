@@ -2,6 +2,7 @@ export default class LogStreamName extends React.Component<any, any, any> {
     static get propTypes(): {
         name: PropTypes.Validator<string>;
         level: PropTypes.Validator<string>;
+        logGroupColor: PropTypes.Validator<string>;
         logGroupElement: PropTypes.Requireable<HTMLElement>;
         logGroupId: PropTypes.Validator<string>;
         logsCount: PropTypes.Validator<number>;
