@@ -4,5 +4,6 @@ import './rendering';
 import './css/main.scss';
 declare function log(...args: any[]): HyperLog;
 declare function setLog(options: GlobalSettings): void;
+declare function errorBoundary(func: () => void): void;
 export default log;
-export { setLog };
+export { setLog, errorBoundary };

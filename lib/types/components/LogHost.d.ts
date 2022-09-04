@@ -35,7 +35,7 @@ export default class LogHost extends React.Component<any, any, any> {
         handleFilterAreaChange: (newAreaData: any) => void;
     };
     loggedCounter: number;
-    stackParser: StackParser;
+    stackParser: import("../methods/stackParser.js").StackParser;
     componentDidMount(): void;
     componentDidUpdate(prevProps: any, prevState: any): void;
     componentWillUnmount(): void;
@@ -59,4 +59,3 @@ export default class LogHost extends React.Component<any, any, any> {
     render(): JSX.Element;
 }
 import React from "react";
-import { StackParser } from "../methods/stackParser.js";

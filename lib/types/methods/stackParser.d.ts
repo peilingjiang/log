@@ -16,3 +16,4 @@ export class StackParser {
         raw: any;
     };
 }
+export const globalStackParser: StackParser;

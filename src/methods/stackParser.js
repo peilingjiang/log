@@ -89,3 +89,5 @@ export class StackParser {
     return result
   }
 }
+
+export const globalStackParser = new StackParser()

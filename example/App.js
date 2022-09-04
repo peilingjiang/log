@@ -2,9 +2,10 @@ import React, { Component } from 'react'
 import { Link, Outlet } from 'react-router-dom'
 
 // ! load HyperLog
-import log, { setLog } from '../src/index.ts'
+import log, { setLog, errorBoundary } from '../src/index.ts'
 window.log = log
 window.setLog = setLog
+window.errorBoundary = errorBoundary
 
 import './css/App.scss'
 

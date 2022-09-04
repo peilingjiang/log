@@ -18,7 +18,7 @@ import { _Aug, _Time } from '../constants.js'
 import { g, socket } from '../global.ts'
 import { clearAllOutlines } from '../methods/attachElements.js'
 import { highlightElement } from '../methods/highlight.js'
-import { StackParser } from '../methods/stackParser.js'
+import { globalStackParser } from '../methods/stackParser.js'
 import { preprocessASTsToGetRegistries } from '../methods/ast.js'
 import { GraphicsHost } from './Graphics.js'
 import { pxWrap } from '../methods/findPosition.js'
@@ -83,7 +83,7 @@ export default class LogHost extends Component {
 
     this.loggedCounter = 0
 
-    this.stackParser = new StackParser()
+    this.stackParser = globalStackParser
 
     // register log functions
     // ! ADD LOG

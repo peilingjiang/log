@@ -1,3 +1,5 @@
+import StackTrace from 'stacktrace-js'
+
 import { HyperLog, Timestamp } from './hyperLog'
 import { logProcessor } from './logProcessor'
 import { GlobalSettings, g } from './global'
@@ -7,6 +9,7 @@ import { assertObject } from './methods/utils'
 import { localStorageKeys } from './constants'
 
 import './css/main.scss'
+import { globalStackParser } from './methods/stackParser'
 
 /* -------------------------------------------------------------------------- */
 
@@ -43,13 +46,19 @@ function setLog(options: GlobalSettings): void {
   localStorage.setItem(localStorageKeys.DEFAULT, JSON.stringify(options))
 }
 
-// function errorBoundary(func: () => void): void {
-//   try {
-//     func()
-//   } catch (error) {
-//     window.log(error).error()
-//   }
-// }
+function errorBoundary(func: () => void): void {
+  try {
+    func()
+  } catch (error: any) {
+    globalStackParser.push(undefined, error, (processedStack: any) => {
+      log(`${error.message} (${processedStack.method})`)
+        .error()
+        .name(
+          `[error] ${processedStack.file}:${processedStack.line}:${processedStack.char}`
+        )
+    })
+  }
+}
 
 // ;(window as any).log = log
 // window.errorBoundary = errorBoundary
@@ -62,4 +71,4 @@ window.console.log(
 )
 
 export default log
-export { setLog }
+export { setLog, errorBoundary }
