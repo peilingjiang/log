@@ -34,7 +34,7 @@ export default class Button extends Component {
               text: e.target.value,
             })
 
-            // log(e.target.value).e(e.target).error()
+            // log(e.target.value).element(e.target).error()
             log(e)
           }}
         />
@@ -54,7 +54,7 @@ export default class Button extends Component {
                 //   .color('#c999ff')
 
                 ////
-                log(e).e(e.target).name('submit')
+                log(e).element(e.target).name('submit')
                 // .color('#c999ff')
                 // .id('buttons')
               }
@@ -74,7 +74,7 @@ export default class Button extends Component {
               },
               () => {
                 /////
-                log(e).name('clear').e(e.target).id('buttons')
+                log(e).name('clear').element(e.target).id('buttons')
                 ////
                 // log().el(e.target)
               }

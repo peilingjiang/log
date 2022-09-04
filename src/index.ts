@@ -56,7 +56,7 @@ function errorBoundary(func: () => void, element?: HTMLElement | string): void {
         .name(
           `[error] ${processedStack.file}:${processedStack.line}:${processedStack.char}`
         )
-        .e(element)
+        .element(element)
     })
   }
 }

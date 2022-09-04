@@ -63,7 +63,7 @@ export class HyperLog {
   }
 
   /* -------------------------------------------------------------------------- */
-  e(element: HTMLElement | string | undefined) {
+  element(element: HTMLElement | string | undefined) {
     if (!element) return this
 
     if (typeof element === 'string')
@@ -143,7 +143,7 @@ export class HyperLog {
   ) {
     // no element to snap to
     if (typeof element === 'undefined' && !this.requests.element) return this
-    else if (!this.requests.element) this.e(element!)
+    else if (!this.requests.element) this.element(element!)
     if (!this.requests.element) return this
 
     this.shape(true)

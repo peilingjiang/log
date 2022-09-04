@@ -45,10 +45,10 @@ export default class Types extends Component {
 
     // for (let i = 0; i < 20; i++)
     //   log(Math.round(Math.random() * 200))
-    //     .e(document.getElementById('home-link'))
+    //     .element(document.getElementById('home-link'))
     //     .warn()
     log(Math.round(Math.random() * 200))
-      .e(document.getElementById('home-link'))
+      .element(document.getElementById('home-link'))
       .error()
     // for (let i = 0; i < 20; i++)
   }
@@ -80,7 +80,7 @@ function testAnotherTopLevelDeclaration() {
   //       },
   //       timestamp: performance.now(),
   //       method: 'Random',
-  //     }).e(document.getElementById('home-link'))
+  //     }).element(document.getElementById('home-link'))
   //   }, Math.random() * 1000)
   // }
 }

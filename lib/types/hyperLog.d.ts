@@ -26,7 +26,7 @@ export declare class HyperLog {
     constructor(args: any[], timestamp: Timestamp, error: Error);
     warn(): this;
     error(): this;
-    e(element: HTMLElement | string | undefined): this;
+    element(element: HTMLElement | string | undefined): this;
     id(id: string): this;
     name(name?: string): this;
     color(color?: string): this;

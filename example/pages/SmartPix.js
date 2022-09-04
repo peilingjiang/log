@@ -52,7 +52,7 @@ export default class SmartPix extends Component {
         },
         () => {
           // log(this.state[`${targetName}X`])
-          //   .e(e.target)
+          //   .element(e.target)
           //   .id(targetName)
           //   .name('offsetX')
           //   .unit('px')

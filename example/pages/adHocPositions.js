@@ -41,9 +41,9 @@ export default class AdHocPositions extends Component {
           [`${targetName}Y`]: startPos.top + e.clientY - startPos.y,
         },
         () => {
-          // log(e.target.getBoundingClientRect()).e(e.target).id(targetName)
+          // log(e.target.getBoundingClientRect()).element(e.target).id(targetName)
           const rect = ref?.current.getBoundingClientRect()
-          log(rect).e(e.target).id(targetName)
+          log(rect).element(e.target).id(targetName)
         }
       )
     }
