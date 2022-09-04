@@ -46,7 +46,7 @@ function setLog(options: GlobalSettings): void {
   localStorage.setItem(localStorageKeys.DEFAULT, JSON.stringify(options))
 }
 
-function errorBoundary(func: () => void): void {
+function errorBoundary(func: () => void, element?: HTMLElement | string): void {
   try {
     func()
   } catch (error: any) {
@@ -56,6 +56,7 @@ function errorBoundary(func: () => void): void {
         .name(
           `[error] ${processedStack.file}:${processedStack.line}:${processedStack.char}`
         )
+        .e(element)
     })
   }
 }

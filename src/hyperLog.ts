@@ -63,7 +63,9 @@ export class HyperLog {
   }
 
   /* -------------------------------------------------------------------------- */
-  e(element: HTMLElement | string) {
+  e(element: HTMLElement | string | undefined) {
+    if (!element) return this
+
     if (typeof element === 'string')
       element = document.querySelector(element) as HTMLElement
 
