@@ -15,7 +15,7 @@ export default env => {
       ...config,
       entry: './src/index',
       mode: 'production',
-      output: { ...output, path: __dirname + '/lib' },
+      output: { ...output, path: __dirname + '/lib', clean: true },
       optimization: {
         minimize: true,
       },
