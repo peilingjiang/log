@@ -70,17 +70,17 @@ export default class Types extends Component {
 function testAnotherTopLevelDeclaration() {
   log("I'm from another top level declaration!")
 
-  // for (let i = 0; i < 10; i++) {
-  //   setTimeout(() => {
-  //     log({
-  //       value: {
-  //         viewingDistanceCm: 500 * Math.random(),
-  //         nearPointCm: { x: Math.random(), y: Math.random() },
-  //         latencyMs: 100,
-  //       },
-  //       timestamp: performance.now(),
-  //       method: 'Random',
-  //     }).element(document.getElementById('home-link'))
-  //   }, Math.random() * 1000)
-  // }
+  for (let i = 0; i < 10; i++) {
+    setTimeout(() => {
+      log({
+        value: {
+          viewingDistanceCm: 500 * Math.random(),
+          nearPointCm: { x: Math.random(), y: Math.random() },
+          latencyMs: 100,
+        },
+        timestamp: performance.now(),
+        method: 'Random',
+      }).element(document.getElementById('home-link'))
+    }, Math.random() * 1000)
+  }
 }

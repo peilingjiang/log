@@ -37,11 +37,11 @@ function log(...args: any[]): HyperLog {
 function setLog(options: GlobalSettings): void {
   if (!assertObject(options)) return
 
-  g.preserveConsole = g.preserveConsole || options.preserveConsole
-  g.useSourceMaps = g.useSourceMaps || options.useSourceMaps
-  g.directionDown = g.directionDown || options.directionDown
-  g.defaultOrganization = g.defaultOrganization || options.defaultOrganization
-  g.vsLogPort = g.vsLogPort || options.vsLogPort
+  g.preserveConsole = options.preserveConsole || g.useSourceMaps
+  g.useSourceMaps = options.useSourceMaps || g.useSourceMaps
+  g.directionDown = options.directionDown || g.directionDown
+  g.defaultOrganization = options.defaultOrganization || g.defaultOrganization
+  g.vsLogPort = options.vsLogPort || g.vsLogPort
 
   localStorage.setItem(localStorageKeys.DEFAULT, JSON.stringify(options))
 }

@@ -197,12 +197,13 @@ export const _DEF: "default";
 export const _ID_INT: "__id__interaction__";
 export namespace localStorageKeys {
     const DEFAULT: string;
+    const AREA: string;
 }
 export const validUnits: string[];
 export const extraKeys: string[];
 export const _Aug: "augmented";
 export const _Time: "timeline";
-export const pageElementsQuery: "body * :not(#root, .hyper-log-host, .hyper-log-streams-holder, .hyper-log-streams-holder *, #sudo-pointer-element, .leader-line, .leader-line *, .hyper-log-timeline, .hyper-log-timeline *, .hyper-selection-rect, .hyper-selection-rect *)";
+export const pageElementsQuery: "body * :not(#root, .hyper-log-host, .hyper-log-streams-holder, .hyper-log-streams-holder *, #sudo-pointer-element, .leader-line, .leader-line *, .hyper-log-timeline, .hyper-log-timeline *, .hyper-selection-rect, .hyper-selection-rect *, .hyper-shortcuts, .hyper-shortcuts *)";
 export const logStreamGapToAnchorPx: 10;
 export namespace _config {
     const logStreamHistoryRenderDepth: number;

@@ -118,7 +118,10 @@ const SelectionDot = memo(SelectionDotMemo, isEqual)
 
 const AllWayMoveDot = ({ filterArea, handleTimelineSetArea }) => {
   const dotX = () =>
-    pxWrap(pxTrim(filterArea.left) + 2 * timelineSelectionAreaOffsetButterPx)
+    // TODO make robust
+    pxWrap(
+      pxTrim(filterArea.left) + 2 * timelineSelectionAreaOffsetButterPx + 2 // plus 2 for the outline
+    )
 
   const handleDotDrag = e => {
     e.preventDefault()

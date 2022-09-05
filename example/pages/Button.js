@@ -15,12 +15,6 @@ export default class Button extends Component {
     this.submitRef = createRef()
   }
 
-  componentDidMount() {
-    setLog({
-      useSourceMaps: true,
-    })
-  }
-
   render() {
     return (
       <div className="button-example">

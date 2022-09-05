@@ -8,10 +8,9 @@ import {
   timelineWaitConnectionTimeout,
   _Time,
 } from './constants.js'
-import { assertObject } from './methods/utils.js'
 
 // eslint-disable-next-line no-undef
-// const development = process.env.NODE_ENV === 'development'
+export const development = process.env.NODE_ENV === 'development'
 
 export interface GlobalSettings {
   // access: boolean | undefined
@@ -79,7 +78,7 @@ export const socket = (io as any).connect(`http://${host}:${g.vsLogPort}/`, {
 // ? is it the best practice to open the socket here?
 socket.on('connect', () => {
   window.console.log(
-    '%cConnected to VS Log Server',
+    '%cConnected to VS Log',
     'color: #ff42a1; font-weight: bold'
   )
 

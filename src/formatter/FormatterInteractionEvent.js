@@ -35,9 +35,13 @@ const FormatterInteractionEvent = props => {
   }
 
   return (
-    <div className={`f-event`} data-key={`${inheritId}[event]`}>
+    <div
+      // key={`${inheritId}[event]`}
+      className={`f-event`}
+      data-key={`${inheritId}[event]`}
+    >
       <FormatterObject
-        key={`${inheritId}[obj]`}
+        // key={`${inheritId}[obj]`}
         obj={event}
         groupId={groupId}
         inheritId={inheritId}

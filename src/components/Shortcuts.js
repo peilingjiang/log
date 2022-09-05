@@ -1,8 +1,15 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import { g } from '../global.ts'
+import { _Aug, _Time } from '../constants.js'
+
 const Shortcuts = ({ show }) => {
   const shortcuts = [
+    {
+      key: 'X',
+      description: `${g.defaultOrganization === _Time ? _Aug : _Time} view`,
+    },
     {
       key: 'A',
       description: 'area filter',
@@ -10,10 +17,6 @@ const Shortcuts = ({ show }) => {
     {
       key: 'C',
       description: 'hide / show',
-    },
-    {
-      key: 'X',
-      description: 'change view',
     },
     {
       key: 'M',

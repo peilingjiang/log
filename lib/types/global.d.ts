@@ -1,3 +1,4 @@
+export declare const development: boolean;
 export interface GlobalSettings {
     preserveConsole: boolean | undefined;
     useSourceMaps: boolean | undefined;

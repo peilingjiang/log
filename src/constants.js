@@ -218,7 +218,8 @@ export const _ID_INT = '__id__interaction__'
 
 // localStorage keys
 export const localStorageKeys = {
-  DEFAULT: 'HYPER_LOG_DEFAULT',
+  DEFAULT: '_HYPER_LOG_DEFAULT_',
+  AREA: '_HYPER_LOG_AREA_',
 }
 
 export const validUnits = ['px', '%', 'em', 'rem', 'vh', 'vw', 'vmin', 'vmax']
@@ -229,7 +230,7 @@ export const _Aug = 'augmented'
 export const _Time = 'timeline'
 
 export const pageElementsQuery =
-  'body * :not(#root, .hyper-log-host, .hyper-log-streams-holder, .hyper-log-streams-holder *, #sudo-pointer-element, .leader-line, .leader-line *, .hyper-log-timeline, .hyper-log-timeline *, .hyper-selection-rect, .hyper-selection-rect *)'
+  'body * :not(#root, .hyper-log-host, .hyper-log-streams-holder, .hyper-log-streams-holder *, #sudo-pointer-element, .leader-line, .leader-line *, .hyper-log-timeline, .hyper-log-timeline *, .hyper-selection-rect, .hyper-selection-rect *, .hyper-shortcuts, .hyper-shortcuts *)'
 
 /* -------------------------------------------------------------------------- */
 

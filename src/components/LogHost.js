@@ -14,8 +14,8 @@ import {
   getFilteredOutElements,
   preventEventWrapper,
 } from '../methods/utils.js'
-import { _Aug, _Time } from '../constants.js'
-import { g, socket } from '../global.ts'
+import { localStorageKeys, _Aug, _Time } from '../constants.js'
+import { g, socket, development } from '../global.ts'
 import { clearAllOutlines } from '../methods/attachElements.js'
 import { highlightElement } from '../methods/highlight.js'
 import { globalStackParser } from '../methods/stackParser.js'
@@ -28,6 +28,12 @@ import Shortcuts from './Shortcuts.js'
 export default class LogHost extends Component {
   constructor(props) {
     super(props)
+
+    // ! recover filter from session storage
+    let recoveredFilterArea = sessionStorage.getItem(localStorageKeys.AREA)
+    if (recoveredFilterArea && recoveredFilterArea.length)
+      recoveredFilterArea = JSON.parse(recoveredFilterArea)
+    else recoveredFilterArea = undefined
 
     this.state = {
       logPaused: false,
@@ -44,13 +50,13 @@ export default class LogHost extends Component {
       // ! adjust for page elements
       clearance: false,
       ////
-      filterArea: {
+      filterArea: recoveredFilterArea || {
         left: pxWrap(window.innerWidth * 0.2),
         top: pxWrap(window.innerHeight * 0.2),
         right: pxWrap(window.innerWidth * (1 - 0.2)),
         bottom: pxWrap(window.innerHeight * (1 - 0.2)),
       }, // { left, top, right, bottom }
-      enableFilterArea: false,
+      enableFilterArea: recoveredFilterArea ? true : false,
       ////
       showShortcuts: false,
     }
@@ -101,7 +107,7 @@ export default class LogHost extends Component {
 
     // asts
     socket.on('ast', data => {
-      window.console.log('%cReceived AST', 'color: #ff42a1')
+      if (development) window.console.log('%cReceived AST', 'color: #ff42a1')
 
       this._updateRegistries(
         data,
@@ -204,10 +210,13 @@ export default class LogHost extends Component {
         preventEventWrapper(e, () => {
           // clear all element highlighting
           clearAllOutlines()
-
           this.changeOrganization(
             this.state.organization === _Aug ? _Time : _Aug
           )
+
+          this.setState({
+            clearance: false,
+          })
         })
       } else if (e.code === 'KeyA') {
         // ! area
@@ -383,17 +392,14 @@ export default class LogHost extends Component {
     // clear all element highlighting
     clearAllOutlines()
 
-    this.setState(
-      {
-        organization: newOrganization,
-        timelineHighlightedLogId: logId,
-      },
-      () => {
-        setLog({
-          defaultOrganization: newOrganization,
-        })
-      }
-    )
+    this.setState({
+      organization: newOrganization,
+      timelineHighlightedLogId: logId,
+    })
+
+    setLog({
+      defaultOrganization: newOrganization,
+    })
   }
 
   setTimelineLogOrderReversed(groupId, reversed) {
@@ -407,19 +413,34 @@ export default class LogHost extends Component {
   // ! area
 
   handleFilterArea() {
-    this.setState({
-      enableFilterArea: !this.state.enableFilterArea,
-    })
+    this.setState(
+      {
+        enableFilterArea: !this.state.enableFilterArea,
+      },
+      () => {
+        if (!this.state.enableFilterArea) {
+          sessionStorage.setItem(localStorageKeys.AREA, '')
+        }
+      }
+    )
   }
 
   // drag selection area dots around
   handleFilterAreaChange(newAreaData) {
-    this.setState({
-      filterArea: {
-        ...this.state.filterArea,
-        ...newAreaData,
+    this.setState(
+      {
+        filterArea: {
+          ...this.state.filterArea,
+          ...newAreaData,
+        },
       },
-    })
+      () => {
+        sessionStorage.setItem(
+          localStorageKeys.AREA,
+          JSON.stringify(this.state.filterArea)
+        )
+      }
+    )
   }
 
   /* -------------------------------------------------------------------------- */

@@ -25,9 +25,7 @@ import {
   cloneLogGroups,
   cloneLogTimeline,
   deepCopyArrayOfLogs,
-  diffObjects,
   getObjectIds,
-  getTimestamp,
   idFromString,
   stringifyDOMElement,
 } from './utils.js'

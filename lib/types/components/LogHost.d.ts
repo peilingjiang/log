@@ -9,7 +9,7 @@ export default class LogHost extends React.Component<any, any, any> {
         asts: {};
         registries: {};
         clearance: boolean;
-        filterArea: {
+        filterArea: string | {
             left: string;
             top: string;
             right: string;
