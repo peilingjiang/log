@@ -33,7 +33,7 @@
     "babel-loader": "^8.2.5",
     "css-loader": "^6.7.1",
     "eslint": "^8.23.0",
-    "eslint-plugin-react": "^7.31.4",
+    "eslint-plugin-react": "^7.31.6",
     "file-loader": "^6.2.0",
     "generator-code": "^1.6.14",
     "husky": "^8.0.1",
