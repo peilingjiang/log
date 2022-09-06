@@ -1,7 +1,7 @@
 import React, { Component, createRef } from 'react'
 import isEqual from 'react-fast-compare'
 
-import { setLog } from '../index.ts'
+import { configLog } from '../index.ts'
 import { HyperLog } from '../hyperLog.ts'
 import { logProcessor } from '../logProcessor.ts'
 
@@ -36,7 +36,7 @@ export default class LogHost extends Component {
 
     if (hasRecoveredDefaults) {
       recoveredDefaults = JSON.parse(recoveredDefaults)
-      setLog(recoveredDefaults, false)
+      configLog(recoveredDefaults, false)
       window.console.log(g)
     }
 
@@ -411,7 +411,7 @@ export default class LogHost extends Component {
       timelineHighlightedLogId: logId,
     })
 
-    setLog({
+    configLog({
       defaultOrganization: newOrganization,
     })
   }

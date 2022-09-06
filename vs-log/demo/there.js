@@ -1,7 +1,7 @@
 import React from 'react'
 
 export const There = () => {
-  setLog({
+  configLog({
     useSourceMaps: true,
   })
 

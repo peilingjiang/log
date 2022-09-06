@@ -14,7 +14,7 @@ module.exports = {
   },
   globals: {
     log: 'readonly',
-    setLog: 'readonly',
+    configLog: 'readonly',
     errorBoundary: 'readonly',
   },
   plugins: ['react'],

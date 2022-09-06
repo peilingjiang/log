@@ -34,14 +34,20 @@ function log(...args: any[]): HyperLog {
   return thisHyperLog
 }
 
-function setLog(options: GlobalSettings, save: boolean = true): void {
+function configLog(options: GlobalSettings, save: boolean = true): void {
   if (!assertObject(options)) return
+
+  window.console.log('before', options)
+  window.console.log(g)
 
   g.preserveConsole = options.preserveConsole || g.preserveConsole
   g.useSourceMaps = options.useSourceMaps || g.useSourceMaps
   g.directionDown = options.directionDown || g.directionDown
   g.defaultOrganization = options.defaultOrganization || g.defaultOrganization
   g.vsLogPort = options.vsLogPort || g.vsLogPort
+
+  window.console.log('after', options)
+  window.console.log(g)
 
   if (save) localStorage.setItem(localStorageKeys.DEFAULT, JSON.stringify(g))
 }
@@ -72,4 +78,4 @@ window.console.log(
 )
 
 export default log
-export { setLog, errorBoundary }
+export { configLog, errorBoundary }
