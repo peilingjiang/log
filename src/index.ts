@@ -34,7 +34,7 @@ function log(...args: any[]): HyperLog {
   return thisHyperLog
 }
 
-function setLog(options: GlobalSettings): void {
+function setLog(options: GlobalSettings, save: boolean = true): void {
   if (!assertObject(options)) return
 
   g.preserveConsole = options.preserveConsole || g.preserveConsole
@@ -43,7 +43,7 @@ function setLog(options: GlobalSettings): void {
   g.defaultOrganization = options.defaultOrganization || g.defaultOrganization
   g.vsLogPort = options.vsLogPort || g.vsLogPort
 
-  localStorage.setItem(localStorageKeys.DEFAULT, JSON.stringify(g))
+  if (save) localStorage.setItem(localStorageKeys.DEFAULT, JSON.stringify(g))
 }
 
 function errorBoundary(func: () => void, element?: HTMLElement | string): void {

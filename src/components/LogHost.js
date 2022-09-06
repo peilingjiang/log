@@ -35,7 +35,7 @@ export default class LogHost extends Component {
 
     if (hasRecoveredDefaults) {
       recoveredDefaults = JSON.parse(recoveredDefaults)
-      setLog(recoveredDefaults)
+      setLog(recoveredDefaults, false)
     }
 
     // ! recover filter from session storage

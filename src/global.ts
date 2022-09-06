@@ -33,24 +33,6 @@ const defaultGlobalSettings: GlobalSettings = {
 
 export const g: GlobalSettings = Object.seal(defaultGlobalSettings)
 
-// ! setLog
-// ;(() => {
-//   window.setLog = (options = {}) => {
-//     if (!assertObject(options)) return
-//     options = Object.assign(g, options)
-
-//     // g.access = options.access // ! to be REMOVED after review process
-//     g.preserveConsole = options.preserveConsole
-//     g.useSourceMaps = options.useSourceMaps
-//     g.directionDown = options.directionDown
-//     g.defaultOrganization = options.defaultOrganization
-//     g.vsLogPort = options.vsLogPort
-
-//     // save to localStorage
-//     localStorage.setItem(localStorageKeys.DEFAULT, JSON.stringify(options))
-//   }
-// })()
-
 /* -------------------------------------------------------------------------- */
 
 // export const globalAST = Object.seal({ current: {} })
