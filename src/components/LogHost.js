@@ -31,6 +31,7 @@ export default class LogHost extends Component {
 
     // ! recover defaults
     let recoveredDefaults = localStorage.getItem(localStorageKeys.DEFAULT)
+    window.console.log(recoveredDefaults)
     const hasRecoveredDefaults = recoveredDefaults && recoveredDefaults.length
 
     if (hasRecoveredDefaults) {
