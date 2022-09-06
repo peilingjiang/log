@@ -37,13 +37,13 @@ function log(...args: any[]): HyperLog {
 function setLog(options: GlobalSettings): void {
   if (!assertObject(options)) return
 
-  g.preserveConsole = options.preserveConsole || g.useSourceMaps
+  g.preserveConsole = options.preserveConsole || g.preserveConsole
   g.useSourceMaps = options.useSourceMaps || g.useSourceMaps
   g.directionDown = options.directionDown || g.directionDown
   g.defaultOrganization = options.defaultOrganization || g.defaultOrganization
   g.vsLogPort = options.vsLogPort || g.vsLogPort
 
-  localStorage.setItem(localStorageKeys.DEFAULT, JSON.stringify(options))
+  localStorage.setItem(localStorageKeys.DEFAULT, JSON.stringify(g))
 }
 
 function errorBoundary(func: () => void, element?: HTMLElement | string): void {

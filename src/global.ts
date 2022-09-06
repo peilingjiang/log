@@ -22,8 +22,6 @@ export interface GlobalSettings {
   vsLogPort: number | undefined
 }
 
-const defaultFromLocalStorage = localStorage.getItem(localStorageKeys.DEFAULT)
-
 const defaultGlobalSettings: GlobalSettings = {
   preserveConsole: false,
   useSourceMaps: true,
@@ -33,15 +31,7 @@ const defaultGlobalSettings: GlobalSettings = {
   vsLogPort: 2022,
 }
 
-export const g: GlobalSettings = Object.seal(
-  defaultFromLocalStorage
-    ? ({
-        ...defaultGlobalSettings,
-        ...JSON.parse(defaultFromLocalStorage),
-        // access: true, // ! to be ENABLE after review process
-      } as GlobalSettings)
-    : defaultGlobalSettings
-)
+export const g: GlobalSettings = Object.seal(defaultGlobalSettings)
 
 // ! setLog
 // ;(() => {

@@ -29,17 +29,29 @@ export default class LogHost extends Component {
   constructor(props) {
     super(props)
 
+    // ! recover defaults
+    let recoveredDefaults = localStorage.getItem(localStorageKeys.DEFAULT)
+    const hasRecoveredDefaults = recoveredDefaults && recoveredDefaults.length
+
+    if (hasRecoveredDefaults) {
+      recoveredDefaults = JSON.parse(recoveredDefaults)
+      setLog(recoveredDefaults)
+    }
+
     // ! recover filter from session storage
     let recoveredFilterArea = sessionStorage.getItem(localStorageKeys.AREA)
     if (recoveredFilterArea && recoveredFilterArea.length)
       recoveredFilterArea = JSON.parse(recoveredFilterArea)
     else recoveredFilterArea = undefined
 
+    // ! init state
     this.state = {
       logPaused: false,
       logGroups: {},
       logTimeline: [],
-      organization: g.defaultOrganization, // timeline, augmented, list?, grid?
+      organization: hasRecoveredDefaults
+        ? recoveredDefaults.defaultOrganization
+        : g.defaultOrganization, // timeline, augmented
       ////
       timelineHighlightedLogId: null,
       ////

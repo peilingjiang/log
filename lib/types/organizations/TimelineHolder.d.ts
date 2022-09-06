@@ -52,6 +52,7 @@ export default class TimelineHolder extends React.Component<any, any, any> {
     };
     addFilteredGroupId(groupId: any): void;
     removeFilteredGroupId(groupId: any): void;
+    getUnfilteredOutGroups(logGroups: any, filteredOutElements: any): any;
     render(): JSX.Element;
 }
 import React from "react";

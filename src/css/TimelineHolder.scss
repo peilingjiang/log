@@ -1,4 +1,5 @@
 $expand-transition-time: $transition-normal;
+$expand-transition-function: cubic-bezier(0.15, 0.75, 0.25, 1);
 
 .hyper-log-timeline {
   position: fixed;
@@ -173,7 +174,7 @@ $expand-transition-time: $transition-normal;
   .timeline-stream-item-wrappers-header {
     cursor: pointer;
     transition: background-color $transition-normal ease-in-out,
-      border $expand-transition-time ease-in-out;
+      border $expand-transition-time $expand-transition-function;
 
     &.filtered-out-group-header {
       // background: $dark-grey;
@@ -207,7 +208,7 @@ $expand-transition-time: $transition-normal;
     transform-origin: center;
     transition: max-height $transition-normal
         cubic-bezier(0.645, 0.045, 0.355, 1),
-      border $expand-transition-time ease-in-out;
+      border $expand-transition-time $expand-transition-function;
     overflow: hidden;
 
     .hyper-log-stream-in-time {
@@ -249,7 +250,7 @@ $expand-transition-time: $transition-normal;
     z-index: -1;
 
     // transition: left $transition-normal ease-in-out, opacity $transition-normal !important;
-    transition: left $expand-transition-time ease-in-out;
+    transition: left $expand-transition-time $expand-transition-function;
 
     &.hidden-alignment-box {
       opacity: 0;

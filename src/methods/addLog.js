@@ -105,6 +105,7 @@ export const addLog = (
   // HyperLog
   stackParser.push(args, error, parsedStack => {
     // add log to logHost
+    // flushSync(() => {
     logHost.setState(prevState => {
       // ! Access requests in setState only
       const newState = {
@@ -372,6 +373,7 @@ export const addLog = (
       return returnedState
     })
   })
+  // })
 }
 
 // TODO optimize and test more

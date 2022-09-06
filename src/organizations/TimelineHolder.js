@@ -27,7 +27,7 @@ import {
 } from '../constants.js'
 import { getLog } from '../methods/getLog.js'
 import { pxTrim, pxWrap } from '../methods/findPosition.js'
-import { socket } from '../global.ts'
+import { g, socket } from '../global.ts'
 import {
   getExpandLevels,
   getTimelineOffsets,
@@ -36,11 +36,6 @@ import {
 } from '../methods/ast.js'
 import TimelineExpandSideDragger from '../components/TimelineExpandSideDragger.js'
 import { darkLogColor, lightLogColor, logColor } from '../methods/levels.js'
-import {
-  CenterStageNav,
-  CenterStageNavItem,
-} from '../components/LogStreamName.js'
-import { g } from '../global.ts'
 
 export default class TimelineHolder extends Component {
   static get propTypes() {
@@ -232,6 +227,25 @@ export default class TimelineHolder extends Component {
 
   /* -------------------------------------------------------------------------- */
 
+  getUnfilteredOutGroups(logGroups, filteredOutElements) {
+    if (!filteredOutElements.length) return logGroups
+
+    const unfilteredOutGroups = {}
+
+    for (const [groupId, logGroup] of Object.entries(logGroups)) {
+      if (logGroup.element) {
+        let filteredOut = false
+
+        for (let el of filteredOutElements)
+          if (el.isSameNode(logGroup.element)) filteredOut = true
+
+        if (!filteredOut) unfilteredOutGroups[groupId] = logGroup
+      }
+    }
+
+    return unfilteredOutGroups
+  }
+
   render() {
     const {
       logPaused,
@@ -280,9 +294,13 @@ export default class TimelineHolder extends Component {
       filteredOutElements.push(...getFilteredOutElements(filterArea))
     }
 
+    const validGroups = enableFilterArea
+      ? this.getUnfilteredOutGroups(logGroups, filteredOutElements)
+      : logGroups
+
     const { offsets, indentationOffsets, declarationOffsets } =
       getTimelineOffsets(
-        logGroups,
+        validGroups,
         registriesByFileName,
         offsetBudget,
         expandLevels
@@ -393,97 +411,7 @@ const TimelineLogItemsMemo = ({
   filteredOutGroupIds,
   filterGroupIdsFunctions,
 }) => {
-  // Object.keys(logGroups)
-  //   .map(key => {
-  //     const logGroup = logGroups[key]
-  //     const logs = logGroup.logs
-
-  //     if (filteredOutElements.length) {
-  //       for (let el of filteredOutElements) {
-  //         if (
-  //           // idFromString(stringifyDOMElement(el)) === logGroup.groupElementId
-  //           el.isSameNode(logGroup.element)
-  //         ) {
-  //           return []
-  //         }
-  //       }
-  //     }
-
-  //     // const offset = standardOffset * threadInd // !
-
-  //     // background alignment element
-  //     // backgroundAlignmentElements.push(
-  //     //   <div
-  //     //     key={groupId}
-  //     //     className="timeline-background-alignment"
-  //     //     style={{
-  //     //       marginLeft: pxWrap(offset),
-  //     //       padding: `0 ${pxWrap(standardOffset)} 0 0`,
-  //     //     }}
-  //     //   ></div>
-  //     // )
-
-  //     return logs.map(logObj => {
-  //       if (logObj.count > 1) {
-  //         return logObj.timestamps.map((timestamp, timestampInd) => ({
-  //           logGroup: logGroup,
-  //           logObj: {
-  //             ...logObj,
-  //             count: 1,
-  //             timestamps: [timestamp],
-  //           },
-  //           rawInd: timestampInd,
-  //         }))
-  //       } else {
-  //         return [{ logGroup, logObj, rawInd: 0 }]
-  //       }
-  //     })
-  //   })
-  //   .flat(2)
-  //   .sort((a, b) => {
-  //     return a.logObj.timestamps[0].now - b.logObj.timestamps[0].now
-  //   })
-  //   .map(({ logGroup, logObj, /* offset, */ rawInd }) => {
-  //     // const isShape = logGroup.format === 'shape'
-
-  //     const logLocationDepthRegistry = getDepthRegistry(
-  //       asts,
-  //       logObj,
-  //       parsedLogASTRegistries
-  //     )
-
-  //     return (
-  //       // ! timeline-log-item-wrapper
-  //       <div
-  //         key={`${logObj.id}-${rawInd}-time`}
-  //         className="timeline-log-item-wrapper"
-  //         style={{
-  //           borderLeft: `5px solid ${logGroup.groupColor}`,
-  //         }}
-  //         data-id={logObj.id}
-  //       >
-  //         <LogStreamWrapperInTimeline
-  //           key={`${logObj.id}-${rawInd}-time-stream`}
-  //           logGroup={logGroup}
-  //           log={logObj}
-  //           updateLogGroup={updateLogGroup}
-  //           updateLog={updateLog}
-  //           hostRef={hostRef}
-  //           handleStreamHover={handleStreamHover}
-  //           handleStreamDragAround={handleStreamDragAround}
-  //           organization={_Time}
-  //           hostFunctions={hostFunctions}
-  //           ////
-  //           // timelineOffset={0} // !
-  //           logLocationDepthRegistry={logLocationDepthRegistry}
-  //         />
-
-  //         <span className="timeline-timestamp">
-  //           {Math.round(logObj.timestamps[0].now)}
-  //         </span>
-  //       </div>
-  //     )
-  //   })
+  // ! filter area
 
   const handleFilterGroupIds = id => {
     if (filteredOutGroupIds.has(id)) filterGroupIdsFunctions.remove(id)
@@ -498,6 +426,9 @@ const TimelineLogItemsMemo = ({
   /* -------------------------------------------------------------------------- */
   return logTimeline.slice(startingAt).map((logIdentifier, ind) => {
     const logGroup = logGroups[logIdentifier.groupId]
+
+    // ! deleted
+    if (logGroup.deleted) return null
 
     // ! filter out elements
     if (enableFilterArea) {
