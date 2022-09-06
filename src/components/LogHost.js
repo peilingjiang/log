@@ -29,17 +29,6 @@ export default class LogHost extends Component {
   constructor(props) {
     super(props)
 
-    // ! recover defaults
-    let recoveredDefaults = localStorage.getItem(localStorageKeys.DEFAULT)
-    window.console.log(recoveredDefaults)
-    const hasRecoveredDefaults = recoveredDefaults && recoveredDefaults.length
-
-    if (hasRecoveredDefaults) {
-      recoveredDefaults = JSON.parse(recoveredDefaults)
-      configLog(recoveredDefaults, false)
-      window.console.log(g)
-    }
-
     // ! recover filter from session storage
     let recoveredFilterArea = sessionStorage.getItem(localStorageKeys.AREA)
     if (recoveredFilterArea && recoveredFilterArea.length)
@@ -51,9 +40,7 @@ export default class LogHost extends Component {
       logPaused: false,
       logGroups: {},
       logTimeline: [],
-      organization: hasRecoveredDefaults
-        ? recoveredDefaults.defaultOrganization
-        : g.defaultOrganization, // timeline, augmented
+      organization: g.defaultOrganization, // timeline, augmented
       ////
       timelineHighlightedLogId: null,
       ////

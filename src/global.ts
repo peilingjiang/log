@@ -31,7 +31,21 @@ const defaultGlobalSettings: GlobalSettings = {
   vsLogPort: 2022,
 }
 
-export const g: GlobalSettings = Object.seal(defaultGlobalSettings)
+// recover from localStorage
+let recoveredDefaults: string =
+  localStorage.getItem(localStorageKeys.DEFAULT) || ''
+const hasRecoveredDefaults: boolean =
+  typeof recoveredDefaults === 'string' && recoveredDefaults.length > 0
+
+let recoveredSettings: object = {}
+if (hasRecoveredDefaults) {
+  recoveredSettings = { ...JSON.parse(recoveredDefaults) }
+}
+
+export const g: GlobalSettings = Object.seal({
+  ...defaultGlobalSettings,
+  ...recoveredSettings,
+})
 
 /* -------------------------------------------------------------------------- */
 
