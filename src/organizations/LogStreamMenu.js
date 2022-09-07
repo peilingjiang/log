@@ -147,7 +147,11 @@ export default class LogStreamMenu extends Component {
           ? ' menu-have-graphics menu-graphics-all'
           : ''
       const elTitle =
-        syncGraphics === 0 ? 'graphic' : syncGraphics === 1 ? 'one' : 'history'
+        syncGraphics === 0
+          ? 'graphic'
+          : syncGraphics === 1
+          ? 'graphic [on]'
+          : 'graphic [history]'
 
       specialItems.push(
         <p
