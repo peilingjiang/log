@@ -1,10 +1,11 @@
 /*!
- *   Log Right Here, Right Now! HyperLog v0.2.3
+ *   Log Right Here, Right Now! Log-it v0.2.3
  *
- *   / a research project /
+ *   This version is only used for paper submission.
+ *   Please do not share or use it for anything else.
  *
- *   by Peiling Jiang at Creativity Lab UCSD (c)
- *   https://creativity.ucsd.edu/
+ *   by Anonymous at Anonymous Lab (c)
+ *   https://en.wikipedia.org/wiki/Anonymous
  *   2022
  *
  *   MIT License

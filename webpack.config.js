@@ -26,14 +26,15 @@ export default env => {
         new webpack.DefinePlugin({
           'process.env.NODE_ENV': JSON.stringify('production'),
         }),
-        new webpack.BannerPlugin(`  Log Right Here, Right Now! HyperLog v${
+        new webpack.BannerPlugin(`  Log Right Here, Right Now! Log-it v${
           packageJSON.version
         }
 
-  / a research project /
+  This version is only used for paper submission.
+  Please do not share or use it for anything else.
 
-  by Peiling Jiang at Creativity Lab UCSD (c)
-  https://creativity.ucsd.edu/
+  by Anonymous at Anonymous Lab (c)
+  https://en.wikipedia.org/wiki/Anonymous
   ${new Date().getFullYear()}
 
   MIT License`),

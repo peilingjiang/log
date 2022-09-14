@@ -1,7 +1,7 @@
 {
-  "name": "log-here-now",
+  "name": "log-it-anonymous",
   "version": "0.2.3",
-  "description": "Log right here, right now.",
+  "description": "Anonymized version of Log-it package for a research paper submission.",
   "main": "lib/index.js",
   "types": "lib/types/index.d.ts",
   "scripts": {
@@ -12,16 +12,8 @@
     "ext:init": "yo code",
     "netlify": "webpack --config example/webpack.config.js --env production"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/peilingjiang/log.git"
-  },
-  "author": "Peiling Jiang",
+  "author": "Anonymous Researcher HCI",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/peilingjiang/log/issues"
-  },
-  "homepage": "https://github.com/peilingjiang/log#readme",
   "devDependencies": {
     "@babel/core": "^7.19.0",
     "@babel/preset-env": "^7.19.0",
