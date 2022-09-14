@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import { testMultipleFiles } from './TypesSub.js'
+import { testMultipleFiles } from './Other.js'
 
 export default class Types extends Component {
   constructor(props) {

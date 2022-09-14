@@ -7,7 +7,7 @@ import './css/main.scss'
 
 import App from './App.js'
 import PagesList from './PagesList.js'
-import Types from './pages/Types.js'
+import Types from './pages/Main.js'
 import Button from './pages/Button.js'
 import SmartPix from './pages/SmartPix.js'
 import AdHocPositions from './pages/adHocPositions.js'
