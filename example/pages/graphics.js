@@ -11,9 +11,9 @@ export default class SmartPix extends Component {
 
     this.state = {
       catX: 200,
-      catY: 200,
+      catY: 65,
       cat2X: 400,
-      cat2Y: 400,
+      cat2Y: 200,
     }
 
     this.catRef = createRef()
@@ -24,12 +24,53 @@ export default class SmartPix extends Component {
 
   componentDidMount() {
     this.catRef.current.addEventListener('mousedown', this.handleMouseDown)
-    this.cat2Ref.current.addEventListener('mousedown', this.handleMouseDown)
+    // this.cat2Ref.current.addEventListener('mousedown', this.handleMouseDown)
   }
 
   componentWillUnmount() {
     this.catRef.current.removeEventListener('mousedown', this.handleMouseDown)
-    this.cat2Ref.current.removeEventListener('mousedown', this.handleMouseDown)
+    // this.cat2Ref.current.removeEventListener('mousedown', this.handleMouseDown)
+  }
+
+  moveCat() {
+    const a = 'a'
+    log(a)
+    // move the cat following the sin wave
+    const steps = 48
+    const eachStepX = 12
+    let step = 1
+    const originalX = this.state.catX
+    const originalY = this.state.catY
+    const _ = setInterval(() => {
+      const newCatX = originalX + step * eachStepX
+      const newCatY =
+        originalY + Math.sin((step * eachStepX) / Math.PI / 30) * 32
+      this.setState({ catX: newCatX, catY: newCatY }, () => {
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+      })
+      const el = this.catRef.current
+      //
+      //
+      log(el.getBoundingClientRect()).element(this.catRef.current)
+
+      step += 1
+
+      if (step > steps) {
+        clearInterval(_)
+      }
+    }, 20)
   }
 
   handleMouseDown(e) {
@@ -48,7 +89,7 @@ export default class SmartPix extends Component {
       this.setState(
         {
           [`${targetName}X`]: startPos.left + e.clientX - startPos.x,
-          [`${targetName}Y`]: startPos.top + e.clientY - startPos.y,
+          [`${targetName}Y`]: startPos.top,
         },
         () => {
           // log(this.state[`${targetName}X`])
@@ -56,13 +97,19 @@ export default class SmartPix extends Component {
           //   .id(targetName)
           //   .name('offsetX')
           //   .unit('px')
-          //   .history(0)
-          //   .shape()
-          log(targetName)
-          log(this.state[`${targetName}X`]).snapTo(
-            'x',
-            targetName === 'cat' ? '#little-cat' : '#little-cat-2'
-          )
+          //
+          const el = this.catRef.current
+
+          //
+          log(el.getBoundingClientRect()).element(e.target).id(targetName)
+          // log(targetName)
+          //
+          //
+          //
+          //
+          // log(e).element(e.target)
+          // .snapTo('x', targetName === 'cat' ? '#little-cat' : '#little-cat-2')
+          // .name('clientX')
         }
       )
     }
@@ -75,9 +122,23 @@ export default class SmartPix extends Component {
   }
 
   render() {
+    const a = 1
+    const b = Math.round(Math.random() * 100)
+    log(Math.random()).name('code')
+    log(this).name('code')
+    log(a + b).name('code')
     return (
       <div className="px-example">
         <div className="playground">
+          <button
+            onClick={this.moveCat.bind(this)}
+            style={{
+              position: 'absolute',
+              top: '10rem',
+            }}
+          >
+            move
+          </button>
           {/* <img className="moon" src={Moon} alt="Big Moon" /> */}
           <img
             ref={this.catRef}
@@ -85,6 +146,7 @@ export default class SmartPix extends Component {
               position: 'absolute',
               left: `${this.state.catX}px`,
               top: `${this.state.catY}px`,
+              transform: 'scaleX(-1)',
             }}
             className="little-cat"
             id="little-cat"
@@ -92,7 +154,7 @@ export default class SmartPix extends Component {
             alt="Little Cat"
             data-name="cat"
           />
-          <img
+          {/* <img
             ref={this.cat2Ref}
             style={{
               filter: 'saturate(0)',
@@ -105,7 +167,7 @@ export default class SmartPix extends Component {
             src={Cat}
             alt="Little Cat"
             data-name="cat2"
-          />
+          /> */}
         </div>
       </div>
     )

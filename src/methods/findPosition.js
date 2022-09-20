@@ -260,6 +260,10 @@ export const pxTrim = value => {
   return Number(value.replace(/px/, ''))
 }
 
+export const unitTrim = value => {
+  return value.replace(/\D/g, '')
+}
+
 export const pxOrStringWrap = value => {
   if (value === 0) return '0px'
   if (assertString(value)) return value

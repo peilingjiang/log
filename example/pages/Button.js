@@ -29,14 +29,15 @@ export default class Button extends Component {
             })
 
             // log(e.target.value).element(e.target).error()
-            log(e)
+            //
+            log(e).name('markings')
           }}
         />
         {/* -------------------------------------------------------------------------- */}
         <button
           ref={this.submitRef}
           id="submit-button"
-          onClick={e => {
+          onClick={clickEvent => {
             this.setState(
               {
                 submitClickedTimes: this.state.submitClickedTimes + 1,
@@ -48,7 +49,7 @@ export default class Button extends Component {
                 //   .color('#c999ff')
 
                 ////
-                log(e).element(e.target).name('submit')
+                log(clickEvent).element(clickEvent.target).name('clicked')
                 // .color('#c999ff')
                 // .id('buttons')
               }

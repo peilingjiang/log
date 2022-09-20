@@ -25,5 +25,6 @@ export function registeredPositions(posId: any, anchorBounding: any): {
 } | undefined;
 export function pxWrap(value: any): string;
 export function pxTrim(value: any): number;
+export function unitTrim(value: any): any;
 export function pxOrStringWrap(value: any): any;
 export function getTestValue(accessor: any, testPosition: any): any;

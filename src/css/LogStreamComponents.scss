@@ -86,6 +86,8 @@
 }
 
 .center-stage-holder {
+  margin: 0 $padding-xs !important;
+
   .center-stage-id-copy {
     cursor: pointer;
     user-select: none;

@@ -40,7 +40,7 @@ const TimelineNameMemo = ({
             textDecoration: logPaused ? 'line-through' : undefined,
           }}
         >
-          timeline
+          Unified Stream
         </span>
       </div>
 

@@ -20,7 +20,7 @@ import {
 // import { Formatter } from '../formatter/Main.js'
 
 import Arrow from '../icons/arrow.svg'
-import { pxTrim } from '../methods/findPosition.js'
+import { pxTrim, unitTrim } from '../methods/findPosition.js'
 
 export default class ShapeLog extends Log {
   render() {
@@ -98,7 +98,9 @@ export default class ShapeLog extends Log {
             <span
               className="shape-log-value"
               onClick={streamFunctions.toggleUseStats}
-            >{`${useStats ? '[%] ' : ''}${value}`}</span>{' '}
+            >{`${useStats ? '[%] ' : ''}${
+              useStats ? unitTrim(value) : value
+            }`}</span>{' '}
             {isAugmented ? (
               <span
                 className="log-body-timestamp shape-timestamp cursor-pointer font-fixed-width"
