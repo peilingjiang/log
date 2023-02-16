@@ -273,7 +273,8 @@ $menu-height-text: calc(
       font-size: $font-size-small;
     }
 
-    svg path {
+    svg path,
+    svg circle {
       fill: $dark-grey;
     }
 
@@ -281,7 +282,8 @@ $menu-height-text: calc(
     &.menu-choosing-item {
       background: $dark-grey !important;
 
-      svg path {
+      svg path,
+      svg circle {
         fill: $white;
       }
     }
@@ -302,13 +304,15 @@ $menu-height-text: calc(
       background: $dark-grey !important;
 
       &.menu-graphics-single {
-        svg path {
+        svg path,
+        svg circle {
           fill: $white;
         }
       }
 
       &.menu-graphics-all {
-        svg path {
+        svg path,
+        svg circle {
           fill: $bright-orange;
         }
       }

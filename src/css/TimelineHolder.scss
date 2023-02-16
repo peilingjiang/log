@@ -55,8 +55,15 @@ $expand-transition-function: cubic-bezier(0.15, 0.75, 0.25, 1);
     }
 
     .timeline-name-icons {
+      height: 100% !important;
+      flex-grow: 1 !important;
       flex-shrink: 0;
-      flex-grow: 1;
+
+      // ? is it ok?
+      svg {
+        height: 1em !important;
+        width: 1em !important;
+      }
     }
 
     .timeline-icon {
