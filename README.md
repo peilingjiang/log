@@ -8,7 +8,7 @@
 
 To install and use the Log-it package, please follow the steps below.
 
-First, install the NPM package
+First, install the NPM package.
 
 ```bash
 npm install log-here-now
@@ -18,9 +18,7 @@ You can also manually copy the `lib` folder into your project.
 
 Then, please install the Visual Studio Code extension, VS Log, from VS Code Marketplace, or load the package (the `vs-log/vs-log-*.vsix` file) following the steps [here](https://code.visualstudio.com/docs/editor/extension-marketplace#_install-from-a-vsix).
 
-**That's it!**
-
-Now, try to log something in your own project
+Now, try to log something in your JavaScript/TypeScript project.
 
 ```ts
 import { log } from 'log-here-now'
@@ -42,6 +40,10 @@ log(/* ... */)                      // ... [default value]
   .snap(SnapOptions)                // snap to an element
   .history(number)                  // set history length for a folded stream [0]
 ```
+
+Last, explore the _Streams_ of rich interactions, contexts, structures, and visuals using the graphical interface.
+
+![Graphics](./media/graphics.png)
 
 ## File Structure
 
