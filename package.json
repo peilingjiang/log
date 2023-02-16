@@ -1,6 +1,6 @@
 {
   "name": "log-here-now",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Log right here, right now. (Log-it, CHI 2023)",
   "main": "lib/index.js",
   "types": "lib/types/index.d.ts",

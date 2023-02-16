@@ -21,7 +21,7 @@ Then, please install the Visual Studio Code extension, VS Log, from VS Code Mark
 Now, try to log something in your JavaScript/TypeScript project.
 
 ```ts
-import { log } from 'log-here-now'
+import log from 'log-here-now'
 log('Hello World')
 ```
 
