@@ -1,15 +1,12 @@
-import StackTrace from 'stacktrace-js'
-
 import { HyperLog, Timestamp } from './hyperLog'
+import { globalStackParser } from './methods/stackParser'
 import { logProcessor } from './logProcessor'
 import { GlobalSettings, g } from './global'
-import './rendering'
-// import './objectLog.js'
 import { assertObject } from './methods/utils'
 import { localStorageKeys } from './constants'
+import './rendering'
 
 import './css/main.scss'
-import { globalStackParser } from './methods/stackParser'
 
 /* -------------------------------------------------------------------------- */
 

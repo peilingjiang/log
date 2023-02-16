@@ -2,7 +2,7 @@
   "name": "vs-log",
   "displayName": "VS Log",
   "icon": "vs-log-icon.png",
-  "description": "VS Code extension for a novel logging framework.",
+  "description": "VS Code extension for a novel logging framework. (Log-it, CHI 2023)",
   "version": "0.1.1",
   "engines": {
     "vscode": "^1.75.1"

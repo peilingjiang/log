@@ -135,6 +135,7 @@ export default class SmartPix extends Component {
             style={{
               position: 'absolute',
               top: '10rem',
+              padding: '1rem',
             }}
           >
             move

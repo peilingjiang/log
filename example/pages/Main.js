@@ -69,7 +69,7 @@ export default class Types extends Component {
 }
 
 // const main = () => {
-//   const helloWorld = 'Hello, World!'
+//   const helloWorld = 'Hello World!'
 //   log(1998, helloWorld, undefined)
 //   for (let i = 0; i < 1; i++) {
 //     log(Math.random())
