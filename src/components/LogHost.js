@@ -71,6 +71,7 @@ export default class LogHost extends Component {
     this.updateLog = this.updateLog.bind(this)
 
     this._resizeHandler = this._resizeHandler.bind(this)
+    this._scrollHandler = this._scrollHandler.bind(this)
     this._shortcutHandler = this._shortcutHandler.bind(this)
     this._shortcutEndHandler = this._shortcutEndHandler.bind(this)
 
@@ -103,6 +104,7 @@ export default class LogHost extends Component {
 
     // add event listeners
     window.addEventListener('resize', this._resizeHandler)
+    window.addEventListener('scroll', this._scrollHandler)
     if (g.useShortcuts) {
       window.addEventListener('keydown', this._shortcutHandler)
       window.addEventListener('keyup', this._shortcutEndHandler)
@@ -146,6 +148,7 @@ export default class LogHost extends Component {
 
   componentWillUnmount() {
     window.removeEventListener('resize', this._resizeHandler)
+    window.removeEventListener('scroll', this._scrollHandler)
     if (g.useShortcuts) {
       window.removeEventListener('keydown', this._shortcutHandler)
       window.removeEventListener('keyup', this._shortcutEndHandler)
@@ -196,6 +199,17 @@ export default class LogHost extends Component {
           }
         }
     }, 50)
+  }
+
+  _scrollHandler() {
+    if (this.state.organization === _Aug)
+      for (let refId in this.streamsHoldersRefs) {
+        const ref = this.streamsHoldersRefs[refId]
+        if (ref.current) {
+          if (ref.current.props.snap) ref.current.snapToPosition()
+          else ref.current.optimizePosition()
+        }
+      }
   }
 
   _shortcutHandler(e) {

@@ -3,6 +3,10 @@ import React, { Component } from 'react'
 import { testMultipleFiles } from './MainSub.js'
 import './synced.js'
 
+configLog({
+  useShortcuts: false,
+})
+
 export default class Types extends Component {
   constructor(props) {
     super(props)
@@ -59,7 +63,9 @@ export default class Types extends Component {
       <div
         className="types-example"
         style={{
+          display: 'flex',
           padding: '1rem',
+          height: '200vh',
         }}
       >
         Logging out many different things...

@@ -24,6 +24,7 @@ export default class LogHost extends React.Component<any, any, any> {
     updateLogGroup(logGroupId: any, logGroup: any): void;
     updateLog(logGroupId: any, logId: any, log: any): void;
     _resizeHandler(): void;
+    _scrollHandler(): void;
     _shortcutHandler(e: any): void;
     _shortcutEndHandler(e: any): void;
     hostFunctions: {

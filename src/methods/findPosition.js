@@ -89,14 +89,15 @@ export const findPosition = (
         }
       })
       .reduce((a, b) => a + b, 0)
-    const overlapWithOffscreenArea = isAnyOffscreen(testPseudoRect)
-      ? pseudoOffscreenOverlap(testPseudoRect)
-      : 0
+    // const overlapWithOffscreenArea = isAnyOffscreen(testPseudoRect)
+    //   ? pseudoOffscreenOverlap(testPseudoRect)
+    //   : 0
 
     // weighted sum
     // offscreen is bad
     overlapByPosId[posId] =
-      overlapWithExistingPageElements + overlapWithOffscreenArea * 3 // offscreen is bad
+      // overlapWithExistingPageElements + overlapWithOffscreenArea * 3 // offscreen is bad
+      overlapWithExistingPageElements
   }
 
   const smallestKey = keyWithSmallestValue(overlapByPosId)
