@@ -6,8 +6,8 @@ export const setupLeaderLine = (event, renderSudoElement, color) => {
   const sudoPointerElement = document.createElement('div')
   sudoPointerElement.classList.add('sudo-pointer-element')
   sudoPointerElement.id = 'sudo-pointer-element'
-  sudoPointerElement.style.top = pxWrap(event.clientY)
-  sudoPointerElement.style.left = pxWrap(event.clientX)
+  sudoPointerElement.style.top = pxWrap(event.clientY + window.scrollY)
+  sudoPointerElement.style.left = pxWrap(event.clientX + window.scrollX)
   renderSudoElement(sudoPointerElement)
 
   const leaderLine = new LeaderLine(

@@ -198,8 +198,8 @@ export default class LogStream extends Component {
       function _mousemove(event) {
         const moveMouse = [event.clientX, event.clientY]
 
-        sudoPointerElement.style.top = pxWrap(event.clientY)
-        sudoPointerElement.style.left = pxWrap(event.clientX)
+        sudoPointerElement.style.top = pxWrap(event.clientY + window.scrollY)
+        sudoPointerElement.style.left = pxWrap(event.clientX + window.scrollX)
 
         leaderLine.position()
         leaderLine.color =
@@ -371,8 +371,10 @@ export default class LogStream extends Component {
 
         if (nearest) {
           const { nearestPointElement, nearestPoint } = nearest
-          sudoPointerElement.style.top = pxWrap(nearestPoint.y)
-          sudoPointerElement.style.left = pxWrap(nearestPoint.x)
+          sudoPointerElement.style.top = pxWrap(nearestPoint.y + window.scrollY)
+          sudoPointerElement.style.left = pxWrap(
+            nearestPoint.x + window.scrollX
+          )
 
           snapElement = nearestPointElement
           snapAnchorPoint = nearestPoint
@@ -380,8 +382,8 @@ export default class LogStream extends Component {
           outlineToHighlightElement(nearestPointElement, true, 'mid')
           sudoPointerElement.classList.add('show-sudo-pointer')
         } else {
-          sudoPointerElement.style.top = pxWrap(event.clientY)
-          sudoPointerElement.style.left = pxWrap(event.clientX)
+          sudoPointerElement.style.top = pxWrap(event.clientY + window.scrollY)
+          sudoPointerElement.style.left = pxWrap(event.clientX + window.scrollX)
           snapElement = snapAnchorPoint = null
           sudoPointerElement.classList.remove('show-sudo-pointer')
         }
