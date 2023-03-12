@@ -5,6 +5,7 @@ export interface GlobalSettings {
     directionDown: boolean | undefined;
     defaultOrganization: string | undefined;
     logHistoryLength: number | undefined;
+    useShortcuts: boolean | undefined;
     useVsLog: boolean | undefined;
     vsLogPort: number | undefined;
 }

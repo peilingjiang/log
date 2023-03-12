@@ -19,6 +19,7 @@ export interface GlobalSettings {
   directionDown: boolean | undefined
   defaultOrganization: string | undefined
   logHistoryLength: number | undefined
+  useShortcuts: boolean | undefined
   useVsLog: boolean | undefined
   vsLogPort: number | undefined
 }
@@ -29,6 +30,7 @@ const defaultGlobalSettings: GlobalSettings = {
   directionDown: true,
   defaultOrganization: _Time,
   logHistoryLength: 100,
+  useShortcuts: true,
   useVsLog: true,
   vsLogPort: 2022,
 }

@@ -103,21 +103,25 @@ export default class LogHost extends Component {
 
     // add event listeners
     window.addEventListener('resize', this._resizeHandler)
-    window.addEventListener('keydown', this._shortcutHandler)
-    window.addEventListener('keyup', this._shortcutEndHandler)
+    if (g.useShortcuts) {
+      window.addEventListener('keydown', this._shortcutHandler)
+      window.addEventListener('keyup', this._shortcutEndHandler)
+    }
 
     // asts
-    socket.on('ast', data => {
-      if (development) window.console.log('%cReceived AST', 'color: #ff42a1')
+    if (g.useVsLog) {
+      socket.on('ast', data => {
+        if (development) window.console.log('%cReceived AST', 'color: #ff42a1')
 
-      this._updateRegistries(
-        data,
-        this.state.registries,
-        this.state.logGroups,
-        this.state.logTimeline
-      )
-    })
-    socket.emit('request:ast')
+        this._updateRegistries(
+          data,
+          this.state.registries,
+          this.state.logGroups,
+          this.state.logTimeline
+        )
+      })
+      socket.emit('request:ast')
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -142,8 +146,10 @@ export default class LogHost extends Component {
 
   componentWillUnmount() {
     window.removeEventListener('resize', this._resizeHandler)
-    window.addEventListener('keydown', this._shortcutHandler)
-    window.addEventListener('keyup', this._shortcutEndHandler)
+    if (g.useShortcuts) {
+      window.removeEventListener('keydown', this._shortcutHandler)
+      window.removeEventListener('keyup', this._shortcutEndHandler)
+    }
 
     this.setState({
       logGroups: {},

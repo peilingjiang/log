@@ -11,10 +11,7 @@ import {
   constrain,
   getFilteredOutElements,
   getIdentifier,
-  parseCenterStagedId,
-  parseDefaultColor,
   preventEventWrapper,
-  removeArgsDescriptions,
 } from '../methods/utils.js'
 import {
   groupIdExtendingConnector,
@@ -120,7 +117,7 @@ export default class TimelineHolder extends Component {
   }
 
   componentWillUnmount() {
-    socket.off('ast')
+    if (g.useVsLog) socket.off('ast')
   }
 
   /* -------------------------------------------------------------------------- */
