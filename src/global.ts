@@ -30,8 +30,8 @@ const defaultGlobalSettings: GlobalSettings = {
   directionDown: true,
   defaultOrganization: _Time,
   logHistoryLength: 100,
-  useShortcuts: true,
-  useVsLog: true,
+  useShortcuts: false,
+  useVsLog: false,
   vsLogPort: 2022,
 }
 

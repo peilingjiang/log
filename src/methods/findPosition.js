@@ -96,8 +96,8 @@ export const findPosition = (
     // weighted sum
     // offscreen is bad
     overlapByPosId[posId] =
-      overlapWithExistingPageElements + overlapWithOffscreenArea * 2 // offscreen is bad
-    // overlapWithExistingPageElements
+      // overlapWithExistingPageElements + overlapWithOffscreenArea * 2 // offscreen is bad
+      overlapWithExistingPageElements
   }
 
   const smallestKey = keyWithSmallestValue(overlapByPosId)

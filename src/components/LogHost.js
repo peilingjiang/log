@@ -105,10 +105,10 @@ export default class LogHost extends Component {
     // add event listeners
     window.addEventListener('resize', this._resizeHandler)
     window.addEventListener('scroll', this._scrollHandler)
-    if (g.useShortcuts) {
-      window.addEventListener('keydown', this._shortcutHandler)
-      window.addEventListener('keyup', this._shortcutEndHandler)
-    }
+    // if (g.useShortcuts) {
+    //   window.addEventListener('keydown', this._shortcutHandler)
+    //   window.addEventListener('keyup', this._shortcutEndHandler)
+    // }
 
     // asts
     if (g.useVsLog) {
@@ -149,10 +149,10 @@ export default class LogHost extends Component {
   componentWillUnmount() {
     window.removeEventListener('resize', this._resizeHandler)
     window.removeEventListener('scroll', this._scrollHandler)
-    if (g.useShortcuts) {
-      window.removeEventListener('keydown', this._shortcutHandler)
-      window.removeEventListener('keyup', this._shortcutEndHandler)
-    }
+    // if (g.useShortcuts) {
+    //   window.removeEventListener('keydown', this._shortcutHandler)
+    //   window.removeEventListener('keyup', this._shortcutEndHandler)
+    // }
 
     this.setState({
       logGroups: {},
