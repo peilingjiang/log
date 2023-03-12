@@ -19,6 +19,7 @@ export interface GlobalSettings {
   directionDown: boolean | undefined
   defaultOrganization: string | undefined
   logHistoryLength: number | undefined
+  useVsLog: boolean | undefined
   vsLogPort: number | undefined
 }
 
@@ -28,6 +29,7 @@ const defaultGlobalSettings: GlobalSettings = {
   directionDown: true,
   defaultOrganization: _Time,
   logHistoryLength: 100,
+  useVsLog: true,
   vsLogPort: 2022,
 }
 
@@ -62,16 +64,17 @@ export const socket = (io as any).connect(`http://${host}:${g.vsLogPort}/`, {
 })
 
 // ? is it the best practice to open the socket here?
-socket.on('connect', () => {
-  window.console.log(
-    '%cConnected to VS Log',
-    'color: #ff42a1; font-weight: bold'
-  )
+if (g.useVsLog)
+  socket.on('connect', () => {
+    window.console.log(
+      '%cConnected to VS Log',
+      'color: #ff42a1; font-weight: bold'
+    )
 
-  // socket.on('ast', data => {
-  //   globalAST.current = data
-  // })
-})
+    // socket.on('ast', data => {
+    //   globalAST.current = data
+    // })
+  })
 
 // extra headers
 // https://github.com/socketio/socket.io/issues/3929

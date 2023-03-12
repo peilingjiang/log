@@ -5,6 +5,7 @@ export interface GlobalSettings {
     directionDown: boolean | undefined;
     defaultOrganization: string | undefined;
     logHistoryLength: number | undefined;
+    useVsLog: boolean | undefined;
     vsLogPort: number | undefined;
 }
 export declare const g: GlobalSettings;

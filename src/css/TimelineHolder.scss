@@ -67,6 +67,7 @@ $expand-transition-function: cubic-bezier(0.15, 0.75, 0.25, 1);
     }
 
     .timeline-icon {
+      box-sizing: content-box !important;
       padding: $padding-xs;
 
       cursor: pointer;
