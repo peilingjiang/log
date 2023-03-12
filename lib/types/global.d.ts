@@ -10,4 +10,3 @@ export interface GlobalSettings {
     vsLogPort: number | undefined;
 }
 export declare const g: GlobalSettings;
-export declare const socket: any;

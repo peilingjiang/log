@@ -58,26 +58,25 @@ export const g: GlobalSettings = Object.seal({
 // const host = window.location.hostname
 const host = 'localhost'
 
-export const socket = (io as any).connect(`http://${host}:${g.vsLogPort}/`, {
-  reconnection: true,
-  reconnectionDelay: 1000,
-  reconnectionDelayMax: 5000,
-  reconnectionAttempts: timelineWaitConnectionTimeout / 1000,
-})
+// export const socket = (io as any).connect(`http://${host}:${g.vsLogPort}/`, {
+//   reconnection: true,
+//   reconnectionDelay: 1000,
+//   reconnectionDelayMax: 5000,
+//   reconnectionAttempts: timelineWaitConnectionTimeout / 1000,
+// })
 
 // ? is it the best practice to open the socket here?
 setTimeout(() => {
-  if (g.useVsLog)
-    socket.on('connect', () => {
-      window.console.log(
-        '%cConnected to VS Log',
-        'color: #ff42a1; font-weight: bold'
-      )
-
-      // socket.on('ast', data => {
-      //   globalAST.current = data
-      // })
-    })
+  // if (g.useVsLog)
+  //   socket.on('connect', () => {
+  //     window.console.log(
+  //       '%cConnected to VS Log',
+  //       'color: #ff42a1; font-weight: bold'
+  //     )
+  //     // socket.on('ast', data => {
+  //     //   globalAST.current = data
+  //     // })
+  //   })
 }, 500)
 
 // extra headers

@@ -117,7 +117,7 @@ export default class TimelineHolder extends Component {
   }
 
   componentWillUnmount() {
-    if (g.useVsLog) socket.off('ast')
+    // if (g.useVsLog) socket.off('ast')
   }
 
   /* -------------------------------------------------------------------------- */

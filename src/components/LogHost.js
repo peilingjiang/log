@@ -111,19 +111,19 @@ export default class LogHost extends Component {
     // }
 
     // asts
-    if (g.useVsLog) {
-      socket.on('ast', data => {
-        if (development) window.console.log('%cReceived AST', 'color: #ff42a1')
+    // if (g.useVsLog) {
+    //   socket.on('ast', data => {
+    //     if (development) window.console.log('%cReceived AST', 'color: #ff42a1')
 
-        this._updateRegistries(
-          data,
-          this.state.registries,
-          this.state.logGroups,
-          this.state.logTimeline
-        )
-      })
-      socket.emit('request:ast')
-    }
+    //     this._updateRegistries(
+    //       data,
+    //       this.state.registries,
+    //       this.state.logGroups,
+    //       this.state.logTimeline
+    //     )
+    //   })
+    //   socket.emit('request:ast')
+    // }
   }
 
   componentDidUpdate(prevProps, prevState) {
