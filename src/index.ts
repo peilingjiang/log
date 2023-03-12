@@ -38,6 +38,9 @@ function configLog(options: GlobalSettings, save: boolean = true): void {
   g.useSourceMaps = options.useSourceMaps || g.useSourceMaps
   g.directionDown = options.directionDown || g.directionDown
   g.defaultOrganization = options.defaultOrganization || g.defaultOrganization
+  g.logHistoryLength = options.logHistoryLength || g.logHistoryLength
+  g.useShortcuts = options.useShortcuts || g.useShortcuts
+  g.useVsLog = options.useVsLog || g.useVsLog
   g.vsLogPort = options.vsLogPort || g.vsLogPort
 
   if (save) localStorage.setItem(localStorageKeys.DEFAULT, JSON.stringify(g))

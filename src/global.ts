@@ -66,17 +66,19 @@ export const socket = (io as any).connect(`http://${host}:${g.vsLogPort}/`, {
 })
 
 // ? is it the best practice to open the socket here?
-if (g.useVsLog)
-  socket.on('connect', () => {
-    window.console.log(
-      '%cConnected to VS Log',
-      'color: #ff42a1; font-weight: bold'
-    )
+setTimeout(() => {
+  if (g.useVsLog)
+    socket.on('connect', () => {
+      window.console.log(
+        '%cConnected to VS Log',
+        'color: #ff42a1; font-weight: bold'
+      )
 
-    // socket.on('ast', data => {
-    //   globalAST.current = data
-    // })
-  })
+      // socket.on('ast', data => {
+      //   globalAST.current = data
+      // })
+    })
+}, 500)
 
 // extra headers
 // https://github.com/socketio/socket.io/issues/3929

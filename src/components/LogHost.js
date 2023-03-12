@@ -260,7 +260,7 @@ export default class LogHost extends Component {
 
     // window.log
     window.log = (...args) => {
-      if (!g.access) return
+      // if (!g.access) return
 
       return new HyperLog(args, requests => {
         addLog(this, this.stackParser, args, null, requests)
