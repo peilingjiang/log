@@ -138,6 +138,7 @@ $dot-d: $padding-mid;
       pointer-events: initial;
 
       .box-icon {
+        box-sizing: content-box !important;
         padding: $padding-xs;
 
         &.icon-measures:hover {
