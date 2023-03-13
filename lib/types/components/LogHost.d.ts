@@ -48,6 +48,7 @@ export default class LogHost extends React.Component<any, any, any> {
     _getElementFromLogGroups(logGroups: any, groupElementId: any): any;
     _getSnapElementFromGroups(logGroups: any, snapElementId: any): any;
     _getSnapAnchorSideFromGroups(logGroups: any, snapElementId: any): any;
+    _getPreferredPositionFromGroups(logGroups: any, elementId: any): any;
     togglePauseTheWholeLogSystem(): void;
     changeOrganization(newOrganization: any, logId?: null): void;
     setTimelineLogOrderReversed(groupId: any, reversed: any): void;

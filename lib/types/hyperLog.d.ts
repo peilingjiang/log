@@ -8,6 +8,9 @@ interface RequestOptions {
     history: number | undefined;
     snap: SnapOptions | undefined;
     format: string | undefined;
+    specialRequests: {
+        preferredPosition?: number;
+    } | undefined;
 }
 interface SnapOptions {
     snap: boolean | undefined;
@@ -35,5 +38,6 @@ export declare class HyperLog {
     snap(options?: SnapOptions): this;
     snapTo(position?: 'x' | 'y' | 'top' | 'left' | 'right' | 'bottom', element?: HTMLElement | string | undefined): this;
     shape(shape?: boolean): this;
+    specialRequests(specialRequests: object): this;
 }
 export {};

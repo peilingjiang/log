@@ -19,9 +19,14 @@ import {
 export const findPosition = (
   anchorElement,
   logElement,
-  existingRegistration = undefined
+  existingRegistration = undefined,
+  preferredPosition = undefined
 ) => {
   // TODO avoid being outside of the page view
+
+  const anchorBounding = getElementBounding(anchorElement)
+  if (preferredPosition !== undefined)
+    return cssify(registeredPositions(preferredPosition, anchorBounding))
 
   // get all rects of page elements
   const existingPageRects = []
@@ -39,8 +44,6 @@ export const findPosition = (
       // pageElements.push(e)
     }
   }
-
-  const anchorBounding = getElementBounding(anchorElement)
 
   let boundingRectForLog = mergeBoundingRects(
     [...logElement.children].map(el => {
@@ -112,6 +115,8 @@ export const findPosition = (
 
   return cssify(registeredPositions(smallestKey, anchorBounding))
 }
+
+/* -------------------------------------------------------------------------- */
 
 export const overlappingArea = (rect1, rect2) => {
   const xOverlap =

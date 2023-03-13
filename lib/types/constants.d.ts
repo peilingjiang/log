@@ -126,6 +126,7 @@ export const logGroupInterface: PropTypes.Requireable<Required<PropTypes.InferPr
     }>>>;
     timelineLogOrderReversed: PropTypes.Validator<number>;
     syncGraphics: PropTypes.Validator<number>;
+    preferredPosition: PropTypes.Requireable<number>;
 }>>>;
 export namespace logStreamsHolderInterface {
     const element: PropTypes.Requireable<Element>;
@@ -141,6 +142,7 @@ export namespace logStreamsHolderInterface {
     const hostFunctions: PropTypes.Validator<object>;
     const registries: PropTypes.Validator<object>;
     const clearance: PropTypes.Validator<boolean>;
+    const preferredPosition: PropTypes.Requireable<number>;
 }
 export const logTimelineItemInterface: PropTypes.Requireable<Required<PropTypes.InferProps<{
     timestamp: PropTypes.Validator<Required<PropTypes.InferProps<{

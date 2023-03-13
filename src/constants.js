@@ -120,6 +120,7 @@ export const logGroupInterface = PropTypes.exact({
   syncGraphics: PropTypes.number.isRequired, // 0 none | 1 last | 2 all
   ////
   // customization
+  preferredPosition: PropTypes.number,
 })
 
 // ! logStreamsHolder
@@ -141,6 +142,8 @@ export const logStreamsHolderInterface = {
   registries: PropTypes.object.isRequired,
   ////
   clearance: PropTypes.bool.isRequired,
+  ////
+  preferredPosition: PropTypes.number,
 }
 
 // ! logTimelineItem

@@ -200,6 +200,8 @@ export const addLog = (
           syncGraphics: 0,
           ////
           // customization
+          preferredPosition:
+            requests.specialRequests.preferredPosition ?? undefined,
         }
       else if (prevIds.includes(groupId)) {
         // ! logStream paused or deleted

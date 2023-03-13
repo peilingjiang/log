@@ -13,6 +13,7 @@ export default class LogStreamsHolder extends React.Component<any, any, any> {
         hostFunctions: import("prop-types").Validator<object>;
         registries: import("prop-types").Validator<object>;
         clearance: import("prop-types").Validator<boolean>;
+        preferredPosition: import("prop-types").Requireable<number>;
     };
     constructor(props: any);
     state: {

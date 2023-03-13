@@ -401,6 +401,16 @@ export default class LogHost extends Component {
     return null
   }
 
+  _getPreferredPositionFromGroups(logGroups, elementId) {
+    for (let groupId in logGroups) {
+      const logGroup = logGroups[groupId]
+      if (logGroup.groupElementId === elementId) {
+        return logGroup.preferredPosition
+      }
+    }
+    return undefined
+  }
+
   /* -------------------------------------------------------------------------- */
 
   togglePauseTheWholeLogSystem() {
@@ -538,6 +548,8 @@ export default class LogHost extends Component {
           registries={registries}
           ////
           clearance={clearance}
+          ////
+          preferredPosition={undefined}
         />
       )
     }
@@ -565,6 +577,11 @@ export default class LogHost extends Component {
           registries={registries}
           ////
           clearance={clearance}
+          ////
+          preferredPosition={this._getPreferredPositionFromGroups(
+            logGroups,
+            groupElementId
+          )}
         />
       )
     }

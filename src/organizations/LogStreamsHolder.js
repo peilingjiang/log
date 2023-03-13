@@ -69,7 +69,7 @@ export default class LogStreamsHolder extends Component {
   /* -------------------------------------------------------------------------- */
 
   optimizePosition() {
-    const { element, updateLogGroup } = this.props
+    const { element, updateLogGroup, preferredPosition } = this.props
 
     if (!assertExistence(element)) {
       // ! page
@@ -106,7 +106,8 @@ export default class LogStreamsHolder extends Component {
       const optimizedPosition = findPosition(
         element,
         this.ref.current,
-        this.state.bounding.registration
+        this.state.bounding.registration,
+        preferredPosition
       )
       this.setState({
         bounding: optimizedPosition,

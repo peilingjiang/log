@@ -57,6 +57,7 @@ export default class LogStream extends React.Component<any, any, any> {
             }>>>;
             timelineLogOrderReversed: PropTypes.Validator<number>;
             syncGraphics: PropTypes.Validator<number>;
+            preferredPosition: PropTypes.Requireable<number>;
         }>>>;
         log: PropTypes.Requireable<Required<PropTypes.InferProps<{
             id: PropTypes.Requireable<string>;

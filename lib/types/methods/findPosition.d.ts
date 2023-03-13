@@ -1,4 +1,4 @@
-export function findPosition(anchorElement: any, logElement: any, existingRegistration?: undefined): any;
+export function findPosition(anchorElement: any, logElement: any, existingRegistration?: undefined, preferredPosition?: undefined): any;
 export function overlappingArea(rect1: any, rect2: any): number;
 export function isOverlapped(rect1: any, rect2: any): boolean;
 export function pseudoOffscreenOverlap(testRect: any): number;

@@ -10,6 +10,11 @@ interface RequestOptions {
   history: number | undefined
   snap: SnapOptions | undefined
   format: string | undefined
+  specialRequests:
+    | {
+        preferredPosition?: number
+      }
+    | undefined
 }
 
 interface SnapOptions {
@@ -44,6 +49,7 @@ export class HyperLog {
       history: undefined,
       snap: undefined,
       format: undefined,
+      specialRequests: {},
     }
 
     // call addLog
@@ -208,4 +214,11 @@ export class HyperLog {
   // get lifeCycle() {
   //   return
   // }
+
+  /* -------------------------------------------------------------------------- */
+
+  specialRequests(specialRequests: object) {
+    this.requests.specialRequests = { ...specialRequests }
+    return this
+  }
 }

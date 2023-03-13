@@ -63,7 +63,11 @@ export default class SmartPix extends Component {
       const el = this.catRef.current
       //
       //
-      log(el.getBoundingClientRect()).element(this.catRef.current)
+      log(el.getBoundingClientRect())
+        .element(this.catRef.current)
+        .specialRequests({
+          preferredPosition: 6,
+        })
 
       step += 1
 
