@@ -537,6 +537,7 @@ export default class LogStream extends Component {
     else
       newUnfoldedIds.splice(newUnfoldedIds.indexOf(removeLogId(idToToggle)), 1)
 
+    console.log(newUnfoldedIds)
     updateLogGroup(groupId, {
       ...cloneLogGroup(logGroup),
       view: {

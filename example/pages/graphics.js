@@ -68,6 +68,7 @@ export default class SmartPix extends Component {
         .specialRequests({
           preferredPosition: 6,
           syncGraphics: 2,
+          unfoldedIds: ['0'],
         })
 
       step += 1

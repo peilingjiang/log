@@ -11,6 +11,7 @@ interface RequestOptions {
     specialRequests: {
         preferredPosition?: number;
         syncGraphics?: 0 | 1 | 2;
+        unfoldedIds?: string[];
     } | undefined;
 }
 interface SnapOptions {

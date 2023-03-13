@@ -14,6 +14,7 @@ interface RequestOptions {
     | {
         preferredPosition?: number
         syncGraphics?: 0 | 1 | 2
+        unfoldedIds?: string[]
       }
     | undefined
 }

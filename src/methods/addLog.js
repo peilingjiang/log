@@ -194,7 +194,12 @@ export const addLog = (
           paused: false,
           deleted: false,
           ////
-          view: logViewDefault,
+          view: {
+            ...logViewDefault,
+            unfoldedIds:
+              requests.specialRequests.unfoldedIds ??
+              logViewDefault.unfoldedIds,
+          },
           timelineLogOrderReversed: 0,
           ////
           syncGraphics: requests.specialRequests.syncGraphics ?? 0,

@@ -364,12 +364,12 @@ const BoxGraphicsMemo = ({
       {!fadedGraphics && (
         <>
           <div className="box-info">
-            <Measures
+            {/* <Measures
               className="box-icon icon-measures"
               onClick={() => {
                 setShowMeasures(groupId)
               }}
-            />
+            /> */}
             {!assertExistence(position) && (
               <AllWayMove
                 className="box-icon icon-move"
