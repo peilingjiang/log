@@ -10,6 +10,7 @@ interface RequestOptions {
     format: string | undefined;
     specialRequests: {
         preferredPosition?: number;
+        syncGraphics?: 0 | 1 | 2;
     } | undefined;
 }
 interface SnapOptions {

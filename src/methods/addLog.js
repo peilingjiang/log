@@ -197,7 +197,7 @@ export const addLog = (
           view: logViewDefault,
           timelineLogOrderReversed: 0,
           ////
-          syncGraphics: 0,
+          syncGraphics: requests.specialRequests.syncGraphics ?? 0,
           ////
           // customization
           preferredPosition:

@@ -67,6 +67,7 @@ export default class SmartPix extends Component {
         .element(this.catRef.current)
         .specialRequests({
           preferredPosition: 6,
+          syncGraphics: 2,
         })
 
       step += 1
