@@ -344,10 +344,7 @@ const BoxGraphicsMemo = ({
         fadedGraphics ? ' faded-graphics' : ''
       }`}
       style={{
-        opacity: fadedGraphics
-          ? _rootStyles.opacityXh -
-            orderReversed * graphicsHistoryOpacityFadeRate
-          : undefined,
+        opacity: fadedGraphics ? _rootStyles.opacityXh : undefined,
         zIndex: fadedGraphics ? -1 : 0,
         ...offsetStylesFromKeyWord(
           keyWord,

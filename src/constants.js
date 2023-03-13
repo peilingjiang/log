@@ -275,7 +275,7 @@ export const _rootStyles = Object.seal({
   opacityDefault: 0.9,
   opacityMid: 0.75,
   opacityHigh: 0.5,
-  opacityXh: 0.3,
+  opacityXh: 0.25,
 
   transitionFastMs: 100,
   transitionNormalMs: 300,
