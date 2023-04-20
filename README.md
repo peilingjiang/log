@@ -4,6 +4,25 @@
 
 > Peiling Jiang, Fuling Sun, and Haijun Xia. 2023. Log-it: Supporting Programming with Interactive, Contextual, Structured, and Visual Logs. In _Proceedings of the 2023 CHI Conference on Human Factors in Computing Systems (CHI ’23), April 23–28, 2023, Hamburg, Germany_. ACM, New York, NY, USA, 16 pages. https://doi.org/10.1145/3544548.3581403
 
+```bibtex
+@inproceedings{jiang2023log,
+  author = {Jiang, Peiling and Sun, Fuling and Xia, Haijun},
+  title = {Log-It: Supporting Programming with Interactive, Contextual, Structured, and Visual Logs},
+  year = {2023},
+  isbn = {9781450394215},
+  publisher = {Association for Computing Machinery},
+  address = {New York, NY, USA},
+  url = {https://doi.org/10.1145/3544548.3581403},
+  doi = {10.1145/3544548.3581403},
+  booktitle = {Proceedings of the 2023 CHI Conference on Human Factors in Computing Systems},
+  articleno = {594},
+  numpages = {16},
+  keywords = {Visualization, Programming support, Program comprehension},
+  location = {Hamburg, Germany},
+  series = {CHI '23}
+}
+```
+
 ## Getting Started
 
 To install and use the Log-it package, please follow the steps below.
