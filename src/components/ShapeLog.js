@@ -72,8 +72,8 @@ export default class ShapeLog extends Log {
 
     const shapeValue = useStats
       ? `${
-          _rootStyles.maxLogWidthRem *
-          map(pxTrim(value), min, max, _rootStyles.minLogWidthRatioToMax, 1)
+          (_rootStyles.maxLogWidthRem * pxTrim(value)) / max
+          // map(pxTrim(value), min, max, _rootStyles.minLogWidthRatioToMax, 1)
         }rem`
       : value
 

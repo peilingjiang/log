@@ -262,7 +262,7 @@ export const pxTrim = value => {
 }
 
 export const unitTrim = value => {
-  return value.replace(/\D/g, '')
+  return value.replace(/[^0-9.]/g, '')
 }
 
 export const pxOrStringWrap = value => {
