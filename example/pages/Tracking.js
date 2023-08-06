@@ -22,31 +22,31 @@ export default class Tracking extends Component {
             showVideo: false,
           },
           callbackStatic: () => {
-            log('trackDistance done').id('sys-msg')
+            log('trackDistance done').id('sys-msg-dist').name('distance')
           },
           callbackTrack: data => {
-            log(data)
+            log(data).id('distance').name('distance track')
           },
         },
-        // {
-        //   name: 'trackGaze',
-        //   options: {
-        //     showVideo: false,
-        //   },
-        //   callbackOnCalibrationEnd: () => {
-        //     log('gaze calibration done').id('done-msg')
-        //   },
-        //   callbackTrack: data => {
-        //     log(data)
-        //   },
-        // },
+        {
+          name: 'trackGaze',
+          options: {
+            showVideo: false,
+          },
+          callbackOnCalibrationEnd: () => {
+            log('gaze calibration done').id('sys-msg-gaze').name('gaze')
+          },
+          callbackTrack: data => {
+            log(data).id('gaze').name('gaze track')
+          },
+        },
       ],
       '#tracking-example',
       {
         i18n: false,
       },
       () => {
-        log('all panel tasks done').id('sys-msg')
+        log('all panel tasks done').id('sys-msg-gaze')
         RemoteCalibrator.removePanel()
 
         this.setState({
