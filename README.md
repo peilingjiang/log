@@ -2,6 +2,9 @@
 
 ![Teaser](./media/teaser.png)
 
+[![NPM Package](https://img.shields.io/badge/NPM_Package-0.3.7-8957FF)](https://www.npmjs.com/package/log-here-now)
+[![VS Code Extension](https://img.shields.io/badge/VS_Code_Extension-0.1.1-blue)](https://marketplace.visualstudio.com/items?itemName=peiling.vs-log)
+
 > Peiling Jiang, Fuling Sun, and Haijun Xia. 2023. Log-it: Supporting Programming with Interactive, Contextual, Structured, and Visual Logs. In _Proceedings of the 2023 CHI Conference on Human Factors in Computing Systems (CHI ’23), April 23–28, 2023, Hamburg, Germany_. ACM, New York, NY, USA, 16 pages. https://doi.org/10.1145/3544548.3581403
 
 ```bibtex
